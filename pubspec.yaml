@@ -1,6 +1,5 @@
-name: DirectBot
+name: directbot
 version: 1.0.0
 description: DirectCode IRC Bot
 dependencies:
-  irc: 1.2.0
-
+  irc: 1.2.0+1

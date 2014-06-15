@@ -26,7 +26,7 @@ check_user(event) {
   return true;
 }
 
-main() {
+start() {
   BotConfig config = new BotConfig(nickname: "DirectBot", username: "DirectBot", host: "irc.esper.net", port: 6667);
 
   CommandBot bot = new CommandBot(config);

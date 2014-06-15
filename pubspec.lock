@@ -8,4 +8,4 @@ packages:
   irc:
     description: irc
     source: hosted
-    version: "1.2.0"
+    version: "1.2.0+1"
