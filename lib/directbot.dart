@@ -37,6 +37,22 @@ start() {
     event.join("#directcode");
   });
 
+  bot.register((BotJoinEvent event) {
+    print("Joined ${event.channel.name}");
+  });
+
+  bot.register((BotPartEvent event) {
+    print("Left ${event.channel.name}");
+  });
+
+  bot.register((ConnectEvent event) {
+    print("Connected");
+  });
+
+  bot.register((DisconnectEvent event) {
+    print("Disconnected");
+  });
+
   bot.command("help").listen((CommandEvent event) {
     event.reply("> ${Color.BLUE}Commands${Color.RESET}: ${bot.commandNames().join(', ')}");
   });
@@ -70,6 +86,7 @@ start() {
     if (!event.message.startsWith(bot.prefix)) {
       handle_youtube(event);
     }
+    print("<${event.target}><${event.from}> ${event.message}");
   });
 
   bot.connect();
