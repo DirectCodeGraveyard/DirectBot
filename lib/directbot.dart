@@ -4,37 +4,44 @@ library directbot;
 import 'package:irc/irc.dart';
 import 'dart:io';
 import 'dart:convert';
+import "package:yaml/yaml.dart";
 
 part "youtube.dart";
+part 'config.dart';
 
 var http = new HttpClient();
 
-var youtube = new youtubeclient.Youtube();
-
-List<String> admins = [
-  "kaendfinger",
-  "samrg472",
-  "Logan",
-  "TheMike"
-];
-
 check_user(event) {
-  if (!admins.contains(event.from)) {
-    event.reply("> Only Admins can use this Command!");
+  if (!config['admins'].contains(event.from)) {
+    event.reply("> ${Color.RED}Sorry, you don't have permission to do that${Color.RESET}.");
     return false;
   }
   return true;
 }
 
 start() {
-  BotConfig config = new BotConfig(nickname: "DirectBot", username: "DirectBot", host: "irc.esper.net", port: 6667);
+  load_config();
 
-  CommandBot bot = new CommandBot(config);
+  BotConfig botConf = new BotConfig(
+    nickname: config["nickname"],
+    username: config["username"],
+    host: config["host"],
+    port: int.parse(config["port"].toString())
+  );
 
-  bot.prefix = ".";
+  print("Starting DirectBot on ${botConf.host}:${botConf.port}");
+
+  print("Going to Join: ${config['channels'].join(', ')}");
+
+  CommandBot bot = new CommandBot(botConf);
+
+  bot.prefix = config['commands']['prefix'];
 
   bot.register((ReadyEvent event) {
-    event.join("#directcode");
+    for (String channel in config['channels']) {
+      bot.join(channel);
+    }
+    bot.client().identify(username: config["identity"]["username"], password: config["identity"]["password"]);
   });
 
   bot.register((BotJoinEvent event) {
@@ -44,6 +51,16 @@ start() {
   bot.register((BotPartEvent event) {
     print("Left ${event.channel.name}");
   });
+
+  if (config["debug"]) {
+    bot.register((LineReceiveEvent event) {
+      print(">> ${event.line}");
+    });
+
+    bot.register((LineSentEvent event) {
+      print("<< ${event.line}");
+    });
+  }
 
   bot.register((ConnectEvent event) {
     print("Connected");
