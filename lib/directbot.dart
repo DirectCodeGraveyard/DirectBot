@@ -4,10 +4,13 @@ library directbot;
 import 'package:irc/irc.dart';
 import 'dart:io';
 import 'dart:convert';
+import 'dart:async';
 import "package:yaml/yaml.dart";
 
 part "youtube.dart";
 part 'config.dart';
+
+part 'update.dart';
 
 var http = new HttpClient();
 
@@ -72,6 +75,12 @@ start() {
 
   bot.command("help").listen((CommandEvent event) {
     event.reply("> ${Color.BLUE}Commands${Color.RESET}: ${bot.commandNames().join(', ')}");
+  });
+
+  bot.command("update").listen((CommandEvent event) {
+    if (!check_user(event))
+      return;
+    update_bot(event);
   });
 
   bot.command("join").listen((event) {
