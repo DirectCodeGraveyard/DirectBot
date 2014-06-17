@@ -9,6 +9,7 @@ void update_bot(CommandEvent event) {
     var pubGetResult = Process.runSync("pub", ["get"]);
     if (pubGetResult.exitCode != 0) {
         event.reply("> Failed to Update Bot (pub get failed)");
+        return;
     }
     event.reply("> Bot Updated");
     event.client.disconnect(reason: "Updated");
