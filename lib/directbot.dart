@@ -14,8 +14,10 @@ part 'update.dart';
 
 var http = new HttpClient();
 
+var _config;
+
 check_user(event) {
-  if (!config['admins'].split(" ").contains(event.from)) {
+  if (!_config['admins'].split(" ").contains(event.from)) {
     event.reply("> ${Color.RED}Sorry, you don't have permission to do that${Color.RESET}.");
     return false;
   }
@@ -24,6 +26,7 @@ check_user(event) {
 
 start() {
   load_config().then((config) {
+      _config = config;
       BotConfig botConf = new BotConfig(
           nickname: config["nickname"],
           username: config["username"],
@@ -37,13 +40,14 @@ start() {
 
       CommandBot bot = new CommandBot(botConf);
 
-      bot.prefix = config['prefix'];
+      bot.prefix = config['command_prefix'];
 
       bot.register((ReadyEvent event) {
           for (String channel in config['channels'].split(" ")) {
               bot.join(channel);
           }
-          bot.client().identify(username: config["identity"]["username"], password: config["identity"]["password"]);
+          var ident = config["identity"].split(":");
+          bot.client().identify(username: ident[0], password: ident[1]);
       });
 
       bot.register((BotJoinEvent event) {
@@ -87,13 +91,6 @@ start() {
       //
       // }
       //});
-
-      bot.command("reload-config").listen((CommandEvent event) {
-          if (check_user(event)) {
-              load_config();
-              event.reply("> Configuration Reloaded");
-          }
-      });
 
       bot.command("join").listen((event) {
           if (!check_user(event)) return;
