@@ -8,7 +8,7 @@ void google(CommandEvent event) {
         }).then((HttpClientResponse response) {
             response.transform(UTF8.decoder).join("").then((content) {
                 var resp = JSON.decoder.convert(content);
-                var results = resp["responseData"]["results"];
+                List results = resp["responseData"]["results"];
                 if  (results.length == 0) {
                     event.reply("> No Results Found!");
                 } else {
