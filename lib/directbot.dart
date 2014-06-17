@@ -116,7 +116,9 @@ start() {
                         event.reply(line);
                     });
                 }
-                print("> EXIT: ${exit}");
+                if (exit != 0) {
+                    event.reply("> EXIT: ${exit}");
+                }
             });
         }
       });
