@@ -132,6 +132,10 @@ start() {
           }
       });
 
+      bot.command("bored").listen((CommandEvent event) {
+          event.reply("> Much Fun Wow: http://i.imgur.com/TLb1ZQz.gif");
+      });
+
       bot.command("part").listen((event) {
           if (!check_user(event)) return;
           if (event.args.length != 1) {
