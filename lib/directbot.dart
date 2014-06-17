@@ -12,6 +12,8 @@ part 'config.dart';
 
 part 'update.dart';
 
+part 'google.dart';
+
 var http = new HttpClient();
 
 var _config;
