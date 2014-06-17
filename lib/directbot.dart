@@ -165,6 +165,10 @@ start() {
         }
       });
 
+      bot.command("config").listen((CommandEvent event) {
+        event.reply("> http://goo.gl/CEPAMu");
+      });
+
       bot.command("part").listen((event) {
           if (!check_user(event)) return;
           if (event.args.length != 1) {
