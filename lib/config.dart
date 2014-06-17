@@ -1,34 +1,10 @@
 part of directbot;
 
-var configFile = new File("config.yaml");
-
-var defaultConfig = """
-host: irc.esper.net
-port: 6667
-nickname: DirectBot
-username: DirectBot
-identity:
-  username: DirectBot
-  password: password
-debug: true
-admins:
-- kaendfinger
-- samrg472
-- Logan
-- TheMike
-- Mraof
-channels:
-- "#directcode"
-- "#samrg472"
-commands:
-  prefix: .
-""";
-
-var config = {};
-
-load_config() {
-  if (!configFile.existsSync()) {
-    configFile.writeAsStringSync(defaultConfig);
-  }
-  config = loadYaml(configFile.readAsStringSync());
+Future<Map<String, dynamic>> load_config() {
+  return new HttpClient().getUrl(Uri.parse("http://script.google.com/macros/s/AKfycbwifjQ_eaDUkalw9NYqGMZnZv8TxQ3P7ltnBdt9slykTy3fauE/exec")).then((HttpClientRequest request) => request.close()).then((HttpClientResponse response) {
+    return response.transform(UTF8.decoder).join("").then((content) {
+        print("Config Loaded");
+        return new Future(() => JSON.decoder.convert(content));
+    });
+  });
 }
