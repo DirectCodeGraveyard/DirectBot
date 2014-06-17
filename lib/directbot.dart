@@ -147,7 +147,7 @@ start() {
                 event.reply("> she wants the d.");
                 break;
               default:
-                event.reply("> LOL IDK!");
+                event.reply("> http://lmgtfy.com/?q=${Uri.encodeComponent("who" + msg)}");
                 break;
           }
       });
