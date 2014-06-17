@@ -88,11 +88,11 @@ start() {
           update_bot(event);
       });
 
-      //bot.command("google").listen((CommandEvent event) {
-      //  if (event.args.length >= 1) {
-      //
-      // }
-      //});
+      bot.command("google").listen((CommandEvent event) {
+        if (event.args.length >= 1) {
+            google(event);
+        }
+      });
 
       bot.command("join").listen((event) {
           if (!check_user(event)) return;
