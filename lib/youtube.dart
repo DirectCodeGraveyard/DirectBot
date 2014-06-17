@@ -2,7 +2,7 @@ part of directbot;
 
 var _yt_link_regex = new RegExp(r'\(?\b((http|https)://|www[.])[-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|]');
 
-var _yt_info_url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&key=AIzaSyCn3fRjsEMyw837JKcgnqJZ1J8YAxFUB0c&id=';
+var _yt_info_url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&key=${googleAPIKey}&id=';
 
 var _yt_link_id = new RegExp(r'^.*(youtu.be/|v/|embed/|watch\?|youtube.com/user/[^#]*#([^/]*?/)*)\??v?=?([^#\&\?]*).*');
 

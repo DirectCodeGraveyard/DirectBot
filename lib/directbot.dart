@@ -147,9 +147,22 @@ start() {
                 event.reply("> she wants the d.");
                 break;
               default:
-                event.reply("> http://lmgtfy.com/?q=${Uri.encodeComponent("who " + msg)}");
+                var url = "http://lmgtfy.com/?q=${Uri.encodeComponent("who " + msg)}";
+                shorten(url).then((shortened) {
+                    event.reply("> ${shortened}");
+                });
                 break;
           }
+      });
+
+      bot.command("shorten").listen((CommandEvent event) {
+        if (event.args.length < 1) {
+            event.reply("> Usage: shorten <url>");
+        } else {
+            shorten(event.args.join(" ")).then((shortened) {
+                event.reply("> ${shortened}");
+            });
+        }
       });
 
       bot.command("part").listen((event) {
