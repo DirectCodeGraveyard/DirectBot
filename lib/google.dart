@@ -13,7 +13,7 @@ void google(CommandEvent event) {
                     event.reply("> No Results Found!");
                 } else {
                     var result = results[0];
-                    event.reply("> ${result["titleNoFormatting"]} | ${result["url"]}");
+                    event.reply("> ${result["titleNoFormatting"]} | ${result["unescapedUrl"]}");
                 }
             });
         });
