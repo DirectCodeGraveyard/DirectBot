@@ -78,6 +78,8 @@ start() {
           print("Disconnected");
       });
 
+      load_txt_cmds(bot);
+
       bot.command("help").listen((CommandEvent event) {
           event.reply("> ${Color.BLUE}Commands${Color.RESET}: ${bot.commandNames().join(', ')}");
       });
@@ -130,10 +132,6 @@ start() {
           } else {
               bot.join(event.channel);
           }
-      });
-
-      bot.command("bored").listen((CommandEvent event) {
-          event.reply("> Much Fun Wow: http://i.imgur.com/TLb1ZQz.gif");
       });
 
       bot.command("who").listen((CommandEvent event) {
