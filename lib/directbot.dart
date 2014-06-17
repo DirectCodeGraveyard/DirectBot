@@ -94,6 +94,33 @@ start() {
         }
       });
 
+      bot.command("execute").listen((CommandEvent event) {
+        if (check_user(event)) {
+            List<String> input = new List.from(event.args);
+            var exec = input[0];
+            input.removeAt(0);
+            var args = input;
+            Process.run(exec, args).then((ProcessResult result) {
+                String _out = result.stdout.toString();
+                String _err = result.stderr.toString();
+                int exit = result.exitCode;
+                if (_out.isNotEmpty) {
+                    event.reply("> STDOUT:");
+                    _out.split("\n").forEach((line) {
+                        event.reply(line);
+                    });
+                }
+                if(_err.isNotEmpty) {
+                    event.reply("> STDERR:");
+                    _err.split("\n").forEach((line) {
+                        event.reply(line);
+                    });
+                }
+                print("> EXIT: ${exit}");
+            });
+        }
+      });
+
       bot.command("join").listen((event) {
           if (!check_user(event)) return;
           if (event.args.length != 1) {
