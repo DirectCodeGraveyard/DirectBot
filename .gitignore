@@ -2,3 +2,5 @@ packages
 .idea/
 *.iml
 config.yaml
+.project
+build/
