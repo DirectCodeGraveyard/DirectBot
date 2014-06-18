@@ -53,8 +53,9 @@ start() {
       });
 
       bot.register((ErrorEvent event) {
+          print("--------------- Error ---------------");
           print(event.err);
-          exit(1);
+          print("-------------------------------------");
       });
 
       bot.register((BotJoinEvent event) {
