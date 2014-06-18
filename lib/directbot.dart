@@ -102,6 +102,8 @@ start() {
       });
       
       bot.command("say").listen((CommandEvent event) {
+        if (!check_user(event))
+          return;
         if (event.args.length != 0) {
           event.reply(event.args.join(" "));
         } else {
