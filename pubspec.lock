@@ -17,6 +17,10 @@ packages:
     description: path
     source: hosted
     version: "1.2.1"
+  quiver:
+    description: quiver
+    source: hosted
+    version: "0.18.2"
   source_maps:
     description: source_maps
     source: hosted

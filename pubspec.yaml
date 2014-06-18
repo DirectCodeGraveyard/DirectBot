@@ -4,3 +4,4 @@ description: DirectCode IRC Bot
 dependencies:
   irc: 1.2.1-dev.6
   yaml: 0.10.0
+  quiver: 0.18.2
