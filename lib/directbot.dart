@@ -20,7 +20,7 @@ var _config;
 check_user(CommandEvent event) {
   if (_config['admins'].split(" ").contains(event.from) && authenticated.contains(event.from))
     return true;
-  
+
   event.reply("> ${Color.RED}Sorry, you don't have permission to do that${Color.RESET}.");
   return false;
 }
@@ -52,8 +52,6 @@ start([String nickname, String prefix]) {
       });
 
       bot.register((ErrorEvent event) {
-          if (event.err is TimeoutException)
-            exit(1); // Timed Out
           print("--------------- Error ---------------");
           print(event.err);
           print("-------------------------------------");
@@ -105,7 +103,7 @@ start([String nickname, String prefix]) {
       bot.command("google").listen((CommandEvent event) {
         google(event);
       });
-      
+
       bot.command("say").listen((CommandEvent event) {
         if (!check_user(event))
           return;
@@ -115,7 +113,7 @@ start([String nickname, String prefix]) {
           event.reply("> Usage: say <text>");
         }
       });
-      
+
       bot.command("act").listen((CommandEvent event) {
         if (!check_user(event))
           return;
@@ -220,7 +218,7 @@ start([String nickname, String prefix]) {
           event.reply("> ${Color.RED}Authentication prohibited${Color.RESET}.");
           return;
         }
-        
+
         if (authenticated.contains(event.from)) {
           event.reply("> You are already authenticated");
           return;
@@ -231,7 +229,7 @@ start([String nickname, String prefix]) {
           event.reply("> A password is required to authenticate.");
           return;
         }
-        
+
         if (event.args[0] == config["admin_authentication"].toString()) {
           event.reply("> Authentication successful.");
           authenticated.add(event.from);
