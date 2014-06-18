@@ -52,6 +52,11 @@ start() {
           bot.client().identify(username: ident[0], password: ident[1]);
       });
 
+      bot.register((ErrorEvent event) {
+          print(event.err);
+          exit(1);
+      });
+
       bot.register((BotJoinEvent event) {
           print("Joined ${event.channel.name}");
       });
