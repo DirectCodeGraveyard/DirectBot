@@ -14,15 +14,15 @@ part 'update.dart';
 part 'google.dart';
 
 var http = new HttpClient();
-
+var authenticated = [];
 var _config;
 
-check_user(event) {
-  if (!_config['admins'].split(" ").contains(event.from)) {
-    event.reply("> ${Color.RED}Sorry, you don't have permission to do that${Color.RESET}.");
-    return false;
-  }
-  return true;
+check_user(CommandEvent event) {
+  if (_config['admins'].split(" ").contains(event.from) && authenticated.contains(event.from))
+    return true;
+  
+  event.reply("> ${Color.RED}Sorry, you don't have permission to do that${Color.RESET}.");
+  return false;
 }
 
 start([String nickname, String prefix]) {
@@ -159,7 +159,7 @@ start([String nickname, String prefix]) {
         }
       });
 
-      bot.command("join").listen((event) {
+      bot.command("join").listen((CommandEvent event) {
           if (!check_user(event)) return;
           if (event.args.length != 1) {
               event.reply("> Usage: join <channel>");
@@ -201,20 +201,45 @@ start([String nickname, String prefix]) {
         event.reply("> http://goo.gl/CEPAMu");
       });
 
-      bot.command("part").listen((event) {
-          if (!check_user(event)) return;
-          if (event.args.length != 1) {
-              bot.part(event.channel.name);
-          } else {
-              bot.part(event.args[0]);
-          }
+      bot.command("part").listen((CommandEvent event) {
+        if (!check_user(event)) return;
+        if (event.args.length != 1) {
+            bot.part(event.channel.name);
+        } else {
+            bot.part(event.args[0]);
+        }
       });
 
-      bot.command("quit").listen((event) {
-          if (!check_user(event)) return;
-          bot.disconnect();
+      bot.command("quit").listen((CommandEvent event) {
+        if (!check_user(event)) return;
+        bot.disconnect();
       });
 
+      bot.command("authenticate").listen((CommandEvent event) {
+        if (!_config['admins'].split(" ").contains(event.from)) {
+          event.reply("> ${Color.RED}Authentication prohibited${Color.RESET}.");
+          return;
+        }
+        
+        if (authenticated.contains(event.from)) {
+          event.reply("> You are already authenticated");
+          return;
+        } else if (event.target != event.client.getNickname()) {
+          event.reply("> ${Color.RED}Authentication is only allowed in a private message${Color.RESET}.");
+          return;
+        } else if (event.args.length != 1) {
+          event.reply("> A password is required to authenticate.");
+          return;
+        }
+        
+        if (event.args[0] == config["admin_authentication"].toString()) {
+          event.reply("> Authentication successful.");
+          authenticated.add(event.from);
+        } else {
+          event.reply("> Authentication failure.");
+        }
+        // TODO: On nick change, alter the authentication table to match new nick to prevent exploit
+      });
 
       bot.register((MessageEvent event) {
           /* YouTube Support */
