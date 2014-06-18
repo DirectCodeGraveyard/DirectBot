@@ -94,7 +94,7 @@ start([String nickname, String prefix]) {
     });
 
     bot.command("google").listen((CommandEvent event) {
-      google(event);
+      google_cmd(event);
     });
 
     bot.command("say").listen((CommandEvent event) {
