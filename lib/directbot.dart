@@ -5,7 +5,6 @@ import 'package:irc/irc.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'dart:async';
-import "package:yaml/yaml.dart";
 
 part "youtube.dart";
 part 'config.dart';
@@ -142,7 +141,7 @@ start() {
           if (event.args.length != 1) {
               event.reply("> Usage: join <channel>");
           } else {
-              bot.join(event.channel);
+              bot.join(event.args[0]);
           }
       });
 
@@ -182,9 +181,9 @@ start() {
       bot.command("part").listen((event) {
           if (!check_user(event)) return;
           if (event.args.length != 1) {
-              event.reply("> Usage: part <channel>");
+              bot.part(event.channel.name);
           } else {
-              bot.part(event.channel);
+              bot.part(event.args[0]);
           }
       });
 
