@@ -25,11 +25,11 @@ check_user(event) {
   return true;
 }
 
-start() {
+start([String nickname, String prefix]) {
   load_config().then((config) {
       _config = config;
       BotConfig botConf = new BotConfig(
-          nickname: config["nickname"],
+          nickname: nickname == null ? config["nickname"] : nickname,
           username: config["username"],
           host: config["host"],
           port: config["port"]
@@ -41,7 +41,7 @@ start() {
 
       CommandBot bot = new CommandBot(botConf);
 
-      bot.prefix = config['command_prefix'];
+      bot.prefix = prefix == null ? config['command_prefix'] : prefix;
 
       bot.register((ReadyEvent event) {
           for (String channel in config['channels'].split(" ")) {
