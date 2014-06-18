@@ -10,6 +10,8 @@ handle_youtube(event) {
   if (_yt_link_regex.hasMatch(event.message)) {
     _yt_link_regex.allMatches(event.message).forEach((match) {
       var url = match.group(0);
+      if (!url.contains("youtube"))
+        return;
       var request_url = "${_yt_info_url}${extract_yt_id(url)}";
       http.getUrl(Uri.parse(request_url)).then((request) => request.close()).then((response) {
         response.transform(UTF8.decoder).join("").then((content) {
