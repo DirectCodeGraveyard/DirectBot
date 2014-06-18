@@ -110,6 +110,16 @@ start() {
           event.reply("> Usage: say <text>");
         }
       });
+      
+      bot.command("act").listen((CommandEvent event) {
+        if (!check_user(event))
+          return;
+        if (event.args.length != 0) {
+          event.channel.action(event.args.join(" "));
+        } else {
+          event.reply("> Usage: act <text>");
+        }
+      });
 
       bot.command("execute").listen((CommandEvent event) {
         if (check_user(event)) {
