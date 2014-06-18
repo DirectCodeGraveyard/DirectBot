@@ -98,9 +98,7 @@ start() {
       });
 
       bot.command("google").listen((CommandEvent event) {
-        if (event.args.length >= 1) {
-            google(event);
-        }
+        google(event);
       });
 
       bot.command("execute").listen((CommandEvent event) {
