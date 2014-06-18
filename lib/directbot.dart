@@ -64,6 +64,11 @@ start([String nickname, String prefix]) {
       });
 
       bot.register((BotPartEvent event) {
+          List<String> sticky = config["sticky_channels"].split(" ");
+          if (sticky.contains(event.channel.name)) {
+            bot.join(event.channel.name);
+            return;
+          }
           print("Left ${event.channel.name}");
       });
 
