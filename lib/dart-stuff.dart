@@ -28,7 +28,7 @@ class dart {
         if (version == null) {
           event.reply("> No Such Package: ${event.args[0]}");
         } else {
-          event.reply("> Latest Pub Version: ${version}");
+          event.reply("> Latest Version: ${version}");
         }
       });
     }
