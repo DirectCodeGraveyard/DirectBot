@@ -11,18 +11,22 @@ handle_youtube(event) {
     link_regex.allMatches(event.message).forEach((match) {
       var url = match.group(0);
       if (url.contains("youtube") || url.contains("youtu.be")) {
-        var request_url = "${_yt_info_url}${extract_yt_id(url)}";
-        http.getUrl(Uri.parse(request_url)).then((request) => request.close()).then((response) {
-          response.transform(UTF8.decoder).join("").then((content) {
-            var data = JSON.decoder.convert(content);
-            var items = data['items'];
-            var video = items[0];
-            print_yt_info(event, video);
-          });
-        });
+        output_youtube_info(event, url);
       }
     });
   }
+}
+
+output_youtube_info(event, url) {
+  var request_url = "${_yt_info_url}${extract_yt_id(url)}";
+  http.getUrl(Uri.parse(request_url)).then((request) => request.close()).then((response) {
+    response.transform(UTF8.decoder).join("").then((content) {
+      var data = JSON.decoder.convert(content);
+      var items = data['items'];
+      var video = items[0];
+      print_yt_info(event, video);
+    });
+  });
 }
 
 print_yt_info(event, info) {
