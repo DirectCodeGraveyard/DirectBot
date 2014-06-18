@@ -100,6 +100,14 @@ start() {
       bot.command("google").listen((CommandEvent event) {
         google(event);
       });
+      
+      bot.command("say").listen((CommandEvent event) {
+        if (event.args.length != 0) {
+          event.reply(event.args.join(" "));
+        } else {
+          event.reply("> Usage: say <text>");
+        }
+      });
 
       bot.command("execute").listen((CommandEvent event) {
         if (check_user(event)) {
