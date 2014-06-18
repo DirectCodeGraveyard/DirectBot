@@ -53,6 +53,8 @@ start() {
       });
 
       bot.register((ErrorEvent event) {
+          if (event.err is TimeoutException)
+            exit(1); // Timed Out
           print("--------------- Error ---------------");
           print(event.err);
           print("-------------------------------------");
