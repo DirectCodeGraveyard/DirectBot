@@ -9,6 +9,7 @@ import 'dart:async';
 
 part 'dart-stuff.dart';
 part "youtube.dart";
+part 'server.dart';
 part 'config.dart';
 part 'update.dart';
 part 'google.dart';
@@ -257,6 +258,6 @@ void start([String nickname, String prefix]) {
 
     bot.connect();
     init_github();
-    github_listen();
+    server_listen();
   });
 }
