@@ -53,8 +53,14 @@ void start([String nickname, String prefix]) {
     });
 
     bot.register((ErrorEvent event) {
+      String out;
+      if (event.type == "server") {
+        out = event.message;
+      } else {
+        out = "${event.err}";
+      }
       print("--------------- Error ---------------");
-      print(event.err);
+      print(out);
       print("-------------------------------------");
     });
 

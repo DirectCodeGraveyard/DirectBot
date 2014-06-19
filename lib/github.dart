@@ -15,7 +15,10 @@ void github_listen() {
     .then((HttpServer server) {
       server.listen((HttpRequest request) {
         if (request.method != "POST") {
-          request.response.write('{ "error": "Only POST is supported" }');
+          request.response.write(JSON.encode({
+            "status": "failure",
+            "error": "Only POST is Supported"
+          }));
           request.response.close();
           return;
         }
@@ -32,16 +35,47 @@ void github_listen() {
         request.transform(UTF8.decoder).join("").then((String data) {
           var json = JSON.decoder.convert(data);
           
-          var repo_name = json["repository"]["name"];
+          var repo_name;
           
-          void message(String msg) {
+          if (json["repository"] != null) {
+            repo_name = json["repository"]["name"];
+          }
+          
+          void message(String msg, [bool prefix = true]) {
+            var m = "";
+            if (prefix)
+              m += "[${Color.BLUE}$repo_name${Color.RESET}] ";
+            m += msg;
             for (var chan in github_chans)
-              bot.message(chan, "[${Color.BLUE}$repo_name${Color.RESET}] $msg");
+              bot.message(chan, m);
           }
           
           switch (request.headers.value('X-GitHub-Event')) {
+            case "ping":
+              message("[${Color.BLUE}GitHub${Color.RESET}] ${json["zen"]}", false);
+              break;
             case "push":
-              if (json["commits"] != null) {
+              var ref_regex = new RegExp(r"refs/(heads|tags)/(.*)$");
+              var branchName = "";
+              var tagName = "";
+              var is_branch = false;
+              var is_tag = false;
+              if (ref_regex.hasMatch(json["ref"])) {
+                var match = ref_regex.firstMatch(json["ref"]);
+                var _type = match.group(1);
+                var type = ({
+                  "heads": "branch",
+                  "tags": "tag"
+                }[_type]);
+                if (type == "branch") {
+                  is_branch = true;
+                  branchName = match.group(2);
+                } else if (type == "tag") {
+                  is_tag = true;
+                  tagName = match.group(2);
+                }
+              }
+              if (json["commits"] != null && json["commits"].length != 0) {
                 if (json['repository']['fork'])
                   break;
                 var pusher = json['pusher']['name'];
@@ -52,14 +86,12 @@ void github_listen() {
                     bot.message(chan, "[${Color.BLUE}$repo_name${Color.RESET}] $msg");
                 }
                 
-                (new HttpClient()).postUrl(Uri.parse("http://git.io/?url=${json['compare']}"))
-                .then((HttpClientRequest req) {
-                  return req.close();
-                }).then((HttpClientResponse rep) {
+                gitio_shorten(json["compare"]).then((compareUrl) {
                   var committer = "${Color.OLIVE}$pusher${Color.RESET}";
                   var commit = "commit${commit_size > 1 ? "s" : ""}";
                   var branch = "${Color.GREEN}${json['ref'].split("/")[2]}${Color.RESET}";
-                  var url = "${Color.PURPLE}http://git.io/${rep.headers.value('Location').split("/").last}${Color.RESET}";
+                  
+                  var url = "${Color.PURPLE}${compareUrl}${Color.RESET}";
                   message("$committer pushed ${Color.GREEN}$commit_size${Color.RESET} $commit to $branch - $url");
                   
                   int tracker = 0;
@@ -72,18 +104,99 @@ void github_listen() {
                     message("$committer $sha - ${commit['message']}");
                   }
                 });
+              } else if (is_tag) {
+                if (json['repository']['fork'])
+                  break;
+                String out = "";
+                if (json['pusher'] != null) {
+                  out += "${Color.OLIVE}${json["pusher"]["name"]}${Color.RESET} tagged ";
+                } else {
+                  out += "Tagged ";
+                }
+                out += "${Color.GREEN}${json['head_commit']['id'].substring(0, 7)}${Color.RESET} as ";
+                out += "${Color.GREEN}${tagName}${Color.RESET}";
+                message(out);
+              } else if (is_branch) {
+                if (json['repository']['fork'])
+                  break;
+                String out = "";
+                if (json["deleted"]) {
+                  if (json["pusher"] != null)
+                    out += "${Color.OLIVE}${json["pusher"]["name"]}${Color.RESET} deleted branch ";
+                  else
+                    out += "Deleted branch";
+                } else {
+                  if (json["pusher"] != null)
+                    out += "${Color.OLIVE}${json["pusher"]["name"]}${Color.RESET} created branch ";
+                  else
+                    out += "Created branch";
+                }
+                out += "${Color.GREEN}${branchName}${Color.RESET}";
+                
+                gitio_shorten(json["head_commit"]["url"]).then((url) {
+                  out += " - ${Color.PURPLE}${url}${Color.RESET}";
+                  message(out);
+                });
               }
               
               break;
+              
+            case "issues":
+              var action = json["action"];
+              var by = json["sender"]["login"];
+              var issueId = json["issue"]["number"];
+              var issueName = json["issue"]["title"];
+              var issueUrl = json["issue"]["html_url"];
+              gitio_shorten(issueUrl).then((url) {
+                message("${Color.OLIVE}${by}${Color.RESET} ${action} the issue '${issueName}' (${issueId}) - ${url}");
+              });
+              break;
+              
+            case "release":
+              var action = json["action"];
+              var author = json["sender"]["login"];
+              var name = json["release"]["name"];
+              gitio_shorten(json["release"]["html_url"]).then((url) {
+                message("${Color.OLIVE}${author}${Color.RESET} ${action} the release '${name}' - ${url}");
+              });
+              break;
+              
+            case "issues":
+              var action = json["action"];
+              var by = json["sender"]["login"];
+              var issueId = json["issue"]["number"];
+              var issueName = json["issue"]["title"];
+              var issueUrl = json["issue"]["html_url"];
+              gitio_shorten(issueUrl).then((url) {
+                message("${Color.OLIVE}${by}${Color.RESET} ${action} the issue '${issueName}' (${issueId}) - ${url}");
+              });
+              break;
           }
           
+          request.response.write(JSON.encode({
+            "status": "success"
+          }));
           request.response.close();
         });
       });
     });
-  }, onError: (err) {
-    print("ERROR: $err");
+  }, onError: (Error err) {
+    print("------------- GitHub Hook Error --------------");
+    print(err);
+    print(err.stackTrace);
+    print("----------------------------------------------");
   });
 }
 
-void handle_ping() {}
+Future<String> gitio_shorten(String input) {
+  return new HttpClient().postUrl(Uri.parse("http://git.io/?url=${Uri.encodeComponent(input)}"))
+    .then((HttpClientRequest request) {
+      return request.close();
+    }).then((HttpClientResponse response) {
+      if (response.statusCode != 201) {
+        return new Future.value(input);
+      } else {
+        return new Future.value("http://git.io/${response.headers.value("Location").split("/").last}");
+      }
+    });
+}
