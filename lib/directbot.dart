@@ -252,6 +252,7 @@ void start([String nickname, String prefix]) {
     });
 
     bot.connect();
+    init_github();
     listen();
   });
 }
