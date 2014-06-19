@@ -160,17 +160,6 @@ void github_listen() {
                 message("${Color.OLIVE}${author}${Color.RESET} ${action} the release '${name}' - ${url}");
               });
               break;
-              
-            case "issues":
-              var action = json["action"];
-              var by = json["sender"]["login"];
-              var issueId = json["issue"]["number"];
-              var issueName = json["issue"]["title"];
-              var issueUrl = json["issue"]["html_url"];
-              gitio_shorten(issueUrl).then((url) {
-                message("${Color.OLIVE}${by}${Color.RESET} ${action} the issue '${issueName}' (${issueId}) - ${url}");
-              });
-              break;
           }
           
           request.response.write(JSON.encode({
