@@ -42,7 +42,7 @@ void start([String nickname, String prefix]) {
     _bot = new CommandBot(botConf);
     print("Going to Join: ${config['channels'].split(" ").join(', ')}");
 
-    CommandBot bot = new CommandBot(botConf);
+    bot = new CommandBot(botConf);
 
     bot.prefix = prefix == null ? config['command_prefix'] : prefix;
 
