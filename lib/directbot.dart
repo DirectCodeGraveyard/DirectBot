@@ -12,12 +12,17 @@ part 'config.dart';
 part 'update.dart';
 
 part 'google.dart';
+part 'github.dart';
 
-var http = new HttpClient();
-var authenticated = [];
+CommandBot _bot;
+HttpClient http = new HttpClient();
+List<String> authenticated = [];
 var _config;
 
-check_user(CommandEvent event) {
+get config => _config;
+CommandBot get bot => _bot;
+
+bool check_user(CommandEvent event) {
   if (_config['admins'].split(" ").contains(event.from) && authenticated.contains(event.from))
     return true;
   
@@ -25,7 +30,7 @@ check_user(CommandEvent event) {
   return false;
 }
 
-start([String nickname, String prefix]) {
+void start([String nickname, String prefix]) {
   load_config().then((config) {
       _config = config;
       BotConfig botConf = new BotConfig(
@@ -39,7 +44,7 @@ start([String nickname, String prefix]) {
 
       print("Going to Join: ${config['channels'].split(" ").join(', ')}");
 
-      CommandBot bot = new CommandBot(botConf);
+      _bot = new CommandBot(botConf);
 
       bot.prefix = prefix == null ? config['command_prefix'] : prefix;
 
@@ -250,5 +255,6 @@ start([String nickname, String prefix]) {
       });
 
       bot.connect();
+      listen();
   });
 }
