@@ -9,7 +9,7 @@ void init_github() {
   github_chans = config['hook_channels'].split(" ");
 }
 
-void listen() {
+void github_listen() {
   runZoned(() {
     HttpServer.bind(InternetAddress.ANY_IP_V4, config['http_port'])
     .then((HttpServer server) {
@@ -19,7 +19,6 @@ void listen() {
           request.response.close();
           return;
         }
-        print("Request received");
         String address = request.connectionInfo.remoteAddress.address;
         
         if (!_exp.hasMatch(address)) {
@@ -57,7 +56,6 @@ void listen() {
                 .then((HttpClientRequest req) {
                   return req.close();
                 }).then((HttpClientResponse rep) {
-                                
                   var committer = "${Color.OLIVE}$pusher${Color.RESET}";
                   var commit = "commit${commit_size > 1 ? "s" : ""}";
                   var branch = "${Color.GREEN}${json['ref'].split("/")[2]}${Color.RESET}";
