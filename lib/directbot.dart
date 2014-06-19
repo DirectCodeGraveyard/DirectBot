@@ -16,7 +16,7 @@ part 'google.dart';
 part 'github.dart';
 
 CommandBot _bot;
-List<String> authenticated = [];
+Set<String> authenticated = new Set<String>();
 
 var httpClient = new http.Client();
 var _config;
@@ -245,7 +245,13 @@ void start([String nickname, String prefix]) {
       } else {
         event.reply("> Authentication failure.");
       }
-      // TODO: On nick change, alter the authentication table to match new nick to prevent exploit
+    });
+
+    bot.register((NickChangeEvent event) {
+      if (authenticated.contains(event.original)) {
+        authenticated.remove(event.original);
+        authenticated.add(event.now);
+      }
     });
 
     bot.register((MessageEvent event) {
