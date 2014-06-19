@@ -134,7 +134,6 @@ void handle_github_request(HttpRequest request) {
             message(out);
           });
         }
-
         break;
 
       case "issues":
@@ -154,6 +153,13 @@ void handle_github_request(HttpRequest request) {
         var name = json["release"]["name"];
         gitio_shorten(json["release"]["html_url"]).then((url) {
           message("${Color.OLIVE}${author}${Color.RESET} ${action} the release '${name}' - ${url}");
+        });
+        break;
+
+      case "fork":
+        var forkee = json["forkee"];
+        gitio_shorten(forkee["html_url"]).then((url) {
+          message("${Color.OLIVE}${forkee["owner"]["login"]}${Color.RESET} created a fork at ${forkee["full_name"]} - ${url}");
         });
         break;
     }
