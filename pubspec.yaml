@@ -2,5 +2,7 @@ name: directbot
 version: 1.0.0
 description: DirectCode IRC Bot
 dependencies:
-  irc: 1.2.1-dev.5
+  http: 0.11.1+1
+  irc: 1.2.1
+  quiver: 0.18.2
   yaml: 0.10.0
