@@ -26,7 +26,7 @@ get config => _config;
 CommandBot get bot => _bot;
 
 bool check_user(CommandEvent event) {
-  if (_config['admins'].split(" ").contains(event.from) && authenticated.contains(event.from))
+  if (authenticated.contains(event.from))
     return true;
   event.reply("> ${Color.RED}Sorry, you don't have permission to do that${Color.RESET}.");
   return false;
