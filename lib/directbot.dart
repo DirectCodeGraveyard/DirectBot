@@ -17,7 +17,9 @@ part 'github.dart';
 part 'fun.dart';
 
 CommandBot _bot;
+
 Set<String> authenticated = new Set<String>();
+Set<List<String>> _awaiting_authentication = new Set<List<String>>();
 
 var httpClient = new http.Client();
 var _config;
@@ -234,27 +236,32 @@ void start(String nickname, String prefix, String user, String pass, String admi
     });
 
     bot.command("authenticate").listen((CommandEvent event) {
-      if (!_config['admins'].split(" ").contains(event.from)) {
-        event.reply("> ${Color.RED}Authentication prohibited${Color.RESET}.");
-        return;
+      _awaiting_authentication.add(<String>[event.from, event.target]);
+      bot.client().send("WHOIS ${event.from}");
+    });
+    
+    bot.register((WhoisEvent event) {
+      
+      List<String> search(String nick) {
+        for (var v in _awaiting_authentication) {
+          if (v[0] == nick)
+            return v;
+        }
+        return null;
       }
-
-      if (authenticated.contains(event.from)) {
-        event.reply("> You are already authenticated");
-        return;
-      } else if (event.target != event.client.getNickname()) {
-        event.reply("> ${Color.RED}Authentication is only allowed in a private message${Color.RESET}.");
-        return;
-      } else if (event.args.length != 1) {
-        event.reply("> A password is required to authenticate.");
-        return;
-      }
-
-      if (event.args[0] == admin_pass) {
-        event.reply("> Authentication successful.");
-        authenticated.add(event.from);
-      } else {
-        event.reply("> Authentication failure.");
+      
+      WhoisBuilder builder = event.builder;
+      String username = builder.username;
+      List<String> info = search(builder.nickname);
+      
+      if (info != null) {
+        _awaiting_authentication.remove(info);
+        if (!_config['admins'].split(" ").contains(username)) {
+          bot.message(info[1], "${info[0]}> ${Color.RED}Authentication prohibited${Color.RESET}.");
+        } else {
+          authenticated.add(info[0]);
+          bot.message(info[1], "${info[0]}> Authentication successful.");
+        }
       }
     });
 
