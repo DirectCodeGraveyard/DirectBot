@@ -68,7 +68,13 @@ void start([String nickname, String prefix]) {
     });
 
     bot.register((DisconnectEvent event) {
-      exit(0);
+      if (server != null) {
+        server.close(force: true).then((_) {
+          exit(0);
+        });
+      } else {
+        exit(0);
+      }
     });
 
     bot.register((BotJoinEvent event) {
