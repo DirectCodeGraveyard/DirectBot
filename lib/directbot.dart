@@ -32,11 +32,11 @@ bool check_user(CommandEvent event) {
   return false;
 }
 
-void start([String nickname, String prefix]) {
+void start(String nickname, String prefix, String user, String pass, String admin_pass) {
   load_config().then((config) {
     _config = config;
-
-    BotConfig botConf = new BotConfig(nickname: nickname == null ? config["nickname"] : nickname, username: config["username"],
+    
+    BotConfig botConf = new BotConfig(nickname: nickname, username: nickname, 
                                       host: config["host"], port: config["port"]);
 
     print("Starting DirectBot on ${botConf.host}:${botConf.port}");
@@ -44,14 +44,13 @@ void start([String nickname, String prefix]) {
     _bot = new CommandBot(botConf);
     print("Going to Join: ${config['channels'].split(" ").join(', ')}");
 
-    bot.prefix = prefix == null ? config['command_prefix'] : prefix;
+    bot.prefix = prefix;
 
     bot.register((ReadyEvent event) {
+      bot.client().identify(username: user, password: pass);
       for (String channel in config['channels'].split(" ")) {
         bot.join(channel);
       }
-      var ident = config["identity"].split(":");
-      bot.client().identify(username: ident[0], password: ident[1]);
     });
 
     bot.register((ErrorEvent event) {
@@ -251,7 +250,7 @@ void start([String nickname, String prefix]) {
         return;
       }
 
-      if (event.args[0] == config["admin_authentication"].toString()) {
+      if (event.args[0] == admin_pass) {
         event.reply("> Authentication successful.");
         authenticated.add(event.from);
       } else {
