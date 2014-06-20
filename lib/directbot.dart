@@ -67,6 +67,10 @@ void start([String nickname, String prefix]) {
       print("-------------------------------------");
     });
 
+    bot.register((DisconnectEvent event) {
+      exit(0);
+    });
+
     bot.register((BotJoinEvent event) {
       print("Joined ${event.channel.name}");
     });
