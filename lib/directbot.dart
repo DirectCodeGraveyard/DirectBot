@@ -58,6 +58,7 @@ void start([String nickname, String prefix]) {
       String out;
       if (event.type == "server") {
         out = event.message;
+        exit(1);
       } else {
         out = "${event.err}";
       }
