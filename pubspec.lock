@@ -24,7 +24,7 @@ packages:
   irc:
     description: irc
     source: hosted
-    version: "1.2.2-dev.3"
+    version: "1.2.2-dev.4"
   path:
     description: path
     source: hosted
