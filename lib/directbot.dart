@@ -34,7 +34,7 @@ bool check_user(CommandEvent event) {
   return false;
 }
 
-void start(String nickname, String prefix, String user, String pass, String admin_pass) {
+void start(String nickname, String prefix, String user, String pass) {
   load_config().then((config) {
     _config = config;
     
