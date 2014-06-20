@@ -14,6 +14,7 @@ part 'config.dart';
 part 'update.dart';
 part 'google.dart';
 part 'github.dart';
+part 'fun.dart';
 
 CommandBot _bot;
 Set<String> authenticated = new Set<String>();
@@ -34,8 +35,8 @@ bool check_user(CommandEvent event) {
 void start([String nickname, String prefix]) {
   load_config().then((config) {
     _config = config;
-    
-    BotConfig botConf = new BotConfig(nickname: nickname == null ? config["nickname"] : nickname, username: config["username"], 
+
+    BotConfig botConf = new BotConfig(nickname: nickname == null ? config["nickname"] : nickname, username: config["username"],
                                       host: config["host"], port: config["port"]);
 
     print("Starting DirectBot on ${botConf.host}:${botConf.port}");
@@ -259,6 +260,7 @@ void start([String nickname, String prefix]) {
       if (!event.message.startsWith(bot.prefix)) {
         handle_youtube(event);
       }
+      handle_highfive(event);
       print("<${event.target}><${event.from}> ${event.message}");
     });
 
