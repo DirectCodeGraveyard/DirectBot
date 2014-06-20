@@ -3,6 +3,6 @@ version: 1.0.0
 description: DirectCode IRC Bot
 dependencies:
   http: 0.11.1+1
-  irc: 1.2.2-dev.4
+  irc: 1.2.2
   quiver: 0.18.2
   yaml: 0.10.0
