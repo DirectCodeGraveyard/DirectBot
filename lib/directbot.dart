@@ -264,8 +264,12 @@ void start(String nickname, String prefix, String user, String pass) {
         if (!_config['admins'].split(" ").contains(username)) {
           bot.message(info[1], "${info[0]}> ${Color.RED}Authentication prohibited${Color.RESET}.");
         } else {
-          authenticated.add(info[0]);
-          bot.message(info[1], "${info[0]}> Authentication successful.");
+          if (!authenticated.contains(info[0])) {
+            authenticated.add(info[0]);
+            bot.message(info[1], "${info[0]}> Authentication successful.");
+          } else {
+            bot.message(info[1], "${info[0]}> Already authenticated.");
+          }
         }
       }
     });
