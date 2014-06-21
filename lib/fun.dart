@@ -1,14 +1,1 @@
 part of directbot;
-
-String current_highfiver = null;
-
-handle_highfive(event) {
-  if ((event.message.contains("\u005Co") || event.message.contains("o/")) && event.client.getNickname() != event.from) {
-    if (current_highfiver == null) {
-      current_highfiver = event.from;
-    } else {
-      event.reply("> " + current_highfiver + " high fived " + event.from + "!");
-      current_highfiver = null;
-    }
-  }
-}

@@ -6,6 +6,9 @@ import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'dart:convert';
 import 'dart:async';
+import "package:quiver/strings.dart";
+import "package:quiver/collection.dart";
+import "package:quiver/pattern.dart";
 
 part 'dart-stuff.dart';
 part "youtube.dart";
@@ -15,6 +18,8 @@ part 'update.dart';
 part 'google.dart';
 part 'github.dart';
 part 'fun.dart';
+part 'regex.dart';
+part 'buffer.dart';
 
 CommandBot _bot;
 
@@ -61,7 +66,7 @@ void start(String nickname, String prefix, String user, String pass) {
         out = event.message;
         exit(1);
       } else {
-        out = "${event.err}";
+        out = "${event.err}\n${event.err.stackTrace}";
       }
       print("--------------- Error ---------------");
       print(out);
@@ -273,16 +278,18 @@ void start(String nickname, String prefix, String user, String pass) {
     });
 
     bot.register((MessageEvent event) {
-      /* YouTube Support */
       if (!event.message.startsWith(bot.prefix)) {
+        /* YouTube Support */
         handle_youtube(event);
+        /* RegEx */
+        regex.handle(event);
       }
-      handle_highfive(event);
+      buffer.handle(event);
       print("<${event.target}><${event.from}> ${event.message}");
     });
 
     bot.connect();
     init_github();
-    server_listen();
+    new Future.delayed(new Duration(seconds: 1), server_listen);
   });
 }
