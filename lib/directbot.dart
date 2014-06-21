@@ -240,6 +240,18 @@ void start(String nickname, String prefix, String user, String pass) {
       bot.disconnect();
     });
 
+    bot.command("clear-buffer").listen((CommandEvent event) {
+      if (!check_user(event)) return;
+      if (event.args.length != 0) {
+        event.args.forEach((target) {
+          buffer.messages.removeAll(target);
+        });
+        event.reply("> ${Color.GREEN}Buffer Cleared${Color.RESET}");
+      } else {
+        event.reply("> ${Color.GREEN }Cleared All Buffers${Color.RESET}");
+      }
+    });
+
     bot.command("authenticate").listen((CommandEvent event) {
       _awaiting_authentication.add(<String>[event.from, event.target]);
       bot.client().send("WHOIS ${event.from}");
