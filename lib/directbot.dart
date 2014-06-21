@@ -6,9 +6,10 @@ import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'dart:convert';
 import 'dart:async';
-import "package:quiver/strings.dart";
 import "package:quiver/collection.dart";
 import "package:quiver/pattern.dart";
+
+part 'misc/timers.dart';
 
 part 'dart-stuff.dart';
 part "youtube.dart";
@@ -24,7 +25,7 @@ part 'buffer.dart';
 CommandBot _bot;
 
 Set<String> authenticated = new Set<String>();
-Set<List<String>> _awaiting_authentication = new Set<List<String>>();
+Set<TimedEntry<List<String>>> _awaiting_authentication = new Set<TimedEntry<List<String>>>();
 
 var httpClient = new http.Client();
 var _config;
@@ -241,15 +242,18 @@ void start(String nickname, String prefix, String user, String pass) {
     });
 
     bot.command("authenticate").listen((CommandEvent event) {
-      _awaiting_authentication.add(<String>[event.from, event.target]);
+      var info = <String>[event.from, event.target];
+      TimedEntry<List<String>> te = new TimedEntry<List<String>>(info);
+      te.start(10, () => _awaiting_authentication.remove(te));
+      _awaiting_authentication.add(te);
       bot.client().send("WHOIS ${event.from}");
     });
     
     bot.register((WhoisEvent event) {
       
-      List<String> search(String nick) {
+      TimedEntry<List<String>> search(String nick) {
         for (var v in _awaiting_authentication) {
-          if (v[0] == nick)
+          if (v.value[0] == nick)
             return v;
         }
         return null;
@@ -257,10 +261,11 @@ void start(String nickname, String prefix, String user, String pass) {
       
       WhoisBuilder builder = event.builder;
       String username = builder.username;
-      List<String> info = search(builder.nickname);
+      TimedEntry<List<String>> entry = search(builder.nickname);
       
-      if (info != null) {
-        _awaiting_authentication.remove(info);
+      if (entry != null) {
+        _awaiting_authentication.remove(entry);
+        List<String> info = entry.value;
         if (!_config['admins'].split(" ").contains(username)) {
           bot.message(info[1], "${info[0]}> ${Color.RED}Authentication prohibited${Color.RESET}.");
         } else {
