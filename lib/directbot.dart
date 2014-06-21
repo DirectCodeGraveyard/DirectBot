@@ -241,6 +241,18 @@ void start(String nickname, String prefix, String user, String pass) {
       bot.disconnect();
     });
 
+    bot.command("clear-buffer").listen((CommandEvent event) {
+      if (!check_user(event)) return;
+      if (event.args.length != 0) {
+        event.args.forEach((target) {
+          buffer.messages.removeAll(target);
+        });
+        event.reply("> ${Color.GREEN}Buffer Cleared${Color.RESET}");
+      } else {
+        event.reply("> ${Color.GREEN }Cleared All Buffers${Color.RESET}");
+      }
+    });
+
     bot.command("authenticate").listen((CommandEvent event) {
       var info = <String>[event.from, event.target];
       TimedEntry<List<String>> te = new TimedEntry<List<String>>(info);
