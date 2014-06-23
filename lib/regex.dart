@@ -16,7 +16,9 @@ class regex {
       var events = Buffer.get(event.channel.name);
       for (event in events) {
         if (regex.hasMatch(event.message)) {
-          event.reply(event.from + ": " + event.message.replaceAll(regex, replacement));
+          var e = new MessageEvent(event.client, event.from, event.target, event.message.replaceAll(regex, replacement));
+          event.reply(event.from + ": " + e.message);
+          Buffer.handle(e);
           return;
         }
       }
