@@ -155,7 +155,7 @@ void start(String nickname, String prefix, String user, String pass) {
         input.removeAt(0);
         var args = input;
         runZoned(() {
-          Process.run(exec, args).then((ProcessResult result) {
+          Process.run(exec, args, runInShell: true).then((ProcessResult result) {
             String _out = result.stdout.toString();
             String _err = result.stderr.toString();
             int exit = result.exitCode;
