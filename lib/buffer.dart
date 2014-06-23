@@ -12,7 +12,7 @@ class Buffer {
     if (event.message.startsWith("s/"))
       return;
     
-    if (_tracker > _limit)
+    if (_tracker > _limit - 1)
       _tracker = 0;
     messages[_tracker] = event;
     _tracker++;
