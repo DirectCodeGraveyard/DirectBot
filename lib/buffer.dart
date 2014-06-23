@@ -1,17 +1,66 @@
 part of directbot;
 
-class buffer {
+class Buffer {
 
-  static Multimap<String, MessageEvent> messages = new Multimap<String, MessageEvent>();
+  static Map<String, Buffer> buffers = new Map<String, Buffer>();
+  
+  List<MessageEvent> messages = [];
+  final int _limit = 30;
+  int _tracker = 0;
 
+  void _handle(MessageEvent event) {
+    if (event.message.startsWith("s/"))
+      return;
+    
+    if (_tracker > _limit)
+      _tracker = 0;
+    messages[_tracker] = event;
+    _tracker++;
+  }
+  
   static void handle(MessageEvent event) {
-    if (messages[event.target].length >= 30) {
-      messages.removeAll(event.target);
+    if (event.isPrivate())
+      return;
+    
+    var buf = buffers[event.target];
+    if (buf == null) {
+      buf = new Buffer();
+      buffers[event.target] = buf;
+      for (int i = 0; i < 30; i++)
+        buf.messages.add(null);
     }
-    messages.add(event.target, event);
+    
+    buf._handle(event);
   }
 
   static List<MessageEvent> get(String name) {
-    return messages[name];
+    var buf = buffers[name];
+    if (buf == null)
+      return <MessageEvent>[];
+    
+    var list = buf.messages;
+    var tracker = buf._tracker;
+    
+    List<MessageEvent> newList = [];
+    
+    for (int i = buf._tracker - 1; i >= 0; i--) {
+      if (list[i] == null)
+        break;
+      newList.add(list[i]);
+    }
+    
+    for (int i = buf._limit; i < buf._tracker; i++) {
+      if (list[i] == null)
+        break;
+      newList.add(list[i]);
+    }
+    
+    return newList;
+  }
+  
+  static void clear(String name) {
+    var buf = buffers[name];
+    if (buf != null)
+      buf.messages.clear();
   }
 }

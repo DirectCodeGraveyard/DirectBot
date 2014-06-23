@@ -245,7 +245,7 @@ void start(String nickname, String prefix, String user, String pass) {
       if (!check_user(event)) return;
       if (event.args.length != 0) {
         event.args.forEach((target) {
-          buffer.messages.removeAll(target);
+          Buffer.clear(target);
         });
         event.reply("> ${Color.GREEN}Buffer Cleared${Color.RESET}");
       } else {
@@ -305,7 +305,7 @@ void start(String nickname, String prefix, String user, String pass) {
         /* RegEx */
         regex.handle(event);
       }
-      buffer.handle(event);
+      Buffer.handle(event);
       print("<${event.target}><${event.from}> ${event.message}");
     });
 
