@@ -49,7 +49,7 @@ class Buffer {
       newList.add(list[i]);
     }
     
-    for (int i = buf._limit; i >= buf._tracker; i--) {
+    for (int i = buf._limit - 1; i >= buf._tracker; i--) {
       if (list[i] == null)
         break;
       newList.add(list[i]);
