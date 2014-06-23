@@ -22,8 +22,8 @@ class regex {
       for (event in events) {
         if (regex.hasMatch(event.message)) {
           var dat_msg = event.message;
-          var newmsg = first ? dat_msg.replaceFirst(regex, replacement) : dat_msg.replaceAll(regex, replacement);
-          var e = new MessageEvent(event.client, event.from, event.target, newmsg);
+          var new_msg = first ? dat_msg.replaceFirst(regex, replacement) : dat_msg.replaceAll(regex, replacement);
+          var e = new MessageEvent(event.client, event.from, event.target, new_msg);
           event.reply(event.from + ": " + e.message);
           Buffer.handle(e);
           return;
