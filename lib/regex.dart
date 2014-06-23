@@ -4,12 +4,12 @@ class regex {
   static void handle(MessageEvent event) {
     if (event.message.startsWith("s/") && event.message.length > 3) {
       var msg = event.message.substring(2); // skip "s/"
-      var first = false;
+      var first = true;
       if (msg.endsWith("/"))
         msg = msg.substring(0, msg.length - 1);
       else if (msg.endsWith("/g")) {
         msg = msg.substring(0, msg.length - 2);
-        first = true;
+        first = false;
       }
       
       var index = msg.indexOf("/");
