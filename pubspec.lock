@@ -12,7 +12,7 @@ packages:
   event_dispatcher:
     description: event_dispatcher
     source: hosted
-    version: "0.0.5"
+    version: "0.0.6"
   http:
     description: http
     source: hosted
@@ -36,15 +36,15 @@ packages:
   source_maps:
     description: source_maps
     source: hosted
-    version: "0.9.1"
+    version: "0.9.2+3"
   stack_trace:
     description: stack_trace
     source: hosted
-    version: "1.0.0"
+    version: "1.0.2"
   string_scanner:
     description: string_scanner
     source: hosted
-    version: "0.0.2"
+    version: "0.0.3"
   yaml:
     description: yaml
     source: hosted

@@ -39,7 +39,7 @@ class dart {
       event.reply("> Usage: pub-downloads <package>");
     } else {
       String package = event.args[0];
-      pubPackage(package).then((info) {
+      pub_package(package).then((info) {
         if (info == null) {
           event.reply("> No Such Package: ${event.args[0]}");
         } else {
@@ -63,7 +63,7 @@ class dart {
   }
 
   static Future<String> latest_pub_version(String package) {
-    return pubPackage(package).then((val) {
+    return pub_package(package).then((val) {
       if (val == null) {
         return new Future.value(null);
       } else {
@@ -72,7 +72,7 @@ class dart {
     });
   }
 
-  static Future<Map<String, Object>> pubPackage(String package) {
+  static Future<Map<String, Object>> pub_package(String package) {
     return httpClient.get("https://pub.dartlang.org/api/packages/${package}").then((http.Response response) {
       if (response.statusCode == 404) {
         return new Future.value(null);

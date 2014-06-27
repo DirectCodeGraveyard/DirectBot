@@ -19,8 +19,9 @@ class Buffer {
   }
   
   static void handle(MessageEvent event) {
-    if (event.isPrivate())
+    if (event.isPrivate) {
       return;
+    }
     
     var buf = buffers[event.target];
     if (buf == null) {
