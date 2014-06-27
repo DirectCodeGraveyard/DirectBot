@@ -21,6 +21,7 @@ part 'github.dart';
 part 'fun.dart';
 part 'regex.dart';
 part 'buffer.dart';
+part 'admin.dart';
 
 CommandBot _bot;
 
@@ -308,6 +309,8 @@ void start(String nickname, String prefix, String user, String pass) {
       Buffer.handle(event);
       print("<${event.target}><${event.from}> ${event.message}");
     });
+
+    register_admin_cmds();
 
     bot.connect();
     init_github();
