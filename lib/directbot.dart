@@ -194,6 +194,8 @@ void start(String nickname, String prefix, String user, String pass) {
     bot.command("dartdoc").listen(dart.handle_dartdoc_cmd);
     bot.command("pub-latest").listen(dart.handle_latest_pub_version_cmd);
     bot.command("pub-downloads").listen(dart.handle_pub_downloads_cmd);
+    bot.command("pub-description").listen(dart.handle_pub_description_cmd);
+    bot.command("pub-uploaders").listen(dart.handle_pub_uploaders_cmd);
 
     bot.command("who").listen((CommandEvent event) {
       var msg = event.args.join(" ");

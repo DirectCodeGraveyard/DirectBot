@@ -34,6 +34,20 @@ class dart {
     }
   }
 
+  static void handle_pub_description_cmd(CommandEvent event) {
+    if (event.args.length == 0) {
+      event.reply("> Usage: pub-description <package>");
+    } else {
+      pub_description(event.args[0]).then((desc) {
+        if (desc == null) {
+          event.reply("> No Such Package: ${event.args[0]}");
+        } else {
+          event.reply("> Description: ${desc}");
+        }
+      });
+    }
+  }
+
   static void handle_pub_downloads_cmd(CommandEvent event) {
     if (event.args.length == 0) {
       event.reply("> Usage: pub-downloads <package>");
@@ -44,6 +58,36 @@ class dart {
           event.reply("> No Such Package: ${event.args[0]}");
         } else {
           event.reply("> Download Count: ${info["downloads"]}");
+        }
+      });
+    }
+  }
+
+  static void handle_pub_uploaders_cmd(CommandEvent event) {
+    if (event.args.length == 0) {
+      event.reply("> Usage: pub-uploaders <package>");
+    } else {
+      String package = event.args[0];
+      pub_uploaders(package).then((authors) {
+        if (authors == null) {
+          event.reply("> No Such Package: ${event.args[0]}");
+        } else {
+          event.reply("> Uploaders: ${authors.join(", ")}");
+        }
+      });
+    }
+  }
+
+  static void handle_pub_versions_cmd(CommandEvent event) {
+    if (event.args.length == 0) {
+      event.reply("> Usage: pub-versions <package>");
+    } else {
+      String package = event.args[0];
+      pub_uploaders(package).then((authors) {
+        if (authors == null) {
+          event.reply("> No Such Package: ${event.args[0]}");
+        } else {
+          event.reply("> Versions: ${authors.join(", ")}");
         }
       });
     }
@@ -67,7 +111,41 @@ class dart {
       if (val == null) {
         return new Future.value(null);
       } else {
-        return new Future.value(val["latest"]["version"]);
+        return new Future.value(val["latest"]["description"]);
+      }
+    });
+  }
+
+  static Future<String> pub_description(String package) {
+    return pub_package(package).then((val) {
+      if (val == null) {
+        return new Future.value(null);
+      } else {
+        return new Future.value(val["latest"]["pubspec"]["description"]);
+      }
+    });
+  }
+
+  static Future<List<String>> pub_uploaders(String package) {
+    return pub_package(package).then((val) {
+      if (val == null) {
+        return new Future.value(null);
+      } else {
+        return new Future.value(val["uploaders"]);
+      }
+    });
+  }
+
+  static Future<List<String>> pub_versions(String package) {
+    return pub_package(package).then((val) {
+      if (val == null) {
+        return new Future.value(null);
+      } else {
+        var versions = [];
+        val["versions"].forEach((version) {
+          versions.add(version["name"]);
+        });
+        return new Future.value(val["uploaders"]);
       }
     });
   }
