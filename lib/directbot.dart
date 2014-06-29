@@ -22,6 +22,7 @@ part 'fun.dart';
 part 'regex.dart';
 part 'buffer.dart';
 part 'admin.dart';
+part 'freenode.dart';
 
 CommandBot _bot;
 
@@ -51,6 +52,9 @@ void start(String nickname, String prefix, String user, String pass) {
     print("Starting DirectBot on ${botConf.host}:${botConf.port}");
 
     _bot = new CommandBot(botConf);
+
+    FreenodeBridge.setup(nickname, prefix);
+
     print("Going to Join: ${config['channels'].split(" ").join(', ')}");
 
     bot.prefix = prefix;
