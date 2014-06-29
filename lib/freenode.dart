@@ -3,6 +3,14 @@ part of directbot;
 class FreenodeBridge {
   static Client client;
 
+  static Map<String, String> chans = {
+    "#directcode": "#directcode"
+  };
+
+  static List<String> commands = [
+    "#directcode"
+  ];
+
   static void setup(String nickname, String prefix) {
     BotConfig botConf = new BotConfig(nickname: nickname, username: nickname, 
         host: "irc.freenode.net", port: 6667);
@@ -10,21 +18,25 @@ class FreenodeBridge {
 
     client.register((ReadyEvent event) {
       print("[FREENODE] Ready");
-      event.join("#DirectCode");
+      chans.values.forEach(event.join);
+    });
+
+    bot.register((ReadyEvent event) {
+      chans.keys.forEach(event.join);
     });
 
     bot.register((MessageEvent event) {
-      if (event.target == "#directcode") {
-        client.message("#directcode", "<${event.from}@espernet> ${event.message}");
+      if (chans.containsKey(event.target)) {
+        client.message(chans[event.target], "<${event.from}@espernet> ${event.message}");
       }
     });
 
     client.register((MessageEvent event) {
-      if (event.target == "#directcode") {
-        bot.message("#directcode", "<${event.from}@freenode> ${event.message}");
-        if (event.message.startsWith(prefix)) {
-          bot.handleAsCommand(event);
-        }
+      if (chans.containsValue(event.target)) {
+        bot.message(chans[event.target], "<${event.from}@espernet> ${event.message}");
+      }
+      if (commands.contains(event.channel.name) && event.message.startsWith(prefix)) {
+        bot.handleAsCommand(event);
       }
     });
 
@@ -37,26 +49,26 @@ class FreenodeBridge {
     });
 
     bot.register((JoinEvent event) {
-      if (event.channel.name == "#directcode") {
-        client.message("#directcode", "${event.user}@espernet joined the channel");
+      if (chans.containsKey(event.channel.name)) {
+        client.message(chans[event.channel.name], "${event.user}@espernet joined the channel");
       }
     });
 
     bot.register((PartEvent event) {
-      if (event.channel.name == "#directcode") {
-        client.message("#directcode", "${event.user}@espernet left the channel");
+      if (chans.containsKey(event.channel.name)) {
+        client.message(chans[event.channel.name], "${event.user}@espernet left the channel");
       }
     });
 
     client.register((JoinEvent event) {
-      if (event.channel.name == "#directcode") {
-        client.message("#directcode", "${event.user}@freenode joined the channel");
+      if (chans.containsValue(event.channel.name)) {
+        bot.message(chans[event.channel.name], "${event.user}@espernet joined the channel");
       }
     });
 
     client.register((PartEvent event) {
-      if (event.channel.name == "#directcode") {
-        client.message("#directcode", "${event.user} left the channel");
+      if (chans.containsValue(event.channel.name)) {
+        bot.message(chans[event.channel.name], "${event.user}@espernet left the channel");
       }
     });
 
