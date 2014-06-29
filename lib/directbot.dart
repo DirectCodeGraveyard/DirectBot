@@ -135,6 +135,28 @@ void start(String nickname, String prefix, String user, String pass) {
       google_cmd(event);
     });
 
+    bot.command("relay").listen((CommandEvent event) {
+      if (check_user(event)) {
+        if (event.args.length != 1) {
+          event.reply("> Usage: relay <on/off/toggle>");
+        } else {
+          var it = event.args[0];
+          if (it == "on") {
+            FreenodeBridge.relay = true;
+          } else if (it == "off") {
+            FreenodeBridge.relay = false;
+          } else if (it == "toggle") {
+            FreenodeBridge.relay = !FreenodeBridge.relay;
+          }
+          if (FreenodeBridge.relay) {
+            event.reply("> Relaying is now enabled.");
+          } else {
+            event.reply("> Relaying is now disabled.");
+          }
+        }
+      }
+    });
+
     bot.command("say").listen((CommandEvent event) {
       if (!check_user(event)) return;
       if (event.args.length != 0) {

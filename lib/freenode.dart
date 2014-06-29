@@ -11,6 +11,8 @@ class FreenodeBridge {
     "#directcode"
   ];
 
+  static bool relay = true;
+
   static void setup(String nickname, String prefix) {
     BotConfig botConf = new BotConfig(nickname: nickname, username: nickname, 
         host: "irc.freenode.net", port: 6667);
@@ -26,17 +28,19 @@ class FreenodeBridge {
     });
 
     bot.register((MessageEvent event) {
-      if (chans.containsKey(event.target)) {
-        client.message(chans[event.target], "<${event.from}@espernet> ${event.message}");
+      if (chans.containsKey(event.channel.name.toLowerCase()) && relay) {
+        client.message(chans[event.channel.name.toLowerCase()], "[EsperNet] <-${event.from}> ${event.message}");
       }
     });
 
     client.register((MessageEvent event) {
-      if (chans.containsValue(event.target)) {
-        bot.message(chans[event.target], "<${event.from}@espernet> ${event.message}");
-      }
-      if (commands.contains(event.channel.name) && event.message.startsWith(prefix)) {
-        bot.handleAsCommand(event);
+      if (relay) {
+        if (chans.containsValue(event.target)) {
+          bot.message(chans[event.channel.name.toLowerCase()], "[Freenode] <-${event.from}> ${event.message}");
+        }
+        if (commands.contains(event.channel.name.toLowerCase()) && event.message.startsWith(prefix)) {
+          bot.handleAsCommand(event);
+        }
       }
     });
 
@@ -49,26 +53,26 @@ class FreenodeBridge {
     });
 
     bot.register((JoinEvent event) {
-      if (chans.containsKey(event.channel.name)) {
-        client.message(chans[event.channel.name], "${event.user}@espernet joined the channel");
+      if (chans.containsKey(event.channel.name.toLowerCase()) && relay) {
+        client.message(chans[event.channel.name.toLowerCase()], "[EsperNet] -${event.user} joined the channel");
       }
     });
 
     bot.register((PartEvent event) {
-      if (chans.containsKey(event.channel.name)) {
-        client.message(chans[event.channel.name], "${event.user}@espernet left the channel");
+      if (chans.containsKey(event.channel.name.toLowerCase()) && relay) {
+        client.message(chans[event.channel.name.toLowerCase()], "[EsperNet] -${event.user} left the channel");
       }
     });
 
     client.register((JoinEvent event) {
-      if (chans.containsValue(event.channel.name)) {
-        bot.message(chans[event.channel.name], "${event.user}@espernet joined the channel");
+      if (chans.containsValue(event.channel.name.toLowerCase()) && relay) {
+        bot.message(chans[event.channel.name.toLowerCase()], "[Freenode] -${event.from} joined the channel");
       }
     });
 
     client.register((PartEvent event) {
-      if (chans.containsValue(event.channel.name)) {
-        bot.message(chans[event.channel.name], "${event.user}@espernet left the channel");
+      if (chans.containsValue(event.channel.name.toLowerCase()) && relay) {
+        bot.message(chans[event.channel.name.toLowerCase()], "[Freenode] -${event.user} left the channel");
       }
     });
 
