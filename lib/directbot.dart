@@ -8,20 +8,20 @@ import 'dart:convert';
 import 'dart:async';
 import "package:quiver/pattern.dart";
 
-part 'misc/timers.dart';
+part 'src/misc/timers.dart';
 
-part 'dart-stuff.dart';
-part "youtube.dart";
-part 'server.dart';
-part 'config.dart';
-part 'update.dart';
-part 'google.dart';
-part 'github.dart';
-part 'fun.dart';
-part 'regex.dart';
-part 'buffer.dart';
-part 'admin.dart';
-part 'freenode.dart';
+part 'src/dart-stuff.dart';
+part "src/youtube.dart";
+part 'src/server.dart';
+part 'src/config.dart';
+part 'src/update.dart';
+part 'src/google.dart';
+part 'src/github.dart';
+part 'src/fun.dart';
+part 'src/regex.dart';
+part 'src/buffer.dart';
+part 'src/admin.dart';
+part 'src/freenode.dart';
 
 CommandBot _bot;
 
