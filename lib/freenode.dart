@@ -44,13 +44,15 @@ class FreenodeBridge {
       }
     });
 
-    client.register((LineReceiveEvent event) {
-      print("[FREENODE] >> ${event.line}");
-    });
+    if (config["debug"]) {
+      client.register((LineReceiveEvent event) {
+        print("[FREENODE] >> ${event.line}");
+      });
 
-    client.register((LineSentEvent event) {
-      print("[FREENODE] << ${event.line}");
-    });
+      client.register((LineSentEvent event) {
+        print("[FREENODE] << ${event.line}");
+      });
+    }
 
     bot.register((JoinEvent event) {
       if (chans.containsKey(event.channel.name.toLowerCase()) && relay) {

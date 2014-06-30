@@ -16,7 +16,7 @@ class regex {
       var expr = msg.substring(0, index);
       var replacement = msg.substring(index + 1, msg.length);
       
-      RegExp regex = new RegExp(escapeRegex(expr));
+      var regex = new RegExp(escapeRegex(expr));
 
       var events = Buffer.get(event.channel.name);
       for (event in events) {
