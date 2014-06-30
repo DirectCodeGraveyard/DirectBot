@@ -139,6 +139,10 @@ void start(String nickname, String prefix, String user, String pass) {
         if (event.args.length != 1) {
           event.reply("> Usage: relay <on/off/toggle>");
         } else {
+          if (event.target != "#directcode") {
+            event.reply("> This command only works on #directcode.");
+            return;
+          }
           var it = event.args[0];
           if (it == "on") {
             FreenodeBridge.relay = true;
@@ -148,9 +152,11 @@ void start(String nickname, String prefix, String user, String pass) {
             FreenodeBridge.relay = !FreenodeBridge.relay;
           }
           if (FreenodeBridge.relay) {
-            event.reply("> Relaying is now enabled.");
+            FreenodeBridge.client.message("#directcode", "> Relaying is now enabled.");
+            bot.message("#directcode", "> Relaying is now enabled.");
           } else {
-            event.reply("> Relaying is now disabled.");
+            FreenodeBridge.client.message("#directcode", "> Relaying is now disabled.");
+            bot.message("#directcode", "> Relaying is now disabled.");
           }
         }
       }
