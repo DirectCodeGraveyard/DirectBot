@@ -11,7 +11,7 @@ class FreenodeBridge {
     "#directcode"
   ];
 
-  static bool relay = true;
+  static bool relay = false;
 
   static void setup(String nickname, String prefix) {
     BotConfig botConf = new BotConfig(nickname: nickname, username: nickname, 
