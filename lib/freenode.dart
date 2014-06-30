@@ -38,9 +38,9 @@ class FreenodeBridge {
         if (chans.containsValue(event.target)) {
           bot.message(chans[event.channel.name.toLowerCase()], "[Freenode] <-${event.from}> ${event.message}");
         }
-        if (commands.contains(event.channel.name.toLowerCase()) && event.message.startsWith(prefix)) {
-          bot.handleAsCommand(event);
-        }
+      }
+      if (commands.contains(event.channel.name.toLowerCase()) && event.message.startsWith(prefix)) {
+        bot.handleAsCommand(event);
       }
     });
 
