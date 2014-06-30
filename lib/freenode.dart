@@ -66,7 +66,7 @@ class FreenodeBridge {
 
     client.register((JoinEvent event) {
       if (chans.containsValue(event.channel.name.toLowerCase()) && relay) {
-        bot.message(chans[event.channel.name.toLowerCase()], "[Freenode] -${event.from} joined the channel");
+        bot.message(chans[event.channel.name.toLowerCase()], "[Freenode] -${event.user} joined the channel");
       }
     });
 
