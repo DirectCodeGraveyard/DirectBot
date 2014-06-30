@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'dart:convert';
 import 'dart:async';
-import "package:quiver/collection.dart";
 import "package:quiver/pattern.dart";
 
 part 'misc/timers.dart';
