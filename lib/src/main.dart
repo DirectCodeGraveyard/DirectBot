@@ -135,6 +135,7 @@ void start(String nickname, String prefix, String user, String pass) {
     register_relay_commands();
     register_update_commands();
     register_admin_cmds();
+    register_math_commands();
 
     bot.connect();
     init_github();

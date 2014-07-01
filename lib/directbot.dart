@@ -7,6 +7,8 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:async';
 import "package:quiver/pattern.dart";
+import "package:math_expressions/math_expressions.dart" as MathExpr;
+import "dart:math" as Math;
 
 part 'src/misc/timers.dart';
 
@@ -23,4 +25,5 @@ part 'src/buffer.dart';
 part 'src/admin.dart';
 part 'src/freenode.dart';
 part 'src/basic.dart';
+part 'src/math.dart';
 part 'src/main.dart';

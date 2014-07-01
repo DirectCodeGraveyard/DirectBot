@@ -6,3 +6,4 @@ dependencies:
   irc: 1.3.2
   quiver: 0.18.2
   yaml: 0.10.0
+  math_expressions: ">=0.0.9 <0.1.0"
