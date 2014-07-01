@@ -5,18 +5,27 @@ class regex {
     if (event.message.startsWith("s/") && event.message.length > 3) {
       var msg = event.message.substring(2); // skip "s/"
       var first = true;
+      var escaped = true;
       if (msg.endsWith("/"))
         msg = msg.substring(0, msg.length - 1);
       else if (msg.endsWith("/g")) {
         msg = msg.substring(0, msg.length - 2);
         first = false;
+      } else if (msg.endsWith("/n")) {
+        msg = msg.substring(0, msg.length - 2);
+        escaped = false;
       }
       
       var index = msg.indexOf("/");
       var expr = msg.substring(0, index);
       var replacement = msg.substring(index + 1, msg.length);
       
-      var regex = new RegExp(escapeRegex(expr));
+      String aExpr;
+      if (escaped)
+        aExpr = escapeRegex(expr);
+      else
+        aExpr = expr;
+      var regex = new RegExp(aExpr);
 
       var events = Buffer.get(event.channel.name);
       for (event in events) {
