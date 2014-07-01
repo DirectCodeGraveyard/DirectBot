@@ -13,8 +13,9 @@ class MarkovChain {
   IntMap<String, Word> words = new IntMap<String, Word>();
 
   void addLine(String line) {
+    print("Adding '${line}'");
     {
-      var lines = line.split("\. |\n");
+      var lines = splitMultiple(line, [r"\.", "\n"]);
       for (var currentLine in lines) {
         if (!lines.contains(currentLine)) {
           lines.add(currentLine);
@@ -77,6 +78,7 @@ class MarkovChain {
     if (inputString.isEmpty) {
       return "";
     }
+
     currentLines = inputString.split(r"\. ");
     currentWords.addAll(currentLines[currentLines.length - 1].split(" "));
     if (currentLines.length > 0) {
@@ -301,6 +303,9 @@ class MarkovChain {
     var stopwatch = new Stopwatch();
     stopwatch.start();
     File file = new File("lines.txt");
+    if (file.existsSync()) {
+      file.createSync(recursive: true);
+    }
     file.readAsLinesSync().forEach(addLine);
     stopwatch.stop();
     print("Loaded Lines in ${stopwatch.elapsedMicroseconds} milliseconds");
@@ -315,6 +320,21 @@ class MarkovChain {
 
     stopwatch.stop();
     print("Saved Lines in ${stopwatch.elapsedMicroseconds} milliseconds");
+  }
+
+  List<String> splitMultiple(String input, List<String> by) {
+    List<String> strings = [];
+    List<String> oldStrings = [];
+    oldStrings.add(input);
+
+    for (String sep in by) {
+      strings = [];
+      for (String current in oldStrings)
+        strings.addAll(current.split(sep));
+      oldStrings = strings;
+    }
+
+    return strings;
   }
 }
 

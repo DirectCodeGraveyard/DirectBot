@@ -2,6 +2,10 @@ part of directbot;
 
 CommandBot _bot;
 
+var markov = new MarkovChain();
+
+Timer markov_save_timer;
+
 class AuthenticatedUser {
   Client client;
   String username;
@@ -60,6 +64,7 @@ void start(String nickname, String prefix, String user, String pass) {
       } else {
         out = "${event.err}\n${event.err.stackTrace}";
       }
+      print(event.err.stackTrace);
       print("--------------- Error ---------------");
       print(out);
       print("-------------------------------------");
@@ -122,8 +127,18 @@ void start(String nickname, String prefix, String user, String pass) {
         handle_youtube(event);
         /* RegEx */
         regex.handle(event);
+
+        /* Markov Chain */
+//        markov.addLine(event.message);
       }
+
+      /*if (event.message.toLowerCase().contains(bot.client.nickname.toLowerCase())) {
+        print("I wanna reply");
+        event.reply(markov.reply(event.message, bot.client.nickname, event.from));
+      }*/
+
       Buffer.handle(event);
+
       print("<${event.target}><${event.from}> ${event.message}");
     });
 
@@ -136,6 +151,10 @@ void start(String nickname, String prefix, String user, String pass) {
     register_update_commands();
     register_admin_cmds();
     register_math_commands();
+
+    // markov.load();
+
+    // markov_save_timer = new Timer(new Duration(milliseconds: 60000), () => markov.save());
 
     bot.connect();
     init_github();
