@@ -18,6 +18,8 @@ void register_math_commands() {
       var expr = math_parser.parse(expression);
       var result = expr.evaluate(MathExpr.EvaluationType.REAL, math_context);
       event.reply("> ${result}");
+      math_context.variables.remove("ans");
+      math_context.bindVariable(new MathExpr.Variable("ans"), new MathExpr.Number(result));
     } catch (e) {
       event.reply("> ERROR: ${e}");
     }
