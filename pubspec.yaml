@@ -7,3 +7,5 @@ dependencies:
   quiver: 0.18.2
   yaml: 0.10.0
   math_expressions: ">=0.0.9 <0.1.0"
+environment:
+  sdk: ">=1.6.0-dev"
