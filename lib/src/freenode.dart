@@ -42,6 +42,7 @@ class FreenodeBridge {
       if (commands.contains(event.channel.name.toLowerCase()) && event.message.startsWith(prefix)) {
         bot.handleAsCommand(event);
       }
+      handle_youtube(event);
     });
 
     if (config["debug"]) {
@@ -77,7 +78,50 @@ class FreenodeBridge {
         bot.message(chans[event.channel.name.toLowerCase()], "[Freenode] -${event.user} left the channel");
       }
     });
+    
+    client.register((ErrorEvent event) {
+      String out;
+      if (event.type == "server") {
+        out = event.message;
+        exit(1);
+      } else {
+        out = "${event.err}\n${event.err.stackTrace}";
+      }
+      print("--------------- Error ---------------");
+      print(out);
+      print("-------------------------------------");
+    });
 
     client.connect();
   }
+}
+
+void register_relay_commands() {
+  bot.command("relay").listen((CommandEvent event) {
+    if (check_user(event)) {
+      if (event.args.length != 1) {
+        event.reply("> Usage: relay <on/off/toggle>");
+      } else {
+        if (event.target != "#directcode") {
+          event.reply("> This command only works on #directcode.");
+          return;
+        }
+        var it = event.args[0];
+        if (it == "on") {
+          FreenodeBridge.relay = true;
+        } else if (it == "off") {
+          FreenodeBridge.relay = false;
+        } else if (it == "toggle") {
+          FreenodeBridge.relay = !FreenodeBridge.relay;
+        }
+        if (FreenodeBridge.relay) {
+          FreenodeBridge.client.message("#directcode", "> Relaying is now enabled.");
+          bot.message("#directcode", "> Relaying is now enabled.");
+        } else {
+          FreenodeBridge.client.message("#directcode", "> Relaying is now disabled.");
+          bot.message("#directcode", "> Relaying is now disabled.");
+        }
+      }
+    }
+  });
 }

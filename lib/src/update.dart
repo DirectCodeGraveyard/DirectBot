@@ -14,3 +14,10 @@ void update_bot(CommandEvent event) {
   event.reply("> Bot Updated");
   event.client.disconnect(reason: "Updated");
 }
+
+void register_update_commands() {
+  bot.command("update").listen((CommandEvent event) {
+    if (!check_user(event)) return;
+    update_bot(event);
+  });
+}

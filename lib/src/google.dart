@@ -2,6 +2,22 @@ part of directbot;
 
 var googleAPIKey = "AIzaSyCn3fRjsEMyw837JKcgnqJZ1J8YAxFUB0c";
 
+void register_google_commands() {
+  bot.command("google").listen((CommandEvent event) {
+    google_cmd(event);
+  });
+  
+  bot.command("shorten").listen((CommandEvent event) {
+    if (event.args.length < 1) {
+      event.reply("> Usage: shorten <url>");
+    } else {
+      shorten(event.args.join(" ")).then((shortened) {
+        event.reply("> ${shortened}");
+      });
+    }
+  });
+}
+
 void google_cmd(CommandEvent event) {
   if (event.args.length >= 1) {
     String query = event.args.join(" ");

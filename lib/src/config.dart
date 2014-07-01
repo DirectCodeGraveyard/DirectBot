@@ -4,7 +4,7 @@ Future<Map<String, dynamic>> load_config() {
   return load_from_spread("Configuration");
 }
 
-void load_txt_cmds(CommandBot bot) {
+void load_txt_cmds() {
   load_from_spread("TextCmds").then((cmds) {
     cmds.forEach((key, value) {
       bot.command(key).listen((CommandEvent event) {
