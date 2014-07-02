@@ -64,7 +64,6 @@ void start(String nickname, String prefix, String user, String pass) {
       } else {
         out = "${event.err}\n${event.err.stackTrace}";
       }
-      print(event.err.stackTrace);
       print("--------------- Error ---------------");
       print(out);
       print("-------------------------------------");
