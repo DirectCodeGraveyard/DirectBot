@@ -161,7 +161,7 @@ void register_bot_admin_commands() {
         info[2].message(info[1], "${info[0]}> ${Color.RED}Authentication prohibited${Color.RESET}.");
       } else {
         if (!isAuthenticated()) {
-          authenticated.add(new AuthenticatedUser(event.client, event.nickname, event.username));
+          authenticated.add(new AuthenticatedUser(event.client, event.username, event.nickname));
           info[2].message(info[1], "${info[0]}> Authentication successful.");
         } else {
           info[2].message(info[1], "${info[0]}> Already authenticated.");
