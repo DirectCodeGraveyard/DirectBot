@@ -5,6 +5,8 @@ void register_fun_commands() {
     var msg = event.args.join(" ");
     switch (msg) {
       case "is epic":
+        event.reply("> *crickets*");
+        break;
       case "is the best programmer":
         event.reply("> samrg472");
         break;
