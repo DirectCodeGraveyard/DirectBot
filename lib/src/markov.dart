@@ -30,7 +30,7 @@ class MarkovChain {
         String currentWord;
         String nextWord;
         String pair;
-        for (int i = 0 ; i < currentWords.length - 1; i++) {
+        for (int i = 0; i < currentWords.length - 1; i++) {
           currentWord = _selectively_lowercase(currentWords[i]);
           nextWord = _selectively_lowercase(currentWords[i + 1]);
           pair = previousWord + " " + currentWord;
@@ -47,18 +47,18 @@ class MarkovChain {
           pairList.add(wordIndex);
           wordPairsNext[pair] = pairList;
           wordList = wordsNext[currentWord];
-          if (wordList == null)wordList = [];
+          if (wordList == null) wordList = [];
           wordList.add(wordIndex);
           wordsNext[currentWord] = wordList;
           wordIndex = words.lookup(previousWord);
-          if (wordIndex == null)wordIndex = words.add(new Word(previousWord), previousWord);
+          if (wordIndex == null) wordIndex = words.add(new Word(previousWord), previousWord);
           pair = currentWord + " " + nextWord;
           pairList = wordPairsNext[pair];
-          if (pairList == null)pairList = [];
+          if (pairList == null) pairList = [];
           pairList.add(wordIndex);
           wordPairsPrevious[pair] = pairList;
           wordList = wordsPrevious[currentWord];
-          if (wordList == null)wordList = [];
+          if (wordList == null) wordList = [];
           wordList.add(wordIndex);
           wordsPrevious[currentWord] = wordList;
           previousWord = currentWord;
@@ -108,14 +108,14 @@ class MarkovChain {
     for (int i = 0; i < currentWords.length; i++) {
       var currentWord = currentWords[i];
       var pairKey = previousWord + " " + currentWord;
-      int wordSize = (wordPairsNext[pairKey] != null ? wordPairsNext[pairKey].length : 0) + (wordPairsPrevious[pairKey]) != null ? wordPairsPrevious.length : 0;
+      int wordSize = (wordPairsNext[pairKey] != null ? wordPairsNext[pairKey].length : 0) + (wordPairsPrevious[pairKey] != null ? wordPairsPrevious.length : 0);
       int bestSize = (wordPairsNext[bestWordPair] != null ? wordPairsNext[bestWordPair].length : 0) + (wordPairsPrevious[bestWordPair] != null ? wordPairsPrevious.length : 0);
 
-      if (bestSize == 0)bestWordPair = pairKey;
+      if (bestSize == 0) bestWordPair = pairKey;
 
       wordSize = (wordsNext[currentWord] != null ? wordsNext[currentWord].length : 0) + (wordsPrevious[currentWord] != null ? wordsPrevious.length : 0);
       bestSize = (wordsNext[bestWord] != null ? wordsNext[bestWord].length : 0) + (wordsPrevious[bestWord] != null ? wordsPrevious.length : 0);
-      if (bestSize == 0)bestWord = currentWord;
+      if (bestSize == 0) bestWord = currentWord;
 
       previousWord = currentWord;
     }
@@ -145,7 +145,7 @@ class MarkovChain {
     var wordPairsTemp = <String, List<int>>{};
     var wordsTemp = <String, List<int>>{};
 
-    for (int size = sentence.length -1; size < sentence.length;) {
+    for (int size = sentence.length - 1; size < sentence.length; ) {
       size = sentence.length;
       var currentWord = sentence.first;
       var key = currentWord + " " + nextWord;
@@ -180,7 +180,7 @@ class MarkovChain {
           var word = words.get(list[index]).toString();
           list.remove(index);
           if (word.isNotEmpty) {
-            sentence.indexOf(0, word);
+            sentence.insert(0, word);
           }
         }
       }
@@ -195,7 +195,7 @@ class MarkovChain {
     wordPairsTemp = <String, List<int>>{};
     wordsTemp = <String, List<int>>{};
 
-    for (int size = sentence.length - 1; size < sentence.length;) {
+    for (int size = sentence.length - 1; size < sentence.length; ) {
       size = sentence.length;
       var currentWord = sentence.last;
       var key = previousWord + " " + currentWord;
@@ -209,11 +209,11 @@ class MarkovChain {
         list = wordPairsTemp[key];
       }
 
-      if (list != null && list.size() > 0) {
+      if (list != null && list.length > 0) {
         int index = random.nextInt(list.length);
         String word = words.get(list[index]).toString();
         list.removeAt(index);
-        if(word.isNotEmpty) {
+        if (word.isNotEmpty) {
           sentence.add(word);
         }
       } else {
@@ -248,26 +248,25 @@ class MarkovChain {
         }
       }
       previousWord = currentWord;
-
-      while (replyString.isEmpty) {
-        replyString = sentence.length == 0 ? null : sentence.first;
-      }
-
-      if (replyString.isNotEmpty) {
-        replyString = replyString.substring(0, 1).toUpperCase() + replyString.substring(1);
-      }
-      if (replyString.toLowerCase() == name.toLowerCase() && sender.isNotEmpty) {
-        replyString = sender;
-      }
-
-      for (String replyWord in sentence) {
-        if (replyWord.isNotEmpty) {
-          replyString += " " + replyWord;
-        }
-      }
-
-      return allSentences + replyString;
     }
+    while (replyString.isEmpty) {
+      replyString = sentence.length == 0 ? null : sentence.first;
+    }
+
+    if (replyString.isNotEmpty) {
+      replyString = replyString.substring(0, 1).toUpperCase() + replyString.substring(1);
+    }
+    if (replyString.toLowerCase() == name.toLowerCase() && sender.isNotEmpty) {
+      replyString = sender;
+    }
+
+    for (String replyWord in sentence) {
+      if (replyWord.isNotEmpty) {
+        replyString += " " + replyWord;
+      }
+    }
+
+    return allSentences + replyString;
   }
 
   String randomSentence() {
@@ -329,8 +328,7 @@ class MarkovChain {
 
     for (String sep in by) {
       strings = [];
-      for (String current in oldStrings)
-        strings.addAll(current.split(sep));
+      for (String current in oldStrings) strings.addAll(current.split(sep));
       oldStrings = strings;
     }
 
@@ -343,7 +341,7 @@ class IntMap<L, S> {
   Map<L, int> map = new Map<L, int>();
 
   S get(int index) {
-    if (index == null)return null;
+    if (index == null) return null;
     return list[index];
   }
 
@@ -352,7 +350,7 @@ class IntMap<L, S> {
   }
 
   int add(S value, L key) {
-    if (map[value] != null)return map[value];
+    if (map[value] != null) return map[value];
     list.add(value);
     map[key] = list.length - 1;
     return list.length - 1;
