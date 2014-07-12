@@ -4,6 +4,8 @@ CommandBot _bot;
 
 var markov = new MarkovChain();
 
+bool enable_markov = false;
+
 Timer markov_save_timer;
 
 class AuthenticatedUser {
@@ -128,13 +130,16 @@ void start(String nickname, String prefix, String user, String pass) {
         regex.handle(event);
 
         /* Markov Chain */
-//        markov.addLine(event.message);
+        if (enable_markov) {
+          markov.addLine(event.message);
+        }
       }
 
-      /*if (event.message.toLowerCase().contains(bot.client.nickname.toLowerCase())) {
-        print("I wanna reply");
-        event.reply(markov.reply(event.message, bot.client.nickname, event.from));
-      }*/
+      if (enable_markov) {
+        if (event.message.toLowerCase().contains(bot.client.nickname.toLowerCase())) {
+          event.reply(markov.reply(event.message, bot.client.nickname, event.from));
+        }
+      }
 
       Buffer.handle(event);
 
@@ -151,9 +156,11 @@ void start(String nickname, String prefix, String user, String pass) {
     register_admin_cmds();
     register_math_commands();
 
-    // markov.load();
+    if (enable_markov) {
+      markov.load();
 
-    // markov_save_timer = new Timer(new Duration(milliseconds: 60000), () => markov.save());
+      markov_save_timer = new Timer(new Duration(milliseconds: 60000), () => markov.save());
+    }
 
     bot.connect();
     init_github();
