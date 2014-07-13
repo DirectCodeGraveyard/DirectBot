@@ -45,4 +45,10 @@ void register_basic_commands() {
     if (!check_user(event)) return;
     bot.disconnect();
   });
+  
+  bot.register((KickEvent event) {
+    if (event.user == event.client.nickname && config["sticky_channels"].contains(event.channel.name)) {
+      event.client.join(event.channel.name);
+    }
+  });
 }
