@@ -4,7 +4,20 @@ var googleAPIKey = "AIzaSyCn3fRjsEMyw837JKcgnqJZ1J8YAxFUB0c";
 
 void register_google_commands() {
   bot.command("google").listen((CommandEvent event) {
-    google_cmd(event);
+    if (event.args.length >= 1) {
+      String query = event.args.join(" ");
+      google(query).then((resp) {
+        List results = resp["responseData"]["results"];
+        if (results.length == 0) {
+          event.reply("> No Results Found!");
+        } else {
+          var result = results[0];
+          event.reply("> ${result["titleNoFormatting"]} | ${result["unescapedUrl"]}");
+        }
+      });
+    } else {
+      event.reply("> Usage: google <query>");
+    }
   });
   
   bot.command("shorten").listen((CommandEvent event) {
@@ -16,23 +29,6 @@ void register_google_commands() {
       });
     }
   });
-}
-
-void google_cmd(CommandEvent event) {
-  if (event.args.length >= 1) {
-    String query = event.args.join(" ");
-    google(query).then((resp) {
-      List results = resp["responseData"]["results"];
-      if (results.length == 0) {
-        event.reply("> No Results Found!");
-      } else {
-        var result = results[0];
-        event.reply("> ${result["titleNoFormatting"]} | ${result["unescapedUrl"]}");
-      }
-    });
-  } else {
-    event.reply("> Usage: google <query>");
-  }
 }
 
 Future<Map<String, Object>> google(String query) {
