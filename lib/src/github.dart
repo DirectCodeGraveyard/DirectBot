@@ -9,6 +9,46 @@ void init_github() {
   github_chans = config['hook_channels'].split(" ");
 }
 
+void register_github_hooks() {
+  GitHubAPI.get("https://api.github.com/users/DirectMyFile/repos").then((response) {
+    var repos = JSON.decode(response.body) as List<Map<String, Object>>;
+    repos.forEach((repo) {
+      GitHubAPI.get(repo["hooks_url"]).then((hresp) {
+        var hooks = JSON.decode(hresp.body) as List<Map<String, Object>>;
+        
+        if (hooks is! List) {
+          bot.message("#directcode", "ERROR: Returned Reponse is not a list");
+          return;
+        }
+        
+        var add_hook = true;
+        
+        for (var hook in hooks) {
+          if (hook["config"]["url"] == "http://bot.directmyfile.com:8020/github") {
+            add_hook = false;
+          }
+        }
+        
+        if (add_hook) {
+          GitHubAPI.post(repo["hooks_url"], JSON.encode({
+            "name": "web",
+            "active": true,
+            "config": {
+              "url": "http://bot.directmyfile.com:8020/github"
+            }
+          } as Map<String, Object>)).then((resp) {
+            if (resp.statusCode != 201) {
+              bot.message("#directcode", "[${Color.BLUE}GitHub${Color.RESET}] Failed to add hook for ${repo["name"]}");
+            } else {
+              bot.message("#directcode", "[${Color.BLUE}GitHub${Color.RESET}] Added Hook for ${repo["name"]}.");
+            }
+          });
+        }
+      });
+    });
+  });
+}
+
 void handle_github_request(HttpRequest request) {
   if (request.method != "POST") {
     request.response.write(JSON.encode({
@@ -182,4 +222,26 @@ Future<String> gitio_shorten(String input) {
         return new Future.value("http://git.io/${response.headers.value("Location").split("/").last}");
       }
     });
+}
+
+class GitHubAPI {
+  static String token = null;
+  
+  static Future<http.Response> get(String url) {
+    return http.get(url, headers: {
+      "Authorization": "token ${GitHubAPI.token}"
+    });
+  }
+  
+  static Future<http.Response> post(String url, body) {
+    return http.post(url, headers: {
+      "Authorization": "token ${GitHubAPI.token}"
+    }, body: body);
+  }
+}
+
+void register_github_commands() {
+  bot.command("check-hooks").listen(((CommandEvent event) {
+    register_github_hooks();
+  }));
 }

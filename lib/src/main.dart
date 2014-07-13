@@ -42,6 +42,8 @@ void start(String nickname, String prefix, String user, String pass) {
   load_config().then((config) {
     _config = config;
     
+    GitHubAPI.token = config["github_token"];
+    
     var botConf = new BotConfig(nickname: nickname, username: nickname, 
                                       host: config["host"], port: config["port"]);
 
@@ -155,6 +157,7 @@ void start(String nickname, String prefix, String user, String pass) {
     register_update_commands();
     register_admin_cmds();
     register_math_commands();
+    register_github_commands();
 
     if (enable_markov) {
       markov.load();
