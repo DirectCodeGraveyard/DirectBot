@@ -98,15 +98,9 @@ void register_bot_admin_commands() {
         }
         
         Process.start(exec, args, runInShell: true).then((Process proc) {
-          proc.stdout.listen((it) {
-            var str = new String.fromCharCodes(it);
-            str.split("\n").forEach(event.reply);
-          });
+          proc.stdout.transform(UTF8.decoder).transform(new LineSplitter()).listen(event.reply);
           
-          proc.stderr.listen((it) {
-            var str = new String.fromCharCodes(it);
-            str.split("\n").forEach(event.reply);
-          });
+          proc.stderr.transform(UTF8.decoder).transform(new LineSplitter()).listen(event.reply);
           
           proc.exitCode.then((code) {
             if (code != 0) {
