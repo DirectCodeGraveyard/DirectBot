@@ -1,6 +1,6 @@
 part of directbot;
 
-register_admin_cmds() {
+register_admin_commands() {
   bot.command("op").listen((CommandEvent event) {
     if (check_user(event)) {
       if (event.args.length == 0) {

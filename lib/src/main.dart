@@ -25,7 +25,7 @@ Set<TimedEntry<List<dynamic>>> _awaiting_authentication = new Set<TimedEntry<Lis
 var httpClient = new http.Client();
 var _config;
 
-get config => _config;
+ConfigWrapper get config => new ConfigWrapper();
 CommandBot get bot => _bot;
 
 bool check_user(CommandEvent event) {
@@ -155,14 +155,13 @@ void start(String nickname, String prefix, String user, String pass) {
     register_google_commands();
     register_relay_commands();
     register_update_commands();
-    register_admin_cmds();
+    register_admin_commands();
     register_math_commands();
     register_github_commands();
     register_dictionary_commands();
 
     if (enable_markov) {
       markov.load();
-
       markov_save_timer = new Timer(new Duration(milliseconds: 60000), () => markov.save());
     }
 

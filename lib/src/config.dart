@@ -36,3 +36,25 @@ Future<Map<String, dynamic>> load_from_spread(String type) {
     });
   });
 }
+
+class ConfigWrapper {
+  String string(String key) {
+    return _config[key];
+  }
+  
+  bool boolean(String key) {
+    return _config[key];
+  }
+  
+  int integer(String key) {
+    return _config[key];
+  }
+  
+  List<String> list(String key) {
+    return string(key).split(" ");
+  }
+  
+  dynamic operator [](String key) {
+   return _config[key]; 
+  }
+}
