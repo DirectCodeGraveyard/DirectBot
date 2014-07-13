@@ -1,7 +1,7 @@
 part of directbot;
 
 void register_basic_commands() {
-  bot.command("help").listen((CommandEvent event) {
+  bot.command("commands").listen((CommandEvent event) {
     event.reply("> ${Color.BLUE}Commands${Color.RESET}: ${bot.commandNames().join(', ')}");
   });
   
