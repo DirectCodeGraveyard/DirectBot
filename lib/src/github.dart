@@ -269,6 +269,8 @@ class GitHubAPI {
 
 void register_github_commands() {
   bot.command("check-hooks").listen(((CommandEvent event) {
-    register_github_hooks();
+    if (check_user(event)) {
+      register_github_hooks();
+    }
   }));
 }
