@@ -14,6 +14,7 @@ void server_listen() {
             break;
           case "/info.json":
             handle_info_request(request);
+            break;
           default:
             handle_unhandled_path(request);
         }
@@ -43,4 +44,6 @@ void handle_info_request(HttpRequest request) {
   };
   out["nickname"] = bot.client.nickname;
   out["channels"] = bot.client.channels.map((a) => a.name);
+  response.write(JSON.encode(out));
+  response.close();
 }
