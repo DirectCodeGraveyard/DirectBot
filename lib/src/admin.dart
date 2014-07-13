@@ -96,25 +96,20 @@ void register_bot_admin_commands() {
         } else {
           throw new Exception("System not supported");
         }
-        Process.run(exec, args, runInShell: true).then((ProcessResult result) {
-          String _out = result.stdout.toString();
-          String _err = result.stderr.toString();
-          int exit = result.exitCode;
-          if (_out.isNotEmpty) {
-            event.reply("> STDOUT:");
-            _out.split("\n").forEach((line) {
-              event.reply(line);
-            });
-          }
-          if (_err.isNotEmpty) {
-            event.reply("> STDERR:");
-            _err.split("\n").forEach((line) {
-              event.reply(line);
-            });
-          }
-          if (exit != 0) {
-            event.reply("> EXIT: ${exit}");
-          }
+        
+        Process.start(exec, args, runInShell: true).then((Process proc) {
+          proc.stdout.listen((it) {
+            var str = new String.fromCharCodes(it);
+            str.split("\n").forEach(event.reply);
+          });
+          
+          proc.stderr.listen((it) {
+            var str = new String.fromCharCodes(it);
+            str.split("\n").forEach(event.reply);
+          });
+          proc.exitCode.then((code) {
+            event.reply("> EXIT: ${code}");
+          });
         });
       }, onError: (err) {
         event.reply("> ERROR: " + err);
