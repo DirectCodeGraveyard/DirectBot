@@ -9,8 +9,8 @@ Future<Map<String, dynamic>> load_config() {
 void load_txt_cmds() {
   load_from_spread("TextCmds").then((cmds) {
     text_commands = cmds;
-    cmds.forEach((key, value) {
-      bot.command(key).listen((CommandEvent event) {
+    cmds.forEach((text, value) {
+      bot.command(text).listen((CommandEvent event) {
         String who;
         switch (event.args.length) {
           case 0:
@@ -20,7 +20,7 @@ void load_txt_cmds() {
             who = event.args[0] + ":";
             break;
           default:
-            event.reply("> Usage: ${key} [user]");
+            event.reply("> Usage: ${text} [user]");
             return;
         }
         event.reply("${who} ${value}");
