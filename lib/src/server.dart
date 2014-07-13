@@ -48,6 +48,10 @@ void handle_info_request(HttpRequest request) {
     chans.add(channel.name);
   }
   out["channels"] = chans;
+  out["debug"] = config["debug"];
+  out["admins"] = config.split(" ");
+  out["hook_channels"] = config.split(" ");
+  out["sticky_channels"] = config["sticky_channels"];
   response.write(new JsonEncoder.withIndent("  ").convert(out));
   response.close();
 }
