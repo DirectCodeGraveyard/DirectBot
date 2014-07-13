@@ -8,4 +8,4 @@ dependencies:
   yaml: 1.1.1
   math_expressions: ">=0.0.9 <0.5.0"
 environment:
-  sdk: ">=1.6.0-dev"
+  sdk: ">=1.5.0"
