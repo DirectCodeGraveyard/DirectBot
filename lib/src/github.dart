@@ -10,8 +10,12 @@ void init_github() {
 }
 
 void register_github_hooks() {
+  var added_hook = false;
+  var completer = new Completer();
+  var repos = null;
+  var count = 0;
   GitHubAPI.get("https://api.github.com/users/DirectMyFile/repos").then((response) {
-    var repos = JSON.decode(response.body) as List<Map<String, Object>>;
+    repos = JSON.decode(response.body) as List<Map<String, Object>>;
     repos.forEach((repo) {
       GitHubAPI.get(repo["hooks_url"]).then((hresp) {
         var hooks = JSON.decode(hresp.body) as List<Map<String, Object>>;
@@ -30,6 +34,7 @@ void register_github_hooks() {
         }
         
         if (add_hook) {
+          added_hook = true;
           GitHubAPI.post(repo["hooks_url"], JSON.encode({
             "name": "web",
             "active": true,
@@ -44,8 +49,19 @@ void register_github_hooks() {
             }
           });
         }
+        
+        count++;
+        if (count == repos.length) {
+          completer.complete();
+        }
       });
     });
+  });
+  
+  completer.future.then((_) {
+    if (!added_hook) {
+      bot.message("#directcode", "[${Color.BLUE}GitHub${Color.RESET}] No Hooks Added");
+    }
   });
 }
 
