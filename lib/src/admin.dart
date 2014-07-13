@@ -107,8 +107,11 @@ void register_bot_admin_commands() {
             var str = new String.fromCharCodes(it);
             str.split("\n").forEach(event.reply);
           });
+          
           proc.exitCode.then((code) {
-            event.reply("> EXIT: ${code}");
+            if (code != 0) {
+              event.reply("> EXIT: ${code}");
+            }
           });
         });
       }, onError: (err) {
