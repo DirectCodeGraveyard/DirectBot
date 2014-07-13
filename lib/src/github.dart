@@ -39,8 +39,10 @@ void register_github_hooks() {
             "name": "web",
             "active": true,
             "config": {
-              "url": "http://bot.directmyfile.com:8020/github"
-            }
+              "url": "http://bot.directmyfile.com:8020/github",
+              "content_type": "json"
+            },
+            "events": GitHubAPI.events
           } as Map<String, Object>)).then((resp) {
             if (resp.statusCode != 201) {
               bot.message("#directcode", "[${Color.BLUE}GitHub${Color.RESET}] Failed to add hook for ${repo["name"]}");
@@ -242,6 +244,15 @@ Future<String> gitio_shorten(String input) {
 
 class GitHubAPI {
   static String token = null;
+  
+  static List<String> events = [
+    "push",
+    "ping",
+    "pull_request",
+    "fork",
+    "release",
+    "issues"
+  ];
   
   static Future<http.Response> get(String url) {
     return http.get(url, headers: {
