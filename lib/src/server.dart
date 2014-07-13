@@ -12,6 +12,8 @@ void server_listen() {
           case "/github":
             handle_github_request(request);
             break;
+          case "/info.json":
+            handle_info_request(request);
           default:
             handle_unhandled_path(request);
         }
@@ -30,4 +32,15 @@ void handle_unhandled_path(HttpRequest request) {
     ..statusCode = 404
     ..write(JSON.encode({ "status": "failure", "error": "Not Found" }))
     ..close();
+}
+
+void handle_info_request(HttpRequest request) {
+  var response = request.response;
+  var out = {};
+  out["server"] = {
+    "host": bot.client.config.host,
+    "port": bot.client.config.port
+  };
+  out["nickname"] = bot.client.nickname;
+  out["channels"] = bot.client.channels.map((a) => a.name);
 }
