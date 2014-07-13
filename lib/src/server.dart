@@ -39,11 +39,15 @@ void handle_info_request(HttpRequest request) {
   var response = request.response;
   var out = {};
   out["server"] = {
-    "host": bot.client.config.host,
-    "port": bot.client.config.port
+    "host": config["host"],
+    "port": config["port"]
   };
   out["nickname"] = bot.client.nickname;
-  out["channels"] = bot.client.channels.map((a) => a.name);
-  response.write(JSON.encode(out));
+  var chans = [];
+  for (var channel in bot.client.channels) {
+    chans.add(channel.name);
+  }
+  out["channels"] = chans;
+  response.write(new JsonEncoder.withIndent("  ").convert(out));
   response.close();
 }
