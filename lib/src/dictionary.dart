@@ -1,9 +1,9 @@
 part of directbot;
 
 void register_dictionary_commands() {
-  bot.command("define").listen((CommandEvent event) {
+  bot.command("urban").listen((CommandEvent event) {
     if (event.args.length == 0) {
-      event.reply("> Usage: define <word>");
+      event.reply("> Usage: urban <word>");
       return;
     }
     var word = event.args.join(" ");
