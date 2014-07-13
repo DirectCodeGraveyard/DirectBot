@@ -1,11 +1,14 @@
 part of directbot;
 
+Map<String, String> text_commands;
+
 Future<Map<String, dynamic>> load_config() {
   return load_from_spread("Configuration");
 }
 
 void load_txt_cmds() {
   load_from_spread("TextCmds").then((cmds) {
+    text_commands = cmds;
     cmds.forEach((key, value) {
       bot.command(key).listen((CommandEvent event) {
         String who;

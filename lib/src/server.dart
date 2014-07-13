@@ -52,6 +52,7 @@ void handle_info_request(HttpRequest request) {
   out["admins"] = config["admins"].split(" ");
   out["hook_channels"] = config["hook_channels"].split(" ");
   out["sticky_channels"] = config["sticky_channels"];
+  out["text_commands"] = text_commands;
   response.write(new JsonEncoder.withIndent("  ").convert(out));
   response.close();
 }
