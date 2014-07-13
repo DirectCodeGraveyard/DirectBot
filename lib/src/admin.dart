@@ -83,10 +83,19 @@ void register_bot_admin_commands() {
   bot.command("execute").listen((CommandEvent event) {
     if (check_user(event)) {
       List<String> input = new List.from(event.args);
-      var exec = input[0];
-      input.removeAt(0);
-      var args = input;
       runZoned(() {
+        var exec;
+        var args;
+        if (Platform.isLinux || Platform.isMacOS) {
+          exec = Platform.environment['SHELL'];
+          args = ['-c', input.join(' ')];
+        } else if (Platform.isWindows) {
+          exec = input[0];
+          input.removeAt(0);
+          args = input;
+        } else {
+          throw new Exception("System not supported");
+        }
         Process.run(exec, args, runInShell: true).then((ProcessResult result) {
           String _out = result.stdout.toString();
           String _err = result.stderr.toString();
@@ -112,7 +121,7 @@ void register_bot_admin_commands() {
       });
     }
   });
-  
+
   bot.command("authenticate").listen((CommandEvent event) {
     var info = <dynamic>[event.from, event.target, event.client];
     TimedEntry<List<dynamic>> te = new TimedEntry<List<dynamic>>(info);
@@ -120,7 +129,7 @@ void register_bot_admin_commands() {
     _awaiting_authentication.add(te);
     event.client.send("WHOIS ${event.from}");
   });
-  
+
   bot.command("clear-buffer").listen((CommandEvent event) {
     if (!check_user(event)) return;
     if (event.args.length != 0) {
@@ -132,9 +141,9 @@ void register_bot_admin_commands() {
       event.reply("> ${Color.GREEN }Cleared All Buffers${Color.RESET}");
     }
   });
-  
+
   var handle_whois = (WhoisEvent event) {
-    
+
     TimedEntry<List<dynamic>> search(String nick) {
       for (var v in _awaiting_authentication) {
         if (v.value[0] == nick)
@@ -142,7 +151,7 @@ void register_bot_admin_commands() {
       }
       return null;
     }
-    
+
     bool isAuthenticated() {
       for (AuthenticatedUser user in authenticated) {
         if (user.username == event.username && user.client == event.client) {
@@ -151,9 +160,9 @@ void register_bot_admin_commands() {
       }
       return false;
     }
-    
+
     var entry = search(event.nickname);
-    
+
     if (entry != null && entry.value[2] == event.client) {
       _awaiting_authentication.remove(entry);
       List<dynamic> info = entry.value;
@@ -169,11 +178,11 @@ void register_bot_admin_commands() {
       }
     }
   };
-  
+
   bot.register(handle_whois);
-  
+
   FreenodeBridge.client.register(handle_whois);
-  
+
   bot.register((ReadyEvent event) {
     authenticated.add(new AuthenticatedUser(event.client, "kaendfinger", "kaendfinger"));
   });
