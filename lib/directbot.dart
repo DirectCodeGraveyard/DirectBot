@@ -27,4 +27,5 @@ part 'src/freenode.dart';
 part 'src/basic.dart';
 part 'src/math.dart';
 part 'src/main.dart';
+part 'src/dictionary.dart';
 part 'src/markov.dart';
