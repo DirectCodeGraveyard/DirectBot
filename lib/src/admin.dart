@@ -173,4 +173,8 @@ void register_bot_admin_commands() {
   bot.register(handle_whois);
   
   FreenodeBridge.client.register(handle_whois);
+  
+  bot.register((ReadyEvent event) {
+    authenticated.add(new AuthenticatedUser(event.client, "kaendfinger", "kaendfinger"));
+  });
 }
