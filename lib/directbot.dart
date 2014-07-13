@@ -12,7 +12,7 @@ import "dart:math" as Math;
 
 part 'src/misc/timers.dart';
 
-part 'src/dart-stuff.dart';
+part 'src/dart.dart';
 part "src/youtube.dart";
 part 'src/server.dart';
 part 'src/config.dart';
