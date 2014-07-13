@@ -1,6 +1,6 @@
 part of directbot;
 
-class dart {
+class DartCommands {
 
   static const String BASE_DARTDOC = "http://www.dartdocs.org/documentation/";
 
@@ -162,9 +162,9 @@ class dart {
 }
 
 void register_dart_commands() {
-  bot.command("dartdoc").listen(dart.handle_dartdoc_cmd);
-  bot.command("pub-latest").listen(dart.handle_latest_pub_version_cmd);
-  bot.command("pub-downloads").listen(dart.handle_pub_downloads_cmd);
-  bot.command("pub-description").listen(dart.handle_pub_description_cmd);
-  bot.command("pub-uploaders").listen(dart.handle_pub_uploaders_cmd);
+  bot.command("dartdoc").listen(DartCommands.handle_dartdoc_cmd);
+  bot.command("pub-latest").listen(DartCommands.handle_latest_pub_version_cmd);
+  bot.command("pub-downloads").listen(DartCommands.handle_pub_downloads_cmd);
+  bot.command("pub-description").listen(DartCommands.handle_pub_description_cmd);
+  bot.command("pub-uploaders").listen(DartCommands.handle_pub_uploaders_cmd);
 }

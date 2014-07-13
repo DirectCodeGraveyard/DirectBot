@@ -1,6 +1,6 @@
 part of directbot;
 
-class regex {
+class RegExSupport {
   static void handle(MessageEvent event) {
     if (event.message.startsWith("s/") && event.message.length > 3) {
       var msg = event.message.substring(2); // skip "s/"

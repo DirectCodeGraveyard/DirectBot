@@ -129,7 +129,7 @@ void start(String nickname, String prefix, String user, String pass) {
         /* YouTube Support */
         handle_youtube(event);
         /* RegEx */
-        regex.handle(event);
+        RegExSupport.handle(event);
 
         /* Markov Chain */
         if (enable_markov) {
