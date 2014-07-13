@@ -39,8 +39,8 @@ void handle_info_request(HttpRequest request) {
   var response = request.response;
   var out = {};
   out["server"] = {
-    "host": config["host"],
-    "port": config["port"]
+    "host": config.string("host"),
+    "port": config.integer("port")
   };
   out["nickname"] = bot.client.nickname;
   var chans = [];
@@ -48,10 +48,10 @@ void handle_info_request(HttpRequest request) {
     chans.add(channel.name);
   }
   out["channels"] = chans;
-  out["debug"] = config["debug"];
-  out["admins"] = config["admins"].split(" ");
-  out["hook_channels"] = config["hook_channels"].split(" ");
-  out["sticky_channels"] = config["sticky_channels"];
+  out["debug"] = config.boolean("debug");
+  out["admins"] = config.list("admins");
+  out["hook_channels"] = config.list("hook_channels");
+  out["sticky_channels"] = config.list("sticky_channels");
   out["text_commands"] = text_commands;
   response.write(new JsonEncoder.withIndent("  ").convert(out));
   response.close();

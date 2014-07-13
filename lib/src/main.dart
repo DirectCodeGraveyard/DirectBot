@@ -39,13 +39,13 @@ bool check_user(CommandEvent event) {
 }
 
 void start(String nickname, String prefix, String user, String pass) {
-  load_config().then((config) {
-    _config = config;
+  load_config().then((the_config) {
+    _config = the_config;
     
-    GitHubAPI.token = config["github_token"];
+    GitHubAPI.token = config.string("github_token");
     
     var botConf = new BotConfig(nickname: nickname, username: nickname, 
-                                      host: config["host"], port: config["port"]);
+                                      host: config.string("host"), port: config.integer("port"));
 
     _bot = new CommandBot(botConf);
 
@@ -55,7 +55,7 @@ void start(String nickname, String prefix, String user, String pass) {
 
     bot.register((ReadyEvent event) {
       bot.client.identify(username: user, password: pass);
-      for (String channel in config['channels'].split(" ")) {
+      for (String channel in config.list("channels")) {
         bot.join(channel);
       }
     });
@@ -88,7 +88,7 @@ void start(String nickname, String prefix, String user, String pass) {
     });
 
     bot.register((BotPartEvent event) {
-      List<String> sticky = config["sticky_channels"].split(" ");
+      List<String> sticky = config.list("sticky_channels");
       if (sticky.contains(event.channel.name)) {
         bot.join(event.channel.name);
         return;
@@ -96,7 +96,7 @@ void start(String nickname, String prefix, String user, String pass) {
       print("Left ${event.channel.name}");
     });
 
-    if (config["debug"]) {
+    if (config.boolean("debug")) {
       bot.register((LineReceiveEvent event) {
         print(">> ${event.line}");
       });

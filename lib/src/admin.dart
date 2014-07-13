@@ -158,7 +158,7 @@ void register_bot_admin_commands() {
     if (entry != null && entry.value[2] == event.client) {
       _awaiting_authentication.remove(entry);
       List<dynamic> info = entry.value;
-      if (!_config['admins'].split(" ").contains(event.username)) {
+      if (!config.list("admins").contains(event.username)) {
         info[2].message(info[1], "${info[0]}> ${Color.RED}Authentication prohibited${Color.RESET}.");
       } else {
         if (!isAuthenticated()) {
