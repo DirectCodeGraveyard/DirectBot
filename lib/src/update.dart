@@ -16,8 +16,7 @@ void update_bot(CommandEvent event) {
 }
 
 void register_update_commands() {
-  bot.command("update").listen((CommandEvent event) {
-    if (!check_user(event)) return;
+  admin_command("update", (event) {
     update_bot(event);
   });
 }

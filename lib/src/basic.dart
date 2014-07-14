@@ -1,8 +1,8 @@
 part of directbot;
 
 void register_basic_commands() {
-  bot.command("commands").listen((CommandEvent event) {
-    var cmds = bot.commandNames();
+  command("commands", (event) {
+    var cmds = commands.all;
     var current = [];
     event.client.notice(event.from, "${Color.BLUE}Commands${Color.RESET}:");
     int i = 0;
@@ -16,7 +16,7 @@ void register_basic_commands() {
     }
   });
   
-  bot.command("say").listen((CommandEvent event) {
+  command("say", (event) {
     if (!check_user(event)) return;
     if (event.args.length != 0) {
       event.reply(event.args.join(" "));
@@ -25,7 +25,7 @@ void register_basic_commands() {
     }
   });
 
-  bot.command("act").listen((CommandEvent event) {
+  command("act", (event) {
     if (!check_user(event)) return;
     if (event.args.length != 0) {
       event.channel.action(event.args.join(" "));
@@ -34,7 +34,7 @@ void register_basic_commands() {
     }
   });
   
-  bot.command("join").listen((CommandEvent event) {
+  command("join", (event) {
     if (!check_user(event)) return;
     if (event.args.length != 1) {
       event.reply("> Usage: join <channel>");
@@ -43,7 +43,7 @@ void register_basic_commands() {
     }
   });
   
-  bot.command("part").listen((CommandEvent event) {
+  command("part", (event) {
     if (!check_user(event)) return;
     if (event.args.length != 1) {
       bot.part(event.channel.name);
@@ -52,7 +52,7 @@ void register_basic_commands() {
     }
   });
 
-  bot.command("quit").listen((CommandEvent event) {
+  command("quit", (event) {
     if (!check_user(event)) return;
     bot.disconnect();
   });

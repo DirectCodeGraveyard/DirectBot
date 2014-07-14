@@ -162,9 +162,9 @@ class DartCommands {
 }
 
 void register_dart_commands() {
-  bot.command("dartdoc").listen(DartCommands.handle_dartdoc_cmd);
-  bot.command("pub-latest").listen(DartCommands.handle_latest_pub_version_cmd);
-  bot.command("pub-downloads").listen(DartCommands.handle_pub_downloads_cmd);
-  bot.command("pub-description").listen(DartCommands.handle_pub_description_cmd);
-  bot.command("pub-uploaders").listen(DartCommands.handle_pub_uploaders_cmd);
+  command("dartdoc", DartCommands.handle_dartdoc_cmd);
+  command("pub-latest", DartCommands.handle_latest_pub_version_cmd);
+  command("pub-downloads", DartCommands.handle_pub_downloads_cmd);
+  command("pub-description", DartCommands.handle_pub_description_cmd);
+  command("pub-uploaders", DartCommands.handle_pub_uploaders_cmd);
 }

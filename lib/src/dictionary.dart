@@ -1,7 +1,7 @@
 part of directbot;
 
 void register_dictionary_commands() {
-  bot.command("urban").listen((CommandEvent event) {
+  command("urban", (event) {
     if (event.args.length == 0) {
       event.reply("> Usage: urban <word>");
       return;
@@ -17,7 +17,7 @@ void register_dictionary_commands() {
     });
   });
   
-  bot.command("define").listen((CommandEvent event) {
+  command("define", (event) {
     if (event.args.length == 0) {
       event.reply("> Usage: define <word>");
       return;

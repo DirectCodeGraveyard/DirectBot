@@ -8,6 +8,25 @@ bool enable_markov = false;
 
 Timer markov_save_timer;
 
+CommandStorage commands = new CommandStorage();
+
+class CommandStorage {
+  Set<String> normal;
+  Set<String> admin;
+  
+  CommandStorage() {
+    normal = new Set<String>();
+    admin = new Set<String>();
+  }
+  
+  Set<String> get all {
+    var all = new Set<String>();
+    all.addAll(admin);
+    all.addAll(normal);
+    return all;
+  }
+}
+
 class AuthenticatedUser {
   Client client;
   String username;
@@ -53,7 +72,7 @@ void start(String nickname, String prefix, String user, String pass) {
 
     bot.prefix = prefix;
 
-    bot.register((ReadyEvent event) {
+    register((ReadyEvent event) {
       bot.client.identify(username: user, password: pass);
       for (String channel in config.list("channels")) {
         bot.join(channel);
@@ -63,7 +82,7 @@ void start(String nickname, String prefix, String user, String pass) {
     setup_sticky_channels();
     setup_aliases();
 
-    bot.register((ErrorEvent event) {
+    register((ErrorEvent event) {
       String out;
       if (event.type == "server") {
         out = event.message;
@@ -76,7 +95,7 @@ void start(String nickname, String prefix, String user, String pass) {
       print("-------------------------------------");
     });
 
-    bot.register((DisconnectEvent event) {
+    register((DisconnectEvent event) {
       if (server != null) {
         server.close(force: true).then((_) {
           exit(0);
@@ -86,35 +105,35 @@ void start(String nickname, String prefix, String user, String pass) {
       }
     });
 
-    bot.register((BotJoinEvent event) {
+    register((BotJoinEvent event) {
       print("Joined ${event.channel.name}");
     });
 
-    bot.register((BotPartEvent event) {
+    register((BotPartEvent event) {
       print("Left ${event.channel.name}");
     });
 
     if (config.boolean("debug")) {
-      bot.register((LineReceiveEvent event) {
+      register((LineReceiveEvent event) {
         print(">> ${event.line}");
       });
 
-      bot.register((LineSentEvent event) {
+      register((LineSentEvent event) {
         print("<< ${event.line}");
       });
     }
 
-    bot.register((ConnectEvent event) {
+    register((ConnectEvent event) {
       print("Connected");
     });
 
-    bot.register((DisconnectEvent event) {
+    register((DisconnectEvent event) {
       print("Disconnected");
     });
 
     load_txt_cmds();
 
-    bot.register((NickChangeEvent event) {
+    register((NickChangeEvent event) {
       for (AuthenticatedUser user in authenticated) {
         if (user.nickname == event.original) {
           user.nickname = event.now;
@@ -122,7 +141,7 @@ void start(String nickname, String prefix, String user, String pass) {
       }
     });
 
-    bot.register((MessageEvent event) {
+    register((MessageEvent event) {
       if (!event.message.startsWith(bot.prefix)) {
         /* YouTube Support */
         handle_youtube(event);
@@ -160,7 +179,7 @@ void start(String nickname, String prefix, String user, String pass) {
 
     if (enable_markov) {
       markov.load();
-      markov_save_timer = new Timer(new Duration(milliseconds: 60000), () => markov.save());
+      markov_save_timer = new Timer.periodic(new Duration(milliseconds: 60000), (t) => markov.save());
     }
 
     bot.connect();
@@ -169,7 +188,27 @@ void start(String nickname, String prefix, String user, String pass) {
   });
 }
 
+void command(String name, void handle(CommandEvent event)) {
+  print("Registering Command '${name}'");
+  commands.normal.add(name);
+  bot.command(name).listen(handle);
+}
+
+void register(void handle(Event event)) {
+  bot.register(handle);
+}
+
+void admin_command(String name, void handle(CommandEvent event)) {
+  print("Registering Admin Command '${name}'");
+  commands.admin.add(name);
+  bot.command(name).listen((CommandEvent event) {
+    if (check_user(event)) {
+      handle(event);
+    }
+  });
+}
+
 void register_both(handler) {
-  bot.register(handler);
+  register(handler);
   FreenodeBridge.client.register(handler);
 }

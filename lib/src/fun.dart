@@ -1,7 +1,7 @@
 part of directbot;
 
 void register_fun_commands() {
-  bot.command("who").listen((CommandEvent event) {
+  command("who", (event) {
     var msg = event.args.join(" ").trim();
     if (msg.endsWith("?")) {
       msg = msg.substring(0, msg.length - 1);

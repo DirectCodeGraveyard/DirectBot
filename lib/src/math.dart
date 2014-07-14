@@ -8,7 +8,7 @@ void register_math_commands() {
   math_context
     ..bindVariable(new MathExpr.Variable("pi"), new MathExpr.Number(Math.PI));
 
-  bot.command("calc").listen((CommandEvent event) {
+  command("calc", (event) {
     if (event.args.length == 0) {
       event.reply("> Usage: calc <expression>");
       return;
@@ -25,7 +25,7 @@ void register_math_commands() {
     }
   });
 
-  bot.command("simplify").listen((CommandEvent event) {
+  command("simplify", (event) {
     if (event.args.length == 0) {
       event.reply("> Usage: simplify <expression>");
       return;

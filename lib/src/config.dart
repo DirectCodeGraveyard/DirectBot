@@ -22,7 +22,7 @@ void load_txt_cmds() {
     text_commands = cmds;
     cmds.forEach((text, value) {
       bot.commands.remove(text);
-      bot.command(text).listen((CommandEvent event) {
+      command(text, (event) {
         String who;
         switch (event.args.length) {
           case 0:

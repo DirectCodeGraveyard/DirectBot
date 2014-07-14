@@ -3,7 +3,7 @@ part of directbot;
 var googleAPIKey = "AIzaSyCn3fRjsEMyw837JKcgnqJZ1J8YAxFUB0c";
 
 void register_google_commands() {
-  bot.command("google").listen((CommandEvent event) {
+  command("google", (event) {
     if (event.args.length >= 1) {
       String query = event.args.join(" ");
       google(query).then((resp) {
@@ -20,7 +20,7 @@ void register_google_commands() {
     }
   });
   
-  bot.command("shorten").listen((CommandEvent event) {
+  command("shorten", (event) {
     if (event.args.length < 1) {
       event.reply("> Usage: shorten <url>");
     } else {
