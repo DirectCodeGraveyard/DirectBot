@@ -8,9 +8,9 @@ void register_math_commands() {
   math_context
     ..bindVariable(new MathExpr.Variable("pi"), new MathExpr.Number(Math.PI));
 
-  bot.command("calculate").listen((CommandEvent event) {
+  bot.command("calc").listen((CommandEvent event) {
     if (event.args.length == 0) {
-      event.reply("> Usage: calculate <expression>");
+      event.reply("> Usage: calc <expression>");
       return;
     }
     var expression = event.args.join(" ");
