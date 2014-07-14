@@ -139,7 +139,7 @@ void register_bot_admin_commands() {
     if (entry != null && entry.value[2] == event.client) {
       _awaiting_authentication.remove(entry);
       var info = entry.value;
-      if (!config.list("admins").contains(event.username)) {
+      if (!config["admins"].contains(event.username)) {
         info[2].message(info[1], "${info[0]}> ${Color.RED}Authentication prohibited${Color.RESET}.");
       } else {
         if (!isAuthenticated()) {
@@ -192,9 +192,9 @@ void reload_config() {
   load_config().then((_conf) {
     _config = _conf;
 
-    github_chans = config.list("hook_channels");
-    sticky_channels = config.list("sticky_channels");
-    var ch = config.list("channels");
+    github_chans = config["hook_channels"];
+    sticky_channels = config["sticky_channels"];
+    var ch = config["channels"];
     bot.client.channels.forEach((c) {
       if (!ch.contains(c.name)) {
         bot.part(c.name);
