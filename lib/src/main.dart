@@ -61,6 +61,7 @@ void start(String nickname, String prefix, String user, String pass) {
     });
     
     setup_sticky_channels();
+    setup_aliases();
 
     bot.register((ErrorEvent event) {
       String out;

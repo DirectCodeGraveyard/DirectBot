@@ -30,3 +30,4 @@ part 'src/main.dart';
 part 'src/dictionary.dart';
 part 'src/markov.dart';
 part 'src/sticky_channels.dart';
+part 'src/aliases.dart';
