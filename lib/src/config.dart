@@ -63,7 +63,7 @@ class ConfigWrapper {
   }
   
   List<String> list(String key) {
-    return string(key).split(" ");
+    return string(key).split("\n");
   }
   
   dynamic operator [](String key) {
