@@ -178,4 +178,29 @@ void register_bot_admin_commands() {
   bot.register((ReadyEvent event) {
     authenticated.add(new AuthenticatedUser(event.client, "kaendfinger", "kaendfinger"));
   });
+  
+  bot.command("reload").listen((CommandEvent event) {
+    if (check_user(event)) {
+      if (event.args.length != 1) {
+        event.reply("> Usage: reload <aliases/txtcmds/all>");
+        return;
+      }
+      var what = event.args[0];
+      if (!["aliases", "txtcmds", "all"].contains(what)) {
+        event.reply("> Usage: reload <aliases/txtcmds/all>");
+        return;
+      }
+      if (what == "aliases") {
+        setup_aliases();
+        event.reply("> Reloading Aliases");
+      } else if (what == "txtcmds") {
+        load_txt_cmds();
+        event.reply("> Reloading Text Commands");
+      } else {
+        load_txt_cmds();
+        setup_aliases();
+        event.reply("> Reloading Aliases and Text Commands");
+      }
+    }
+  });
 }

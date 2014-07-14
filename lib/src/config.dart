@@ -8,8 +8,20 @@ Future<Map<String, dynamic>> load_config() {
 
 void load_txt_cmds() {
   load_from_spread("TextCmds").then((cmds) {
+    if (text_commands != null) {
+      var remove = [];
+      bot.commands.forEach((k, v) {
+        if (text_commands.keys.contains(k)) {
+          remove.add(k);
+        }
+      });
+      for (var r in remove) {
+        bot.commands.remove(r);
+      }
+    }
     text_commands = cmds;
     cmds.forEach((text, value) {
+      bot.commands.remove(text);
       bot.command(text).listen((CommandEvent event) {
         String who;
         switch (event.args.length) {
