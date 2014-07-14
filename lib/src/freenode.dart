@@ -14,6 +14,10 @@ class FreenodeBridge {
   static void setup(String nickname, String prefix) {
     BotConfig botConf = new BotConfig(nickname: nickname, username: nickname, host: "irc.freenode.net", port: 6667);
     client = new Client(botConf);
+    
+    load_config_file("freenode").then((config) {
+      chans = config["channels"];
+    });
 
     client.register((ReadyEvent event) {
       print("[FREENODE] Ready");
