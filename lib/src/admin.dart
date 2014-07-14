@@ -182,12 +182,12 @@ void register_bot_admin_commands() {
   bot.command("reload").listen((CommandEvent event) {
     if (check_user(event)) {
       if (event.args.length != 1) {
-        event.reply("> Usage: reload <aliases/txtcmds/all>");
+        event.reply("> Usage: reload <config/aliases/txtcmds/all>");
         return;
       }
       var what = event.args[0];
-      if (!["aliases", "txtcmds", "all"].contains(what)) {
-        event.reply("> Usage: reload <aliases/txtcmds/all>");
+      if (!["aliases", "txtcmds", "all", "config"].contains(what)) {
+        event.reply("> Usage: reload <config/aliases/txtcmds/all>");
         return;
       }
       if (what == "aliases") {
@@ -196,11 +196,35 @@ void register_bot_admin_commands() {
       } else if (what == "txtcmds") {
         load_txt_cmds();
         event.reply("> Reloading Text Commands");
+      } else if (what == "config") {
+        reload_config();
+        event.reply("> Reloading Configuration");
       } else {
         load_txt_cmds();
         setup_aliases();
-        event.reply("> Reloading Aliases and Text Commands");
+        reload_config();
+        event.reply("> Reloading Configuration, Aliases, Text Commands");
       }
     }
+  });
+}
+
+void reload_config() {
+  load_config().then((_conf) {
+    _config = _conf;
+  
+    github_chans = config.list("hook_channels");
+    sticky_channels = config.list("sticky_channels");
+    var ch = config.list("channels");
+    bot.client.channels.forEach((c) {
+      if (!ch.contains(c.name)) {
+        bot.part(c.name);
+      }
+    });
+    ch.forEach((a) {
+      if (bot.channel(a) == null) {
+        bot.join(a);
+      }
+    });
   });
 }
