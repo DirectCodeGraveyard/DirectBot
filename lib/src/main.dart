@@ -59,6 +59,8 @@ void start(String nickname, String prefix, String user, String pass) {
         bot.join(channel);
       }
     });
+    
+    setup_sticky_channels();
 
     bot.register((ErrorEvent event) {
       String out;
@@ -88,11 +90,6 @@ void start(String nickname, String prefix, String user, String pass) {
     });
 
     bot.register((BotPartEvent event) {
-      List<String> sticky = config.list("sticky_channels");
-      if (sticky.contains(event.channel.name)) {
-        bot.join(event.channel.name);
-        return;
-      }
       print("Left ${event.channel.name}");
     });
 
