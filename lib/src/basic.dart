@@ -2,7 +2,18 @@ part of directbot;
 
 void register_basic_commands() {
   bot.command("commands").listen((CommandEvent event) {
-    event.reply("> ${Color.BLUE}Commands${Color.RESET}: ${bot.commandNames().join(', ')}");
+    var cmds = bot.commandNames();
+    var current = [];
+    event.client.notice(event.from, "${Color.BLUE}Commands${Color.RESET}:");
+    int i = 0;
+    for (var cmd in cmds) {
+      i++;
+      current.add(cmd);
+      if ((i % 5) == 0 || cmds.length == i) {
+        event.client.notice(event.from, "${current.join(", ")}");
+        current.clear();
+      }
+    }
   });
   
   bot.command("say").listen((CommandEvent event) {
