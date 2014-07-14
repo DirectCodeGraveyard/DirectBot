@@ -6,6 +6,12 @@ class RegExSupport {
       var msg = event.message.substring(2); // skip "s/"
       var first = true;
       var escaped = true;
+      
+      if (event.message.startsWith("s//")) {
+        event.reply("> ERROR: Not s// Supported");
+        return;
+      }
+      
       if (msg.endsWith("/"))
         msg = msg.substring(0, msg.length - 1);
       else if (msg.endsWith("/g")) {
