@@ -4,11 +4,8 @@ var aliases = <String, List<String>>{};
 
 void setup_aliases() {
   
-  load_from_spread("Aliases").then((al) {
-    aliases.clear();
-    al.forEach((k, v) {
-      aliases[k] = v.split(" ");
-    });
+  load_config_file("Aliases").then((al) {
+    aliases = al;
   });
   
   String find_alias(String cmd) {

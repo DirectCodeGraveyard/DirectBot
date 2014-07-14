@@ -44,7 +44,8 @@ Set<TimedEntry<List<dynamic>>> _awaiting_authentication = new Set<TimedEntry<Lis
 var httpClient = new http.Client();
 var _config;
 
-ConfigWrapper get config => new ConfigWrapper();
+get config => _config;
+
 CommandBot get bot => _bot;
 
 bool check_user(CommandEvent event) {
@@ -61,10 +62,10 @@ void start(String nickname, String prefix, String user, String pass) {
   load_config().then((the_config) {
     _config = the_config;
     
-    GitHubAPI.token = config.string("github_token");
+    GitHubAPI.token = config["github_token"];
     
     var botConf = new BotConfig(nickname: nickname, username: nickname, 
-                                      host: config.string("host"), port: config.integer("port"));
+                                      host: config["host"], port: config["port"]);
 
     _bot = new CommandBot(botConf);
 
@@ -74,7 +75,7 @@ void start(String nickname, String prefix, String user, String pass) {
 
     register((ReadyEvent event) {
       bot.client.identify(username: user, password: pass);
-      for (String channel in config.list("channels")) {
+      for (String channel in config["channels"]) {
         bot.join(channel);
       }
     });
@@ -113,7 +114,7 @@ void start(String nickname, String prefix, String user, String pass) {
       print("Left ${event.channel.name}");
     });
 
-    if (config.boolean("debug")) {
+    if (config["debug"]) {
       register((LineReceiveEvent event) {
         print(">> ${event.line}");
       });
@@ -134,7 +135,7 @@ void start(String nickname, String prefix, String user, String pass) {
     load_txt_cmds();
 
     register((NickChangeEvent event) {
-      for (AuthenticatedUser user in authenticated) {
+      for (var user in authenticated) {
         if (user.nickname == event.original) {
           user.nickname = event.now;
         }

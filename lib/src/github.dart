@@ -6,7 +6,7 @@ RegExp _exp = new RegExp(r"192\.30\.25[2-5]\.[0-9]{1,3}");
 List<String> github_chans;
 
 void init_github() {
-  github_chans = config.list("hook_channels");
+  github_chans = config["hook_channels"];
 }
 
 void register_github_hooks() {

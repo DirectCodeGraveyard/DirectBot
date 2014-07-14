@@ -42,7 +42,7 @@ class FreenodeBridge {
       handle_youtube(event);
     });
 
-    if (config.boolean("debug")) {
+    if (config["debug"]) {
       client.register((LineReceiveEvent event) {
         print("[FREENODE] >> ${event.line}");
       });

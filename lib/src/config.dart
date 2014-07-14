@@ -3,11 +3,11 @@ part of directbot;
 Map<String, String> text_commands;
 
 Future<Map<String, dynamic>> load_config() {
-  return load_from_spread("Configuration");
+  return load_config_file("Configuration");
 }
 
 void load_txt_cmds() {
-  load_from_spread("TextCmds").then((cmds) {
+  load_config_file("TextCmds").then((cmds) {
     if (text_commands != null) {
       var remove = [];
       bot.commands.forEach((k, v) {
@@ -41,32 +41,25 @@ void load_txt_cmds() {
   });
 }
 
-Future<Map<String, dynamic>> load_from_spread(String type) {
-  return new HttpClient().getUrl(Uri.parse("http://script.google.com/macros/s/AKfycbwifjQ_eaDUkalw9NYqGMZnZv8TxQ3P7ltnBdt9slykTy3fauE/exec?type=${type}")).then((HttpClientRequest request) => request.close()).then((HttpClientResponse response) {
-    return response.transform(UTF8.decoder).join("").then((content) {
-      return new Future(() => JSON.decoder.convert(content));
-    });
+Future<Map<String, dynamic>> load_config_file(String type) {
+  var base = "http://directmyfile.github.io/bot-config/";
+  switch (type) {
+    case "Configuration":
+      base += "bot.yaml";
+      break;
+    case "TextCmds":
+      base += "text_commands.yaml";
+      break;
+    case "Aliases":
+      base += "aliases.yaml";
+      break;
+    default:
+      base += type + ".yaml";
+      break;
+  }
+  
+  return http.get(base).then((resp) {
+    return new Future.value(loadYaml(resp.body));
   });
 }
 
-class ConfigWrapper {
-  String string(String key) {
-    return _config[key];
-  }
-  
-  bool boolean(String key) {
-    return _config[key];
-  }
-  
-  int integer(String key) {
-    return _config[key];
-  }
-  
-  List<String> list(String key) {
-    return string(key).split("\n");
-  }
-  
-  dynamic operator [](String key) {
-   return _config[key]; 
-  }
-}

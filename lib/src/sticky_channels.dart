@@ -10,7 +10,7 @@ void setup_sticky_channels() {
   register((ConnectEvent event) {
     connected = true;
   });
-  sticky_channels = config.list("sticky_channels");
+  sticky_channels = config["sticky_channels"];
   sticky_timer = new Timer.periodic(new Duration(seconds: 1), (timer) {
     sticky_channels.forEach((chan) {
       if (connected && bot.client.channel(chan) == null) {
