@@ -177,6 +177,7 @@ void start(String nickname, String prefix, String user, String pass) {
     register_math_commands();
     register_github_commands();
     register_dictionary_commands();
+    register_wolfram_commands();
 
     if (enable_markov) {
       markov.load();

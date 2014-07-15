@@ -1,6 +1,6 @@
 part of directbot;
 
-var googleAPIKey = "AIzaSyCn3fRjsEMyw837JKcgnqJZ1J8YAxFUB0c";
+var googleAPIKey = "AIzaSyBNTRakVvRuGHn6AVIhPXE_B3foJDOxmBU";
 
 void register_google_commands() {
   command("google", (event) {
