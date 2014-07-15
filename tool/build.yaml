@@ -1,0 +1,6 @@
+analyzer:
+  files:
+  - "lib/directbot.dart"
+docs:
+  root: "."
+  output: "out/docs"
