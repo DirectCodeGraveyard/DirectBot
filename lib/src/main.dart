@@ -67,11 +67,9 @@ void start(String nickname, String prefix, String user, String pass) {
     var botConf = new BotConfig(nickname: nickname, username: nickname, 
                                       host: config["host"], port: config["port"]);
 
-    _bot = new CommandBot(botConf);
+    _bot = new AdvancedCommandBot(botConf, prefix: prefix);
 
     FreenodeBridge.setup(nickname, prefix);
-
-    bot.prefix = prefix;
 
     register((ReadyEvent event) {
       bot.client.identify(username: user, password: pass);

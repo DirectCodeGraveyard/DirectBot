@@ -33,3 +33,4 @@ part 'src/markov.dart';
 part 'src/sticky_channels.dart';
 part 'src/aliases.dart';
 part 'src/wolfram.dart';
+part 'src/commands.dart';
