@@ -1,6 +1,6 @@
 part of directbot;
 
-CommandBot _bot;
+AdvancedCommandBot _bot;
 
 var markov = new MarkovChain();
 
@@ -46,7 +46,7 @@ var _config;
 
 get config => _config;
 
-CommandBot get bot => _bot;
+AdvancedCommandBot get bot => _bot;
 
 bool check_user(CommandEvent event) {
   for (AuthenticatedUser user in authenticated) {
