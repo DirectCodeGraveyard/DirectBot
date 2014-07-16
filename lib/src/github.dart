@@ -139,6 +139,8 @@ void handle_github_request(HttpRequest request) {
     return;
   }
 
+  var handled = true;
+  
   request.transform(UTF8.decoder).join("").then((String data) {
     var json = JSON.decoder.convert(data);
 
@@ -175,7 +177,7 @@ void handle_github_request(HttpRequest request) {
     if (get_repo_name(json["repository"]) == "DirectMyFile/bot-data") {
       return;
     }
-
+    
     switch (request.headers.value('X-GitHub-Event')) {
       case "ping":
         message("[${Color.BLUE}GitHub${Color.RESET}] ${json["zen"]}", false);
@@ -287,13 +289,75 @@ void handle_github_request(HttpRequest request) {
           message("${Color.OLIVE}${get_repo_owner(forkee)}${Color.RESET} created a fork at ${forkee["full_name"]} - ${url}");
         });
         break;
+      case "commit_comment":
+        var who = json["sender"]["login"];
+        var commit_id = json["comment"]["commit_id"].substring(0, 10);
+        message("${Color.OLIVE}${who}${Color.RESET} commented on commit ${commit_id}");
+        break;
+      case "issue_comment":
+        var issue = json["issue"];
+        var sender = json["sender"];
+        var action = json["action"];
+        
+        if (action == "created") {
+          message("${Color.OLIVE}${sender["login"]}${Color.RESET} commented on issue #${issue["number"]}");
+        }
+        
+        break;
+      case "watch":
+        var who = json["sender"]["login"];
+        message("${Color.OLIVE}${who}${Color.RESET} starred the repository");
+        break;
+      case "page_build":
+        var build = json["build"];
+        var who = build["pusher"]["login"];
+        var msg = "";
+        if (build["error"]["message"] != null) {
+          msg += "${Color.OLIVE}${who}${Color.RESET} Page Build Failed (Message: ${build["error"]["message"]})";
+          message(msg);
+        }
+        break;
+      case "gollum":
+        var who = json["sender"]["login"];
+        var pages = json["pages"];
+        for (var page in pages) {
+          var name = page["title"];
+          var type = page["action"];
+          var summary = page["summary"];
+          var msg = "${Color.OLIVE}${who}${Color.RESET} ${type} '${name}' on the wiki";
+          if (summary != null) {
+            msg += " (${msg})";
+          }
+          message(msg);
+        }
+        break;
+        
+      case "pull_request":
+        var who = json["sender"]["login"];
+        var pr = json["pull_request"];
+        var number = json["number"];
+        
+        var action = json["action"];
+        
+        if (["opened", "reopened", "closed"].contains(action)) {
+          gitio_shorten(pr["html_url"]).then((url) {
+            message("${Color.OLIVE}${who}${Color.RESET} ${action} a Pull Request (#${number}) - ${url}");
+          }); 
+        }
+        
+        break;
+        
+      default:
+        handled = false;
+        break;
     }
     
     request.response.write(JSON.encode({
         "status": "success",
         "information": {
           "repo_name": repo_name,
-          "channels": github_channels_for(repo_name)
+          "channels": github_channels_for(repo_name),
+          "handled": handled
         }
     }));
     request.response.close();
@@ -322,7 +386,9 @@ class GitHubAPI {
     "pull_request",
     "fork",
     "release",
-    "issues"
+    "issues",
+    "commit_comment",
+    "watch"
   ];
   
   static Future<http.Response> get(String url, {String api_token}) {

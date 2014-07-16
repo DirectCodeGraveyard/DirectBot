@@ -58,6 +58,11 @@ bool check_user(CommandEvent event) {
   return false;
 }
 
+void on_exit() {
+  print("Uploading Data Store");
+  update_datastore();
+}
+
 void start(String nickname, String prefix, String user, String pass) {
   load_config().then((the_config) {
     _config = the_config;
@@ -187,7 +192,19 @@ void start(String nickname, String prefix, String user, String pass) {
       markov.load();
       markov_save_timer = new Timer.periodic(new Duration(milliseconds: 60000), (t) => markov.save());
     }
-
+    
+    var is_exiting = false;
+    
+    [ProcessSignal.SIGINT].forEach((ProcessSignal it) {
+      it.watch().listen((it) {
+        if (!is_exiting) {
+          is_exiting = true;
+          on_exit();
+          exit(0); 
+        }
+      });
+    });
+    
     bot.connect();
     new Future.delayed(new Duration(seconds: 1), server_listen);
   });
