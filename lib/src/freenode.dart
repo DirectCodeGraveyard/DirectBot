@@ -29,12 +29,18 @@ class FreenodeBridge {
     });
 
     register((MessageEvent event) {
+      if (event.isPrivate) {
+        return;
+      }
       if (chans.containsKey(event.channel.name.toLowerCase()) && relay) {
         client.message(chans[event.channel.name.toLowerCase()], "[EsperNet] <-${event.from}> ${event.message}");
       }
     });
 
     client.register((MessageEvent event) {
+      if (event.isPrivate) {
+        return;
+      }
       if (relay) {
         if (chans.containsValue(event.target)) {
           bot.message(chans[event.channel.name.toLowerCase()], "[Freenode] <-${event.from}> ${event.message}");

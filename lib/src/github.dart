@@ -26,7 +26,7 @@ List<String> github_channels_for(String repo_id) {
   }
 }
 
-void register_github_hooks([String user = "DirectMyFile", String irc_user, String channel = "#directcode"]) {
+void register_github_hooks([String user = "DirectMyFile", String irc_user, String channel = "#directcode", String token]) {
   var added_hook = false;
   var completer = new Completer();
   var repos = null;
@@ -34,7 +34,7 @@ void register_github_hooks([String user = "DirectMyFile", String irc_user, Strin
   
   var ran_complete = false;
   
-  GitHubAPI.get("https://api.github.com/users/${user}/repos").then((response) {
+  GitHubAPI.get("https://api.github.com/users/${user}/repos", api_token: token).then((response) {
     
     if (response.statusCode != 200) {
       bot.message("#directcode", "[${Color.BLUE}GitHub${Color.RESET}] Failed to get repository list.");
@@ -52,7 +52,7 @@ void register_github_hooks([String user = "DirectMyFile", String irc_user, Strin
     });
     
     repos.forEach((repo) {
-      GitHubAPI.get(repo["hooks_url"]).then((hresp) {
+      GitHubAPI.get(repo["hooks_url"], api_token: token).then((hresp) {
         if (hresp.statusCode != 200) {
           var m = "[${Color.BLUE}GitHub${Color.RESET}] No Permissions for Repository '${repo["name"]}'";
           if (irc_user != null) {
@@ -83,7 +83,7 @@ void register_github_hooks([String user = "DirectMyFile", String irc_user, Strin
               "content_type": "json"
             },
             "events": GitHubAPI.events
-          } as Map<String, Object>)).then((resp) {
+          } as Map<String, Object>), api_token: token).then((resp) {
             if (resp.statusCode != 201) {
               var m = "[${Color.BLUE}GitHub${Color.RESET}] Failed to add hook for ${repo["name"]}.";
               if (irc_user != null) {
@@ -320,15 +320,21 @@ class GitHubAPI {
     "issues"
   ];
   
-  static Future<http.Response> get(String url) {
+  static Future<http.Response> get(String url, {String api_token}) {
+    if (api_token == null) {
+      api_token = token;
+    }
     return http.get(url, headers: {
-      "Authorization": "token ${GitHubAPI.token}"
+      "Authorization": "token ${api_token}"
     });
   }
   
-  static Future<http.Response> post(String url, body) {
+  static Future<http.Response> post(String url, body, {String api_token}) {
+    if (api_token == null) {
+      api_token = token;
+    }
     return http.post(url, headers: {
-      "Authorization": "token ${GitHubAPI.token}"
+      "Authorization": "token ${api_token}"
     }, body: body);
   }
 }
@@ -338,11 +344,12 @@ void register_github_commands() {
     if (event.args.length == 0) {
       register_github_hooks();
     } else {
-      if (event.args.length != 1) {
-        event.reply("> Usage: check-hooks [user]");
+      if (event.args.length > 2) {
+        event.reply("> Usage: check-hooks [user] [token]");
       } else {
         var user = event.args[0];
-        register_github_hooks(user, event.from, event.channel.name);
+        var token = event.args.length == 2 ? event.args[1] : GitHubAPI.token;
+        register_github_hooks(user, event.from, event.isPrivate ? event.from : event.target);
       }
     }
   });
