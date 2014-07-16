@@ -99,7 +99,11 @@ void handle_github_request(HttpRequest request) {
       if (names != null && names.containsKey(name)) {
         repo_name = names[name];
       } else {
-        repo_name = name;
+        if (json["repository"]["owner"]["name"] != "DirectMyFile") {
+          repo_name = name;
+        } else {
+          repo_name = json["repository"]["name"];
+        }
       }
     }
 
