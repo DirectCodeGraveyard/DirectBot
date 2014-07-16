@@ -5,3 +5,4 @@ config.yaml
 .project
 build/
 .settings
+data/

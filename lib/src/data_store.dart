@@ -1,7 +1,9 @@
 part of directbot;
 
 void init_datastore() {
-  _exec("git", ["submodule", "init"]);
+  if (!new Directory("data").existsSync()) {
+    _exec("git", ["clone", "git@github.com:DirectMyFile/bot-data.git", "data"]);
+  }
   _exec("git", ["pull", "origin", "master"], "data");
   
   DataStore.load();
