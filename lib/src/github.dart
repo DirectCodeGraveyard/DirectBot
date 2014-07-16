@@ -84,6 +84,14 @@ void register_github_hooks() {
   });
 }
 
+String get_repo_owner(Map<String, dynamic> repo) {
+  if (repo["owner"]["name"] != null) {
+    return repo["owner"]["name"];
+  } else {
+    return repo["owner"]["login"];
+  }
+}
+
 void handle_github_request(HttpRequest request) {
   if (request.method != "POST") {
     request.response.write(JSON.encode({
@@ -116,7 +124,7 @@ void handle_github_request(HttpRequest request) {
       if (names != null && names.containsKey(name)) {
         repo_name = names[name];
       } else {
-        if (json["repository"]["owner"]["name"] != "DirectMyFile") {
+        if (get_repo_owner(json["repository"]) != "DirectMyFile") {
           repo_name = name;
         } else {
           repo_name = json["repository"]["name"];
@@ -244,7 +252,7 @@ void handle_github_request(HttpRequest request) {
       case "fork":
         var forkee = json["forkee"];
         gitio_shorten(forkee["html_url"]).then((url) {
-          message("${Color.OLIVE}${forkee["owner"]["login"]}${Color.RESET} created a fork at ${forkee["full_name"]} - ${url}");
+          message("${Color.OLIVE}${get_repo_owner(forkee)}${Color.RESET} created a fork at ${forkee["full_name"]} - ${url}");
         });
         break;
     }
