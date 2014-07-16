@@ -31,6 +31,9 @@ void register_github_hooks([String user = "DirectMyFile", String irc_user, Strin
   var completer = new Completer();
   var repos = null;
   var count = 0;
+  
+  var ran_complete = false;
+  
   GitHubAPI.get("https://api.github.com/users/${user}/repos").then((response) {
     
     if (response.statusCode != 200) {
@@ -39,9 +42,17 @@ void register_github_hooks([String user = "DirectMyFile", String irc_user, Strin
     }
     
     repos = JSON.decode(response.body) as List<Map<String, Object>>;
+    
+    var timer;
+    timer = new Timer.periodic(new Duration(milliseconds: 20), (it) {
+      if (count == repos.length) {
+        completer.complete();
+        timer.cancel();
+      }
+    });
+    
     repos.forEach((repo) {
       GitHubAPI.get(repo["hooks_url"]).then((hresp) {
-        
         if (hresp.statusCode != 200) {
           var m = "[${Color.BLUE}GitHub${Color.RESET}] No Permissions for Repository '${repo["name"]}'";
           if (irc_user != null) {
@@ -49,6 +60,7 @@ void register_github_hooks([String user = "DirectMyFile", String irc_user, Strin
           } else {
             bot.message(irc_user, m);
           }
+          count++;
           return;
         }
         
@@ -83,12 +95,11 @@ void register_github_hooks([String user = "DirectMyFile", String irc_user, Strin
               added_hook = true;
               bot.message(channel, "[${Color.BLUE}GitHub${Color.RESET}] Added Hook for ${repo["name"]}.");
             }
+            
+            count++;
           });
-        }
-        
-        count++;
-        if (count == repos.length) {
-          completer.complete();
+        } else {
+          count++;
         }
       });
     });
@@ -96,7 +107,7 @@ void register_github_hooks([String user = "DirectMyFile", String irc_user, Strin
   
   completer.future.then((_) {
     if (!added_hook) {
-      bot.message(channel, "[${Color.BLUE}GitHub${Color.RESET}] No Hooks Added");
+      bot.message(channel, "[${Color.BLUE}GitHub${Color.RESET}] Checked ${repos.length} repositories. No Hooks Added");
     }
   });
 }
