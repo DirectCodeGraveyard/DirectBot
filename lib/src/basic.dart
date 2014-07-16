@@ -4,17 +4,8 @@ void register_basic_commands() {
   command("commands", (event) {
     Achievements.give(event.from, "Curious Cat");
     var cmds = commands.all;
-    var current = [];
     event.client.notice(event.from, "${Color.BLUE}Commands${Color.RESET}:");
-    int i = 0;
-    for (var cmd in cmds) {
-      i++;
-      current.add(cmd);
-      if ((i % 5) == 0 || cmds.length == i) {
-        event.client.notice(event.from, "${current.join(", ")}");
-        current.clear();
-      }
-    }
+    paginate(event.from, cmds.toList(), 8);
   });
   
   command("say", (event) {

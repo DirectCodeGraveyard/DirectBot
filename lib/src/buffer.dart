@@ -40,10 +40,28 @@ class Buffer {
     }
     
     var count = counts[id];
+    var chan_count = counts[event.target];
+    
+    if (chan_count == null) {
+      chan_count = 0;
+    }
+    
+    chan_count++;
+    
+    if (chan_count % 10 == 0) {
+      Points.add_points(event.target, 1, null, false);
+    }
+    
+    if (chan_count == 500) {
+      Points.add_points(event.target, 50);
+    }
+    
     
     if (count % 5 == 0) {
       Points.add_points(event.from, 1, null, false);
     }
+    
+    counts[event.target] = chan_count;
     
     var buf = buffers[event.target];
     if (buf == null) {
