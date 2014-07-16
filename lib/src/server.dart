@@ -10,7 +10,7 @@ void server_listen() {
       server.listen((HttpRequest request) {
         switch (request.uri.path) {
           case "/github":
-            handle_github_request(request);
+            GitHub.handle_request(request);
             break;
           case "/info.json":
             handle_info_request(request);

@@ -5,6 +5,8 @@ class GitHub {
 
 // Github IP range converted to regex
   static var IP_REGEX = new RegExp(r"192\.30\.25[2-5]\.[0-9]{1,3}");
+  
+  static var HOOK_URL = "http://bot.directcode.org:8020/github";
 
   static List<String> events = ["push", "ping", "pull_request", "fork", "release", "issues", "commit_comment", "watch"];
 
@@ -331,7 +333,7 @@ class GitHub {
           var add_hook = true;
 
           for (var hook in hooks) {
-            if (hook["config"]["url"] == "http://bot.directmyfile.com:8020/github") {
+            if (hook["config"]["url"] == HOOK_URL) {
               add_hook = false;
             }
           }
