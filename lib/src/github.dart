@@ -26,21 +26,22 @@ List<String> github_channels_for(String repo_id) {
   }
 }
 
-void register_github_hooks() {
+void register_github_hooks([String user = "DirectMyFile"]) {
   var added_hook = false;
   var completer = new Completer();
   var repos = null;
   var count = 0;
-  GitHubAPI.get("https://api.github.com/users/DirectMyFile/repos").then((response) {
+  GitHubAPI.get("https://api.github.com/users/${user}/repos").then((response) {
+    
+    if (response.statusCode != 200) {
+      bot.message("#directcode", "[${Color.BLUE}GitHub${Color.RESET}] Failed to get repository list.");
+      return;
+    }
+    
     repos = JSON.decode(response.body) as List<Map<String, Object>>;
     repos.forEach((repo) {
       GitHubAPI.get(repo["hooks_url"]).then((hresp) {
         var hooks = JSON.decode(hresp.body) as List<Map<String, Object>>;
-        
-        if (hooks is! List) {
-          bot.message("#directcode", "ERROR: Returned Reponse is not a list");
-          return;
-        }
         
         var add_hook = true;
         
@@ -62,7 +63,7 @@ void register_github_hooks() {
             "events": GitHubAPI.events
           } as Map<String, Object>)).then((resp) {
             if (resp.statusCode != 201) {
-              bot.message("#directcode", "[${Color.BLUE}GitHub${Color.RESET}] Failed to add hook for ${repo["name"]}");
+              bot.message("#directcode", "[${Color.BLUE}GitHub${Color.RESET}] Failed to add hook for ${repo["name"]}.");
             } else {
               bot.message("#directcode", "[${Color.BLUE}GitHub${Color.RESET}] Added Hook for ${repo["name"]}.");
             }
@@ -307,6 +308,15 @@ class GitHubAPI {
 
 void register_github_commands() {
   admin_command("check-hooks", (event) {
-    register_github_hooks();
+    if (event.args.length == 0) {
+      register_github_hooks();
+    } else {
+      if (event.args.length != 1) {
+        event.reply("> Usage: check-hooks [user]");
+      } else {
+        var user = event.args[0];
+        register_github_hooks(user);
+      }
+    }
   });
 }
