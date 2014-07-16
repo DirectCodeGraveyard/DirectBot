@@ -41,6 +41,10 @@ class DataStore {
         Achievements.tracker.addValues(k, v);
       });
     }
+    
+    if (data["points"] != null) {
+      Points.points = data["points"];
+    }
   }
   
   static void load() {

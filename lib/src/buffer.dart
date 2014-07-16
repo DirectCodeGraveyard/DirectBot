@@ -23,6 +23,22 @@ class Buffer {
       return;
     }
     
+    var data = DataStore.data;
+    
+    if (data["message_count"] == null) {
+      data["message_count"] = {};
+    }
+    
+    var counts = data["message_count"];
+    
+    var id = "${get_store_name(event.from)}${event.target}";
+    
+    if (!counts.containsKey(id)) {
+      counts[id] = 1;
+    } else {
+      counts[id] = counts[id] + 1;
+    }
+    
     var buf = buffers[event.target];
     if (buf == null) {
       buf = new Buffer();

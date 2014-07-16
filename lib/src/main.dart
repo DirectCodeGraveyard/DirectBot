@@ -179,6 +179,7 @@ void start(String nickname, String prefix, String user, String pass) {
     register_dictionary_commands();
     register_wolfram_commands();
     register_achievement_commands();
+    register_points_commands();
 
     if (enable_markov) {
       markov.load();
@@ -213,4 +214,13 @@ void admin_command(String name, void handle(CommandEvent event)) {
 void register_both(handler) {
   register(handler);
   FreenodeBridge.client.register(handler);
+}
+
+String get_store_name(String user) {
+  for (var a in authenticated) {
+    if (a.nickname == user) {
+      return a.username;
+    }
+  }
+  return user;
 }

@@ -36,6 +36,22 @@ class AdvancedCommandBot extends Bot {
       
       Achievements.give(event.from, "Command Wizard");
       
+      var data = DataStore.data;
+      
+      if (data["commands_count"] == null) {
+        data["commands_count"] = {};
+      }
+      
+      var counts = data["commands_count"];
+      
+      var id = "${event.from}${event.target}";
+      
+      if (!counts.containsKey(id)) {
+        counts[id] = 1;
+      } else {
+        counts[id] = counts[id] + 1;
+      }
+      
       var end = message.contains(" ") ? message.indexOf(" ", the_prefix.length) : message.length;
       var command = message.substring(the_prefix.length, end);
       var args = message.substring(end != message.length ? end + 1 : end).split(" ");

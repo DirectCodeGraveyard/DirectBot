@@ -9,22 +9,23 @@ class Achievements {
       for (var chan in config["achievements"]["notify"]) {
         bot.message(chan, msg);
       }
-      tracker.add(user, name);
+      tracker.add(get_store_name(user), name);
       DataStore.data["achievements"] = tracker.toMap();
     }
   }
   
   static List<String> get(String user) {
+    user = get_store_name(user);
     return tracker[user];
   }
   
   static bool has(String user, String name) {
-    return tracker[user].contains(name);
+    return tracker[get_store_name(user)].contains(name);
   }
 }
 
 void register_achievement_commands() {
-  admin_command("give", (event) {
+  admin_command("achieve", (event) {
     if (event.args.length < 2) {
       event.reply("Usage: ${event.command} <user> <achievement>");
     } else {
