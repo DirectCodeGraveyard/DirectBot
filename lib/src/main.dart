@@ -159,6 +159,11 @@ void start(String nickname, String prefix, String user, String pass) {
         if (enable_markov) {
           markov.addLine(event.message);
         }
+        
+        /* GitHub Issues */
+        GitHub.handle_issue(event);
+        /* GitHub Repository Info */
+        GitHub.handle_repo(event);
       }
 
       if (enable_markov) {

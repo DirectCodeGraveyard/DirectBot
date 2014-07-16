@@ -5,7 +5,7 @@ class GitHub {
 
 // Github IP range converted to regex
   static var IP_REGEX = new RegExp(r"192\.30\.25[2-5]\.[0-9]{1,3}");
-  
+
   static var HOOK_URL = "http://bot.directcode.org:8020/github";
 
   static List<String> events = ["push", "ping", "pull_request", "fork", "release", "issues", "commit_comment", "watch"];
@@ -88,7 +88,7 @@ class GitHub {
             repo_name = json["repository"]["name"];
           }
         }
-        
+
         // Skip Bot Data Repository
         if (get_repo_name(json["repository"]) == "DirectMyFile/bot-data") {
           return;
@@ -408,4 +408,84 @@ class GitHub {
       }
     });
   }
+
+  static RegExp ISSUE_REGEX = new RegExp(r"(?:.*)(?:https?)\:\/\/github\.com\/(.*)\/(.*)\/issues\/([0-9]+)(?:.*)");
+
+  static void handle_issue(MessageEvent event) {
+    if (ISSUE_REGEX.hasMatch(event.message)) {
+      for (var match in ISSUE_REGEX.allMatches(event.message)) {
+        var url = "https://api.github.com/repos/${match[1]}/${match[2]}/issues/${match[3]}";
+        GitHub.get(url).then((http.Response response) {
+          if (response.statusCode != 200) {
+            var repo = match[1] + "/" + match[2];
+            event.reply("${part_prefix("GitHub Issues")} Failed to fetch issue information (repo: ${repo}, issue: ${match[3]})");
+          } else {
+            var json = JSON.decode(response.body);
+            var msg = "${part_prefix("GitHub Issues")} ";
+            
+            msg += "Issue #${json["number"]} '${json["title"]}' by ${json["user"]["login"]}";
+            event.reply(msg);
+            msg = "${part_prefix("GitHub Issues")} ";
+            
+            if (json["asignee"] != null) {
+              msg += "assigned to: ${json["assignee"]["login"]}, ";
+            }
+            
+            msg += "status: ${json["state"]}";
+            
+            if (json["milestone"] != null) {
+              msg += ", milestone: ${json["milestone"]["title"]}";
+            }
+            
+            event.reply(msg);
+          }
+        });
+      }
+    }
+  }
+  
+  static RegExp REPO_REGEX = new RegExp(r"(?:.*)(?:https?)\:\/\/github\.com\/([A-Za-z0-9\-\.\_\(\)]+)\/([A-Za-z0-9\-\.\_\(\)]+)(?:\/?)(?:.*)");
+  
+  static void handle_repo(MessageEvent event) {
+    if (REPO_REGEX.hasMatch(event.message)) {
+      for (var match in REPO_REGEX.allMatches(event.message)) {
+        var user = match[1];
+        var repo = match[2];
+        
+        var url = "https://api.github.com/repos/${user}/${repo}";
+        
+        GitHub.get(url).then((response) {
+          if (response.statusCode != 200) {
+            if (response.statusCode == 404) {
+              event.reply("${part_prefix("GitHub")} Repository does not exist: ${user}/${repo}");
+            } else {
+              event.reply("${part_prefix("GitHub")} Failed to get repository information (code: ${response.statusCode})");
+            }
+            return;
+          }
+          var json = JSON.decode(response.body);
+          var description = json["description"];
+          var subscribers = json["subscribers_count"];
+          var stars = json["stargazers_count"];
+          var forks = json["forks_count"];
+          var open_issues = json["open_issues_count"];
+          var language = json["language"];
+          var default_branch = json["default_branch"];
+          var msg = "${part_prefix("GitHub")} ";
+          
+          if (description != null) {
+            msg += "${description}";
+            event.reply(msg);
+          }
+          
+          msg = "${part_prefix("GitHub")} ${subscribers} subscribers, ${stars} stars, ${forks} forks, ${open_issues} open issues";
+          event.reply(msg);
+        
+          msg = "${part_prefix("GitHub")} Language: ${language}, Default Branch: ${default_branch}";
+          event.reply(msg);
+        });
+      }
+    }
+  }
 }
+
