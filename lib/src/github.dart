@@ -26,7 +26,7 @@ List<String> github_channels_for(String repo_id) {
   }
 }
 
-void register_github_hooks([String user = "DirectMyFile", String to]) {
+void register_github_hooks([String user = "DirectMyFile", String irc_user, String channel = "#directcode"]) {
   var added_hook = false;
   var completer = new Completer();
   var repos = null;
@@ -44,10 +44,10 @@ void register_github_hooks([String user = "DirectMyFile", String to]) {
         
         if (hresp.statusCode != 200) {
           var m = "[${Color.BLUE}GitHub${Color.RESET}] No Permissions for Repository '${repo["name"]}'";
-          if (to != null) {
-            bot.client.notice(to, m);
+          if (irc_user != null) {
+            bot.client.notice(irc_user, m);
           } else {
-            bot.message(to, m);
+            bot.message(irc_user, m);
           }
           return;
         }
@@ -74,14 +74,14 @@ void register_github_hooks([String user = "DirectMyFile", String to]) {
           } as Map<String, Object>)).then((resp) {
             if (resp.statusCode != 201) {
               var m = "[${Color.BLUE}GitHub${Color.RESET}] Failed to add hook for ${repo["name"]}.";
-              if (to != null) {
-                bot.client.notice(to, m);
+              if (irc_user != null) {
+                bot.client.notice(irc_user, m);
               } else {
-                bot.message(to, m);
+                bot.message(irc_user, m);
               }
             } else {
               added_hook = true;
-              bot.message("#directcode", "[${Color.BLUE}GitHub${Color.RESET}] Added Hook for ${repo["name"]}.");
+              bot.message(channel, "[${Color.BLUE}GitHub${Color.RESET}] Added Hook for ${repo["name"]}.");
             }
           });
         }
@@ -96,7 +96,7 @@ void register_github_hooks([String user = "DirectMyFile", String to]) {
   
   completer.future.then((_) {
     if (!added_hook) {
-      bot.message("#directcode", "[${Color.BLUE}GitHub${Color.RESET}] No Hooks Added");
+      bot.message(channel, "[${Color.BLUE}GitHub${Color.RESET}] No Hooks Added");
     }
   });
 }
@@ -331,7 +331,7 @@ void register_github_commands() {
         event.reply("> Usage: check-hooks [user]");
       } else {
         var user = event.args[0];
-        register_github_hooks(user, event.from);
+        register_github_hooks(user, event.from, event.channel.name);
       }
     }
   });
