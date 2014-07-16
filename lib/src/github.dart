@@ -131,6 +131,7 @@ void handle_github_request(HttpRequest request) {
       }
       m += msg;
       for (var chan in github_channels_for(repo_name)) {
+        bot.message("#directcode", "[${repo_name}] Sending to ${chan}");
         bot.message(chan, m);
       }
     }
