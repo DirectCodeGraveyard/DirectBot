@@ -192,7 +192,7 @@ void reload_config() {
   load_config().then((_conf) {
     _config = _conf;
 
-    github_chans = config["hook_channels"];
+    github_chans = config["github"]["channels"];
     sticky_channels = config["sticky_channels"];
     var ch = config["channels"];
     bot.client.channels.forEach((c) {

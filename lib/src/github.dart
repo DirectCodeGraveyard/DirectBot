@@ -6,7 +6,7 @@ RegExp _exp = new RegExp(r"192\.30\.25[2-5]\.[0-9]{1,3}");
 List<String> github_chans;
 
 void init_github() {
-  github_chans = config["hook_channels"];
+  github_chans = config["github"]["channels"];
 }
 
 void register_github_hooks() {
@@ -92,13 +92,21 @@ void handle_github_request(HttpRequest request) {
     var repo_name;
 
     if (json["repository"] != null) {
-      repo_name = json["repository"]["name"];
+      var name = get_repo_name(json["repository"]);
+      
+      var names = config["github"]["names"];
+      
+      if (names != null && names.containsKey(name)) {
+        repo_name = names[name];
+      } else {
+        repo_name = name;
+      }
     }
 
     void message(String msg, [bool prefix = true]) {
       var m = "";
       if (prefix)
-        m += "[${Color.BLUE}$repo_name${Color.RESET}] ";
+        m += "[${Color.BLUE}${repo_name}${Color.RESET}] ";
       m += msg;
       for (var chan in github_chans)
         bot.message(chan, m);
@@ -227,6 +235,10 @@ void handle_github_request(HttpRequest request) {
     }));
     request.response.close();
   });
+}
+
+String get_repo_name(Map<String, dynamic> repo) {
+  return "${repo["owner"]["name"]}/${repo["name"]}";
 }
 
 Future<String> gitio_shorten(String input) {
