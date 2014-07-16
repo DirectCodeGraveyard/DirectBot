@@ -176,6 +176,7 @@ void start(String nickname, String prefix, String user, String pass) {
     register_github_commands();
     register_dictionary_commands();
     register_wolfram_commands();
+    register_achievement_commands();
 
     if (enable_markov) {
       markov.load();

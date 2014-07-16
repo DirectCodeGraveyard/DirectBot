@@ -9,6 +9,7 @@ class RegExSupport {
       
       if (event.message.startsWith("s//")) {
         event.reply("> ERROR: Not s// Supported");
+        Achievements.give(event.from, "Possible Spammer");
         return;
       }
       
@@ -41,10 +42,18 @@ class RegExSupport {
           var e = new MessageEvent(event.client, event.from, event.target, new_msg);
           event.reply(event.from + ": " + e.message);
           Buffer.handle(e);
+          
+          if (Achievements.has(event.from, "Regular Expression User")) {
+            Achievements.give(event.from, "Regular Expression Master");
+          } else {
+            Achievements.give(event.from, "Regular Expression User");
+          }
+          
           return;
         }
       }
       event.reply("> ERROR: No Match Found for expression '${expr}'");
+      Achievements.give(event.from, "Regular Expression Failure");
     }
   }
 }

@@ -140,11 +140,13 @@ void register_bot_admin_commands() {
       _awaiting_authentication.remove(entry);
       var info = entry.value;
       if (!config["admins"].contains(event.username)) {
-        info[2].message(info[1], "${info[0]}> ${Color.RED}Authentication prohibited${Color.RESET}.");
+        Achievements.give(info[1], "Average Joe");
+        info[2].message(event.nickname, "${info[0]}> ${Color.RED}Authentication prohibited${Color.RESET}.");
       } else {
         if (!isAuthenticated()) {
           authenticated.add(new AuthenticatedUser(event.client, event.username, event.nickname));
           info[2].message(info[1], "${info[0]}> Authentication successful.");
+          Achievements.give(event.nickname, "Best Admin Ever");
         } else {
           info[2].message(info[1], "${info[0]}> Already authenticated.");
         }
