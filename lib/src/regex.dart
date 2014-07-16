@@ -45,6 +45,8 @@ class RegExSupport {
         replacement = new String.fromCharCodes(replacement.codeUnits.reversed);
       
       var regex = new RegExp(aExpr);
+      
+      var orig_event = event;
 
       var events = Buffer.get(event.channel.name);
       for (event in events) {
@@ -55,10 +57,10 @@ class RegExSupport {
           event.reply(event.from + ": " + e.message);
           Buffer.handle(e);
           
-          if (Achievements.has(event.from, "Regular Expression User")) {
-            Achievements.give(event.from, "Regular Expression Master");
+          if (Achievements.has(orig_event.from, "Regular Expression User")) {
+            Achievements.give(orig_event.from, "Regular Expression Master");
           } else {
-            Achievements.give(event.from, "Regular Expression User");
+            Achievements.give(orig_event.from, "Regular Expression User");
           }
           
           return;
