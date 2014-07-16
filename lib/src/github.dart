@@ -63,7 +63,6 @@ void register_github_hooks([String user = "DirectMyFile", String to]) {
         }
         
         if (add_hook) {
-          added_hook = true;
           GitHubAPI.post(repo["hooks_url"], JSON.encode({
             "name": "web",
             "active": true,
@@ -81,6 +80,7 @@ void register_github_hooks([String user = "DirectMyFile", String to]) {
                 bot.message(to, m);
               }
             } else {
+              added_hook = true;
               bot.message("#directcode", "[${Color.BLUE}GitHub${Color.RESET}] Added Hook for ${repo["name"]}.");
             }
           });
