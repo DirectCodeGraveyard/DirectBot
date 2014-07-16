@@ -88,6 +88,11 @@ class GitHub {
             repo_name = json["repository"]["name"];
           }
         }
+        
+        // Skip Bot Data Repository
+        if (get_repo_name(json["repository"]) == "DirectMyFile/bot-data") {
+          return;
+        }
       }
 
       void message(String msg, [bool prefix = true]) {
@@ -99,11 +104,6 @@ class GitHub {
         for (var chan in channels_for(repo_name)) {
           bot.message(chan, m);
         }
-      }
-
-      // Skip Bot Data Repository
-      if (get_repo_name(json["repository"]) == "DirectMyFile/bot-data") {
-        return;
       }
 
       switch (request.headers.value('X-GitHub-Event')) {
@@ -321,8 +321,6 @@ class GitHub {
             var m = "[${Color.BLUE}GitHub${Color.RESET}] No Permissions for Repository '${repo["name"]}'";
             if (irc_user != null) {
               bot.client.notice(irc_user, m);
-            } else {
-              bot.message(irc_user, m);
             }
             count++;
             return;
@@ -343,7 +341,7 @@ class GitHub {
               "name": "web",
               "active": true,
               "config": {
-                "url": "http://bot.directmyfile.com:8020/github",
+                "url": HOOK_URL,
                 "content_type": "json"
               },
               "events": GitHub.events
@@ -352,8 +350,6 @@ class GitHub {
                 var m = "[${Color.BLUE}GitHub${Color.RESET}] Failed to add hook for ${repo["name"]}.";
                 if (irc_user != null) {
                   bot.client.notice(irc_user, m);
-                } else {
-                  bot.message(irc_user, m);
                 }
               } else {
                 added_hook = true;
@@ -407,7 +403,7 @@ class GitHub {
         } else {
           var user = event.args[0];
           var token = event.args.length == 2 ? event.args[1] : GitHub.token;
-          register_github_hooks(user, event.from, event.isPrivate ? event.from : event.target);
+          register_github_hooks(user, event.from, event.isPrivate ? event.from : event.target, token);
         }
       }
     });

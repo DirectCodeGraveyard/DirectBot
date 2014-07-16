@@ -12,7 +12,12 @@ class FreenodeBridge {
   static bool relay = false;
 
   static void setup(String nickname, String prefix) {
-    BotConfig botConf = new BotConfig(nickname: nickname, username: nickname, host: "irc.freenode.net", port: 6667);
+    
+    if (!config["freenode"]["enabled"]) {
+      return;
+    }
+    
+    var botConf = new BotConfig(nickname: nickname, username: nickname, host: "irc.freenode.net", port: 6667);
     client = new Client(botConf);
     
     load_config_file("freenode").then((config) {

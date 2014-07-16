@@ -156,8 +156,10 @@ void register_bot_admin_commands() {
 
   register(handle_whois);
 
-  FreenodeBridge.client.register(handle_whois);
-
+  if (FreenodeBridge.client != null) {
+    FreenodeBridge.client.register(handle_whois);
+  }
+  
   register((ReadyEvent event) {
     authenticated.add(new AuthenticatedUser(event.client, "kaendfinger", "kaendfinger"));
     authenticated.add(new AuthenticatedUser(event.client, "deathcrazyuberlironman", "samrg472"));

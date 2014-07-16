@@ -20,10 +20,9 @@ void server_listen() {
         }
       });
     });
-  }, onError: (Error err) {
+  }, onError: (err) {
     print("------------- HTTP Server Error --------------");
     print(err);
-    print(err.stackTrace);
     print("----------------------------------------------");
   });
 }

@@ -95,4 +95,10 @@ class AdvancedCommandBot extends Bot {
       handle();
     }
   }
+  
+  @override
+  Future disconnect() {
+    update_datastore();
+    return client.disconnect(reason: "Disconnecting");
+  }
 }
