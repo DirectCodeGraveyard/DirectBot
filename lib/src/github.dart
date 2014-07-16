@@ -1,12 +1,21 @@
 part of directbot;
 
 // Github IP range converted to regex
-RegExp _exp = new RegExp(r"192\.30\.25[2-5]\.[0-9]{1,3}");
+var github_ip_regex = new RegExp(r"192\.30\.25[2-5]\.[0-9]{1,3}");
 
-List<String> github_chans;
+void init_github() {}
 
-void init_github() {
-  github_chans = config["github"]["channels"];
+List<String> github_channels_for(String repo_id) {
+  var gh_conf = config["github"];
+  if (gh_conf["channels"] != null && gh_conf["channels"].containsKey(repo_id)) {
+    var chans = gh_conf["channels"][repo_id];
+    if (chans is String) {
+      chans = [chans];
+    }
+    return chans;
+  } else {
+    return gh_conf["default_channels"];
+  }
 }
 
 void register_github_hooks() {
@@ -78,7 +87,7 @@ void handle_github_request(HttpRequest request) {
   }
   String address = request.connectionInfo.remoteAddress.address;
 
-  if (!_exp.hasMatch(address)) {
+  if (!github_ip_regex.hasMatch(address)) {
     print("$address was rejected from the server");
     request.response
       ..statusCode = 403
@@ -109,11 +118,13 @@ void handle_github_request(HttpRequest request) {
 
     void message(String msg, [bool prefix = true]) {
       var m = "";
-      if (prefix)
+      if (prefix) {
         m += "[${Color.BLUE}${repo_name}${Color.RESET}] ";
+      }
       m += msg;
-      for (var chan in github_chans)
+      for (var chan in github_channels_for(get_repo_name(json["repository"]))) {
         bot.message(chan, m);
+      }
     }
 
     switch (request.headers.value('X-GitHub-Event')) {
@@ -146,11 +157,6 @@ void handle_github_request(HttpRequest request) {
             break;
           var pusher = json['pusher']['name'];
           var commit_size = json['commits'].length;
-
-          void message(String msg) {
-            for (var chan in github_chans)
-              bot.message(chan, "[${Color.BLUE}$repo_name${Color.RESET}] $msg");
-          }
 
           gitio_shorten(json["compare"]).then((compareUrl) {
             var committer = "${Color.OLIVE}$pusher${Color.RESET}";

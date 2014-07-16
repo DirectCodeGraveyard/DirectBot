@@ -183,7 +183,6 @@ void start(String nickname, String prefix, String user, String pass) {
     }
 
     bot.connect();
-    init_github();
     new Future.delayed(new Duration(seconds: 1), server_listen);
   });
 }
