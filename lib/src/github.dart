@@ -5,6 +5,14 @@ var github_ip_regex = new RegExp(r"192\.30\.25[2-5]\.[0-9]{1,3}");
 
 void init_github() {}
 
+String get_repo_name(Map<String, dynamic> repo) {
+  if (repo["full_name"] != null) {
+    return repo["full_name"];
+  } else {
+    return "${repo["owner"]["name"]}/${repo["name"]}";
+  }
+}
+
 List<String> github_channels_for(String repo_id) {
   var gh_conf = config["github"];
   if (gh_conf["channels"] != null && gh_conf["channels"].containsKey(repo_id)) {
@@ -101,7 +109,7 @@ void handle_github_request(HttpRequest request) {
     var repo_name;
 
     if (json["repository"] != null) {
-      var name = json["repository"]["full_name"];
+      var name = get_repo_name(json["repository"]);
       
       var names = config["github"]["names"];
       
@@ -111,7 +119,7 @@ void handle_github_request(HttpRequest request) {
         if (json["repository"]["owner"]["name"] != "DirectMyFile") {
           repo_name = name;
         } else {
-          repo_name = json["repository"]["full_name"];
+          repo_name = get_repo_name(json["repository"]);
         }
       }
     }
