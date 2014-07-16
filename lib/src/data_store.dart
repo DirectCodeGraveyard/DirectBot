@@ -2,9 +2,9 @@ part of directbot;
 
 void init_datastore() {
   if (!new Directory("data").existsSync()) {
-    _exec("git", ["clone", "git@github.com:DirectMyFile/bot-data.git", "data"]);
+    _exec("git", ["clone", "git@github.com:DirectMyFile/bot-data.git", "../BotData"]);
   }
-  _exec("git", ["pull", "origin", "master"], "data");
+  _exec("git", ["pull", "origin", "master"], "../BotData/");
   
   DataStore.load();
   
@@ -18,9 +18,9 @@ void init_datastore() {
 
 void update_datastore() {
   DataStore.save();
-  _exec("git", ["add", "."], "data");
-  _exec("git", ["commit", "-m", "Update Data Files"], "data");
-  _exec("git", ["push", "-u", "origin", "master"], "data");
+  _exec("git", ["add", "."], "../BotData/");
+  _exec("git", ["commit", "-m", "Update Data Files"], "../BotData/");
+  _exec("git", ["push", "-u", "origin", "master"], "../BotData/");
 }
 
 void _exec(String command, List<String> args, [String working_dir = "."]) {
@@ -67,6 +67,6 @@ class DataStore {
   }
   
   static File data_file() {
-    return new File("data/data.json");
+    return new File("../BotData/data.json");
   }
 }
