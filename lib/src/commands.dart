@@ -33,7 +33,6 @@ class AdvancedCommandBot extends Bot {
     var the_prefix = prefix;
 
     void handle() {
-      print("Handling ${message} as command with prefix ${the_prefix}");
       var end = message.contains(" ") ? message.indexOf(" ", the_prefix.length) : message.length;
       var command = message.substring(the_prefix.length, end);
       var args = message.substring(end != message.length ? end + 1 : end).split(" ");
