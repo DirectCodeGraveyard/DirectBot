@@ -38,3 +38,4 @@ part 'src/commands.dart';
 part 'src/achievements.dart';
 part 'src/data_store.dart';
 part 'src/points.dart';
+part 'src/karma.dart';

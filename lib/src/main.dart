@@ -191,6 +191,7 @@ void start(String nickname, String prefix, String user, String pass) {
     register_achievement_commands();
     register_points_commands();
     register_datastore_commands();
+    register_karma_commands();
     
     GitHub.initialize();
 

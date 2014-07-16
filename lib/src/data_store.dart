@@ -22,6 +22,10 @@ void init_datastore() {
       DataStore.save();
     }
   });
+  
+  if (DataStore.data["karma"] == null) {
+    DataStore.data["karma"] = {};
+  }
 }
 
 void update_datastore() {
@@ -54,6 +58,10 @@ class DataStore {
     
     if (data["points"] != null) {
       Points.points = data["points"];
+    }
+    
+    if (data["karma"] != null) {
+      
     }
   }
   
