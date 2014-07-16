@@ -119,7 +119,7 @@ void handle_github_request(HttpRequest request) {
         if (json["repository"]["owner"]["name"] != "DirectMyFile") {
           repo_name = name;
         } else {
-          repo_name = get_repo_name(json["repository"]);
+          repo_name = json["repository"]["name"];
         }
       }
     }
