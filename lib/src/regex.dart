@@ -6,6 +6,14 @@ class RegExSupport {
       var msg = event.message.substring(2); // skip "s/"
       var first = true;
       var escaped = true;
+      var reverse = false;
+      
+      var now = new DateTime.now();
+      
+      if (now.month == DateTime.APRIL && now.day == 1) {
+        reverse = true;
+        return;
+      }
       
       if (event.message.startsWith("s//")) {
         event.reply("> ERROR: Not s// Supported");
@@ -32,6 +40,10 @@ class RegExSupport {
         aExpr = escapeRegex(expr);
       else
         aExpr = expr;
+      
+      if (reverse)
+        replacement = new String.fromCharCodes(replacement.codeUnits.reversed);
+      
       var regex = new RegExp(aExpr);
 
       var events = Buffer.get(event.channel.name);
