@@ -10,9 +10,17 @@ void init_datastore() {
   
   update_datastore();
   
-  DataStore.save_timer = new Timer.periodic(new Duration(seconds: 30), (event) {
-    print("Saving Data Store");
-    update_datastore();
+  var count = 0;
+  
+  DataStore.save_timer = new Timer.periodic(new Duration(seconds: 60), (event) {
+    count++;
+    if (count == 30) {
+      print("Uploading Data Store");
+      update_datastore();
+      count = 0;
+    } else {
+      DataStore.save();
+    }
   });
 }
 
@@ -69,4 +77,11 @@ class DataStore {
   static File data_file() {
     return new File("../BotData/data.json");
   }
+}
+
+void register_datastore_commands() {
+  admin_command("push-data", (event) {
+    update_datastore();
+    event.reply("${part_prefix("Data Store")} Pushed Data to GitHub");
+  });
 }

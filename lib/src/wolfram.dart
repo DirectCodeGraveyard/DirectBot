@@ -47,6 +47,7 @@ void register_wolfram_commands() {
     if (event.args.length == 0) {
       event.reply("> Usage: wolfram <input>");
     } else {
+      Achievements.give(event.from, "Wolfram|Alpha User");
       Wolfram.get(event.args.join(" ")).then((it) {
         event.reply("> " + meaningful_output(it));
       });

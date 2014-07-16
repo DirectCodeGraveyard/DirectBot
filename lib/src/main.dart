@@ -97,6 +97,7 @@ void start(String nickname, String prefix, String user, String pass) {
     });
 
     register((DisconnectEvent event) {
+      update_datastore();
       if (server != null) {
         server.close(force: true).then((_) {
           exit(0);
@@ -180,6 +181,7 @@ void start(String nickname, String prefix, String user, String pass) {
     register_wolfram_commands();
     register_achievement_commands();
     register_points_commands();
+    register_datastore_commands();
 
     if (enable_markov) {
       markov.load();

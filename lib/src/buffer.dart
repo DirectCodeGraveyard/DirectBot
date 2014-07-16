@@ -39,6 +39,12 @@ class Buffer {
       counts[id] = counts[id] + 1;
     }
     
+    var count = counts[id];
+    
+    if (count % 5 == 0) {
+      Points.add_points(event.from, 1, null, false);
+    }
+    
     var buf = buffers[event.target];
     if (buf == null) {
       buf = new Buffer();

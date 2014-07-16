@@ -17,11 +17,13 @@ void register_math_commands() {
     try {
       var expr = math_parser.parse(expression);
       var result = expr.evaluate(MathExpr.EvaluationType.REAL, math_context);
-      event.reply("> ${result}");
+      event.reply("${part_prefix("Calculator")} ${result}");
       math_context.variables.remove("ans");
       math_context.bindVariable(new MathExpr.Variable("ans"), new MathExpr.Number(result));
+      Achievements.give(event.from, "Math Wizard");
     } catch (e) {
-      event.reply("> ERROR: ${e}");
+      event.reply("${part_prefix("Calculator")} ERROR: ${e}");
+      Achievements.give(event.from, "High School Dropout");
     }
   });
 
@@ -34,9 +36,10 @@ void register_math_commands() {
     try {
       var expr = math_parser.parse(expression);
       var result = expr.simplify();
-      event.reply("> ${result}");
+      event.reply("${part_prefix("Expression Simplifier")} ${result}");
     } catch (e) {
-      event.reply("> ERROR: ${e}");
+      Achievements.give(event.from, "High School Dropout");
+      event.reply("${part_prefix("Expression Simplifier")} ERROR: ${e}");
     }
   });
 }

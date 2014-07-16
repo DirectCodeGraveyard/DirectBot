@@ -12,8 +12,9 @@ void register_google_commands() {
           event.reply("> No Results Found!");
         } else {
           var result = results[0];
-          event.reply("> ${result["titleNoFormatting"]} | ${result["unescapedUrl"]}");
+          event.reply("${part_prefix("Google")} ${result["titleNoFormatting"]} | ${result["unescapedUrl"]}");
         }
+        Achievements.give(event.from, "Google User");
       });
     } else {
       event.reply("> Usage: google <query>");
@@ -25,7 +26,7 @@ void register_google_commands() {
       event.reply("> Usage: shorten <url>");
     } else {
       shorten(event.args.join(" ")).then((shortened) {
-        event.reply("> ${shortened}");
+        event.reply("${part_prefix("URL Shortener")} ${shortened}");
       });
     }
   });

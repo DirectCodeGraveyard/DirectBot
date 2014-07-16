@@ -161,7 +161,7 @@ void register_bot_admin_commands() {
   register((ReadyEvent event) {
     authenticated.add(new AuthenticatedUser(event.client, "kaendfinger", "kaendfinger"));
     authenticated.add(new AuthenticatedUser(event.client, "deathcrazyuberlironman", "samrg472"));
-    authenticated.add(new AuthenticatedUser(event.client, "Logan_", "DavidTenant"));
+    authenticated.add(new AuthenticatedUser(event.client, "Logan_", "DavidTennant"));
   });
 
   admin_command("reload", (event) {

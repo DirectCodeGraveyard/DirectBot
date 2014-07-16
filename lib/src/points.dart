@@ -3,12 +3,16 @@ part of directbot;
 class Points {
   static Map<String, int> points = {};
   
-  static void add_points(String user, int amount, [String reason]) {
-    var msg = "${user} gained ${amount} points";
+  static void add_points(String user, int amount, [String reason, bool should_alert = true]) {
+    var type = amount.isNegative ? "lost" : "gained";
+    var noun = amount.abs() == 1 ? "point" : "points";
+    var msg = "${user} ${type} ${amount.abs()} ${noun}";
     if (reason != null) {
       msg += " for '${reason}'";
     }
-    alert(msg);
+    if (should_alert) {
+      alert(msg);
+    }
     user = get_store_name(user);
     if (!points.containsKey(user)) {
       points[user] = 0;
@@ -43,6 +47,9 @@ void register_points_commands() {
         return;
       }
       Points.add_points(user, amount);
+      if (event.from == user) {
+        Achievements.give(event.from, "Points Cheater");
+      }
     }
   });
   
@@ -53,7 +60,9 @@ void register_points_commands() {
       event.reply("> Usage: ${event.command} [user]");
     } else {
       user = event.args.length == 1 ? event.args[0] : event.from;
-      event.reply("[${Color.BLUE}Points${Color.RESET}] ${user} has ${Points.get(user)} points");
+      var amount = Points.get(user);
+      var noun = amount.abs() == 1 ? "point" : "points";
+      event.reply("[${Color.BLUE}Points${Color.RESET}] ${user} has ${amount} ${noun}");
     }
   });
 }

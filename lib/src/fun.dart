@@ -23,5 +23,7 @@ void register_fun_commands() {
         });
         break;
     }
+    
+    Achievements.give(event.from, "Fun Person");
   });
 }

@@ -32,10 +32,7 @@ class AdvancedCommandBot extends Bot {
     String message = event.message;
     var the_prefix = prefix;
 
-    void handle() {
-      
-      Achievements.give(event.from, "Command Wizard");
-      
+    void handle() {      
       var data = DataStore.data;
       
       if (data["commands_count"] == null) {
@@ -50,6 +47,26 @@ class AdvancedCommandBot extends Bot {
         counts[id] = 1;
       } else {
         counts[id] = counts[id] + 1;
+      }
+      
+      var count = counts[id];
+      
+      switch (count) {
+        case 1:
+          Achievements.give(event.from, "Command Newbie");
+          break;
+        case 5:
+          Achievements.give(event.from, "Command Learner");
+          break;
+        case 20:
+          Achievements.give(event.from, "Command Master");
+          break;
+        case 100:
+          Achievements.give(event.from, "Command Ninja");
+          break;
+        case 500:
+          Achievements.give(event.from, "Command God");
+          break;
       }
       
       var end = message.contains(" ") ? message.indexOf(" ", the_prefix.length) : message.length;

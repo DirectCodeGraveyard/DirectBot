@@ -29,7 +29,11 @@ output_youtube_info(event, url) {
 
 print_yt_info(event, info) {
   var snippet = info["snippet"];
-  event.reply("> ${snippet['title']} | ${snippet['channelTitle']} (${Color.GREEN}${info['statistics']['likeCount']}${Color.RESET}:${Color.RED}${info['statistics']['dislikeCount']}${Color.RESET})");
+  event.reply("${part_prefix("YouTube")} ${snippet['title']} | ${snippet['channelTitle']} (${Color.GREEN}${info['statistics']['likeCount']}${Color.RESET}:${Color.RED}${info['statistics']['dislikeCount']}${Color.RESET})");
+}
+
+String part_prefix(String name) {
+  return "[${Color.BLUE}${name}${Color.RESET}]";
 }
 
 extract_yt_id(url) {
