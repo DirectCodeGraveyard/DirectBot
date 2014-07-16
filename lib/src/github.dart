@@ -101,7 +101,7 @@ void handle_github_request(HttpRequest request) {
     request.response.close();
     return;
   }
-  String address = request.connectionInfo.remoteAddress.address;
+  var address = request.connectionInfo.remoteAddress.address;
 
   if (!github_ip_regex.hasMatch(address)) {
     print("$address was rejected from the server");
@@ -139,7 +139,6 @@ void handle_github_request(HttpRequest request) {
       }
       m += msg;
       for (var chan in github_channels_for(repo_name)) {
-        bot.message("#directcode", "[${repo_name}] Sending to ${chan}");
         bot.message(chan, m);
       }
     }
