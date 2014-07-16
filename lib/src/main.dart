@@ -71,6 +71,8 @@ void start(String nickname, String prefix, String user, String pass) {
 
     FreenodeBridge.setup(nickname, prefix);
 
+    init_datastore();
+    
     register((ReadyEvent event) {
       bot.client.identify(username: user, password: pass);
       for (String channel in config["channels"]) {

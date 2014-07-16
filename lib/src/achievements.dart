@@ -9,7 +9,8 @@ class Achievements {
       for (var chan in config["achievements"]["notify"]) {
         bot.message(chan, msg);
       }
-      tracker.add(user, name); 
+      tracker.add(user, name);
+      DataStore.data["achievements"] = tracker.toMap();
     }
   }
   

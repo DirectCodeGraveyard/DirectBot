@@ -170,6 +170,11 @@ void handle_github_request(HttpRequest request) {
         bot.message(chan, m);
       }
     }
+    
+    // Skip Bot Data Repository
+    if (get_repo_name(json["repository"]) == "DirectMyFile/bot-data") {
+      return;
+    }
 
     switch (request.headers.value('X-GitHub-Event')) {
       case "ping":
