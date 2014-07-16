@@ -323,7 +323,7 @@ class GitHubAPI {
 }
 
 void register_github_commands() {
-  admin_command("check-hooks", (event) {
+  admin_command("gh-hooks", (event) {
     if (event.args.length == 0) {
       register_github_hooks();
     } else {
