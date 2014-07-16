@@ -26,7 +26,7 @@ List<String> github_channels_for(String repo_id) {
   }
 }
 
-void register_github_hooks([String user = "DirectMyFile"]) {
+void register_github_hooks([String user = "DirectMyFile", String to]) {
   var added_hook = false;
   var completer = new Completer();
   var repos = null;
@@ -41,6 +41,17 @@ void register_github_hooks([String user = "DirectMyFile"]) {
     repos = JSON.decode(response.body) as List<Map<String, Object>>;
     repos.forEach((repo) {
       GitHubAPI.get(repo["hooks_url"]).then((hresp) {
+        
+        if (hresp.statusCode != 200) {
+          var m = "[${Color.BLUE}GitHub${Color.RESET}] No Permissions for Repository '${repo["name"]}'";
+          if (to != null) {
+            bot.client.notice(to, m);
+          } else {
+            bot.message(to, m);
+          }
+          return;
+        }
+        
         var hooks = JSON.decode(hresp.body) as List<Map<String, Object>>;
         
         var add_hook = true;
@@ -63,7 +74,12 @@ void register_github_hooks([String user = "DirectMyFile"]) {
             "events": GitHubAPI.events
           } as Map<String, Object>)).then((resp) {
             if (resp.statusCode != 201) {
-              bot.message("#directcode", "[${Color.BLUE}GitHub${Color.RESET}] Failed to add hook for ${repo["name"]}.");
+              var m = "[${Color.BLUE}GitHub${Color.RESET}] Failed to add hook for ${repo["name"]}.";
+              if (to != null) {
+                bot.client.notice(to, m);
+              } else {
+                bot.message(to, m);
+              }
             } else {
               bot.message("#directcode", "[${Color.BLUE}GitHub${Color.RESET}] Added Hook for ${repo["name"]}.");
             }
@@ -315,7 +331,7 @@ void register_github_commands() {
         event.reply("> Usage: check-hooks [user]");
       } else {
         var user = event.args[0];
-        register_github_hooks(user);
+        register_github_hooks(user, event.from);
       }
     }
   });
