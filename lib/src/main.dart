@@ -62,7 +62,7 @@ void start(String nickname, String prefix, String user, String pass) {
   load_config().then((the_config) {
     _config = the_config;
     
-    GitHubAPI.token = config["github_token"];
+    GitHubAPI.token = config["github"]["token"];
     
     var botConf = new BotConfig(nickname: nickname, username: nickname, 
                                       host: config["host"], port: config["port"]);
