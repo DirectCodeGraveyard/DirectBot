@@ -101,7 +101,7 @@ void handle_github_request(HttpRequest request) {
     var repo_name;
 
     if (json["repository"] != null) {
-      var name = get_repo_name(json["repository"]);
+      var name = json["repository"]["full_name"];
       
       var names = config["github"]["names"];
       
@@ -111,7 +111,7 @@ void handle_github_request(HttpRequest request) {
         if (json["repository"]["owner"]["name"] != "DirectMyFile") {
           repo_name = name;
         } else {
-          repo_name = json["repository"]["name"];
+          repo_name = json["repository"]["full_name"];
         }
       }
     }
@@ -122,7 +122,7 @@ void handle_github_request(HttpRequest request) {
         m += "[${Color.BLUE}${repo_name}${Color.RESET}] ";
       }
       m += msg;
-      for (var chan in github_channels_for(get_repo_name(json["repository"]))) {
+      for (var chan in github_channels_for(repo_name)) {
         bot.message(chan, m);
       }
     }
@@ -245,10 +245,6 @@ void handle_github_request(HttpRequest request) {
     }));
     request.response.close();
   });
-}
-
-String get_repo_name(Map<String, dynamic> repo) {
-  return "${repo["owner"]["name"]}/${repo["name"]}";
 }
 
 Future<String> gitio_shorten(String input) {
