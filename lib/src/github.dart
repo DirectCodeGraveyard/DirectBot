@@ -247,9 +247,13 @@ void handle_github_request(HttpRequest request) {
         });
         break;
     }
-
+    
     request.response.write(JSON.encode({
-        "status": "success"
+        "status": "success",
+        "information": {
+          "repo_name": repo_name,
+          "channels": github_channels_for(repo_name)
+        }
     }));
     request.response.close();
   });
