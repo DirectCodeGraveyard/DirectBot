@@ -45,7 +45,7 @@ class Karma {
 }
 
 void register_karma_commands() {
-  admin_command("add-karma", (event) {
+  admin_command("give-karma", (event) {
     if (event.args.length != 2) {
       event.reply("> Usage: ${event.command} <user> <amount>");
     } else {

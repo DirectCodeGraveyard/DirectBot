@@ -17,11 +17,14 @@ void handle_youtube(MessageEvent event) {
 
 void output_youtube_info(MessageEvent event, String url) {
   var id = extract_yt_id(url);
+  
   if (id == null) {
     return;
   }
+  
   var request_url = "${_yt_info_url}${id}";
-  httpClient.get(request_url).then((http.Response response) {
+  
+  http.get(request_url).then((http.Response response) {
     var data = JSON.decode(response.body);
     var items = data['items'];
     var video = items[0];
