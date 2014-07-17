@@ -61,7 +61,7 @@ class DataStore {
     }
     
     if (data["karma"] != null) {
-      
+      Karma.tracker = data["karma"];
     }
   }
   
