@@ -31,62 +31,68 @@ class Buffer {
       data["character_count"] = {};
     }
 
-    var counts = data["message_count"];
+    var messages = data["message_count"];
     var chars = data["character_count"];
-
-    var id = "${get_store_name(event.from)}${event.target}";
-
-    if (!counts.containsKey(id)) {
-      counts[id] = 1;
-    } else {
-      counts[id] = counts[id] + 1;
+    
+    var channel = event.target;
+    
+    var user_id = "${event.from}${event.target}";
+    
+    // Messages Count (Channel)
+    {
+      var count = messages[channel];
+      if (count == null) {
+        count = 0;
+      }
+      count++;
+      messages[channel] = count;
+      
+      if (count % 50 == 0) {
+        Points.add_points(event.from, 1, null, false);
+      }
     }
-
-    var count = counts[id];
-    var chan_count = counts[event.target];
-
-    if (chan_count == null) {
-      chan_count = 0;
+    
+    // Messages Count (User)
+    {
+      var count = messages[user_id];
+      if (count == null) {
+        count = 0;
+      }
+      count++;
+      messages[user_id] = count;
+      
+      if (count % 10 == 0) {
+        Points.add_points(event.from, 1, null, false);
+      }
     }
-
-    chan_count++;
-
-    if (!counts.containsKey(id)) {
-      counts[id] = 1;
-    } else {
-      counts[id] = counts[id] + 1;
+    
+    // Character Count (Channel)
+    {
+      var count = messages[channel];
+      if (count == null) {
+        count = 0;
+      }
+      count += event.message.length;
+      chars[channel] = count;
+      
+      if (count % 5000 == 0) {
+        Points.add_points(event.from, 1, null, false);
+      }
     }
-
-    var char_count = counts[id];
-    var chan_char_count = counts[event.target];
-
-    if (char_count == null) {
-      char_count = 0;
+    
+    // Characters Count (User)
+    {
+      var count = messages[user_id];
+      if (count == null) {
+        count = 0;
+      }
+      count += event.message.length;
+      chars[user_id] = count;
+      
+      if (count % 5000 == 0) {
+        Points.add_points(event.from, 1, null, false);
+      }
     }
-
-    char_count += event.message.length;
-
-    if (!chars.containsKey(id)) {
-      chars[id] = 1;
-    } else {
-      chars[id] = chars[id] + event.message.length;
-    }
-
-    if (chan_count % 10 == 0) {
-      Points.add_points(event.target, 1, null, false);
-    }
-
-    if (chan_count == 500) {
-      Points.add_points(event.target, 50);
-    }
-
-
-    if (count % 5 == 0) {
-      Points.add_points(event.from, 1, null, false);
-    }
-
-    counts[event.target] = chan_count;
-    chars[event.target] = char_count;
 
     var buf = buffers[event.target];
     if (buf == null) {
