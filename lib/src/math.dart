@@ -5,8 +5,7 @@ var math_parser = new MathExpr.Parser();
 void register_math_commands() {
   var math_context = new MathExpr.ContextModel();
 
-  math_context
-    ..bindVariable(new MathExpr.Variable("pi"), new MathExpr.Number(Math.PI));
+  math_context..bindVariable(new MathExpr.Variable("pi"), new MathExpr.Number(Math.PI));
 
   command("calc", (event) {
     if (event.args.length == 0) {
