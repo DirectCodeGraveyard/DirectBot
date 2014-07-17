@@ -7,45 +7,44 @@ class RegExSupport {
       var first = true;
       var escaped = true;
       var reverse = false;
-      
+
       var now = new DateTime.now();
-      
+
       if (now.month == DateTime.APRIL && now.day == 1) {
         reverse = true;
         return;
       }
-      
+
       if (event.message.startsWith("s//")) {
         event.reply("> ERROR: Not s// Supported");
         Achievements.give(event.from, "Possible Spammer");
         return;
       }
-      
-      if (msg.endsWith("/"))
+
+      if (msg.endsWith("/")) {
         msg = msg.substring(0, msg.length - 1);
-      else if (msg.endsWith("/g")) {
+      } else if (msg.endsWith("/g")) {
         msg = msg.substring(0, msg.length - 2);
         first = false;
       } else if (msg.endsWith("/n")) {
         msg = msg.substring(0, msg.length - 2);
         escaped = false;
       }
-      
+
       var index = msg.indexOf("/");
       var expr = msg.substring(0, index);
       var replacement = msg.substring(index + 1, msg.length);
-      
+
       String aExpr;
-      if (escaped)
+      if (escaped) {
         aExpr = escapeRegex(expr);
-      else
+      } else {
         aExpr = expr;
-      
-      if (reverse)
-        replacement = new String.fromCharCodes(replacement.codeUnits.reversed);
-      
+      }
+      if (reverse) replacement = new String.fromCharCodes(replacement.codeUnits.reversed);
+
       var regex = new RegExp(aExpr);
-      
+
       var orig_event = event;
 
       var events = Buffer.get(event.channel.name);
@@ -56,13 +55,13 @@ class RegExSupport {
           var e = new MessageEvent(event.client, event.from, event.target, new_msg);
           event.reply(event.from + ": " + e.message);
           Buffer.handle(e);
-          
+
           if (Achievements.has(orig_event.from, "Regular Expression User")) {
             Achievements.give(orig_event.from, "Regular Expression Master");
           } else {
             Achievements.give(orig_event.from, "Regular Expression User");
           }
-          
+
           return;
         }
       }

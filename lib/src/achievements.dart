@@ -2,7 +2,7 @@ part of directbot;
 
 class Achievements {
   static Multimap<String, String> tracker = new Multimap<String, String>();
-  
+
   static void give(String user, String name) {
     if (!has(user, name)) {
       var msg = "[${Color.BLUE}Achievements${Color.RESET}] ${user} earned '${name}'";
@@ -13,12 +13,12 @@ class Achievements {
       DataStore.data["achievements"] = tracker.toMap();
     }
   }
-  
+
   static List<String> get(String user) {
     user = get_store_name(user);
     return tracker[user];
   }
-  
+
   static bool has(String user, String name) {
     return tracker[get_store_name(user)].contains(name);
   }
@@ -40,10 +40,10 @@ void register_achievement_commands() {
       }
     }
   });
-  
+
   command("achievements", (event) {
     var user = event.from;
-    
+
     if (event.args.length > 1) {
       event.reply("> Usage: ${event.command} [target]");
     } else {

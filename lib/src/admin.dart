@@ -159,7 +159,7 @@ void register_bot_admin_commands() {
   if (FreenodeBridge.client != null) {
     FreenodeBridge.client.register(handle_whois);
   }
-  
+
   register((ReadyEvent event) {
 //    authenticated.add(new AuthenticatedUser(event.client, "kaendfinger", "kaendfinger"));
 //    authenticated.add(new AuthenticatedUser(event.client, "deathcrazyuberlironman", "samrg472"));
@@ -192,10 +192,10 @@ void register_bot_admin_commands() {
       event.reply("> Reloading Configuration, Aliases, Text Commands");
     }
   });
-  
+
   command("messages", (event) {
     var user = event.from;
-    
+
     if (event.args.length > 1) {
       event.reply("> Usage: ${event.command} [target]");
     } else {
@@ -209,10 +209,10 @@ void register_bot_admin_commands() {
       event.client.message(event.channel.name, "[${Color.BLUE}Messages${Color.RESET}] ${user} has ${amount} messages");
     }
   });
-  
+
   command("characters", (event) {
     var user = event.from;
-    
+
     if (event.args.length > 1) {
       event.reply("> Usage: ${event.command} [target]");
     } else {
@@ -238,7 +238,7 @@ class Messages {
       return counts[user + channel];
     }
   }
-  
+
   static int get_channel(String channel) {
     var counts = DataStore.data["message_count"];
     if (!counts.containsKey(channel)) {
@@ -259,7 +259,7 @@ class Characters {
       return counts[user + channel];
     }
   }
-  
+
   static int get_channel(String channel) {
     var counts = DataStore.data["character_count"];
     if (!counts.containsKey(channel)) {

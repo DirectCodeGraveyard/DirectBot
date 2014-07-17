@@ -18,24 +18,24 @@ handleLink(MessageEvent event) {
 
 /// Will pull down the HTML body for the given [url], then parse the HTML into a DOM
 /// before then grabbing the text between the '''<title></title>''' tags and sending
-/// it as a reply to the triggering [event]. 
+/// it as a reply to the triggering [event].
 void readPageTitle(MessageEvent event, String url) {
   http.get(url).then((http.Response response) {
     var data = response.body;
     if (data == null) {
       return;
     }
-    
+
     var page = HtmlParser.parse(data);
     if (page == null) {
       return;
     }
-    
+
     var title = page.querySelector('title').text;
     if (title == null || title.isEmpty) {
       return;
     }
-    
+
     title = title.replaceAll(NO_SPECIAL_CHARS, ' ').replaceAll(NO_MULTI_SPACES, ' ');
     event.reply("${part_prefix("Link Title")} posted by ${event.from}: ${title}");
   });

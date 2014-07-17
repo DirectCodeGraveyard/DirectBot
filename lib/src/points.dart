@@ -2,7 +2,7 @@ part of directbot;
 
 class Points {
   static Map<String, int> points = {};
-  
+
   static void add_points(String user, int amount, [String reason, bool should_alert = true]) {
     var type = amount.isNegative ? "lost" : "gained";
     var noun = amount.abs() == 1 ? "point" : "points";
@@ -20,18 +20,18 @@ class Points {
     points[user] = points[user] + amount;
     DataStore.data["points"] = points;
   }
-  
+
   static int get(String user) {
     user = get_store_name(user);
     return points.containsKey(user) ? points[user] : 0;
   }
-  
+
   static void alert(String message) {
     for (var chan in config["points"]["notify"]) {
       bot.message(chan, "[${Color.BLUE}Points${Color.RESET}] ${message}");
     }
   }
-  
+
   static List<String> get_order(bool channels) {
     var list = new Map.from(points);
     var people = new List.from(list.keys);
@@ -68,10 +68,10 @@ void register_points_commands() {
       }
     }
   });
-  
+
   command("points", (event) {
     var user = event.from;
-    
+
     if (event.args.length > 1) {
       event.reply("> Usage: ${event.command} [user]");
     } else {
@@ -81,7 +81,7 @@ void register_points_commands() {
       event.reply("[${Color.BLUE}Points${Color.RESET}] ${user} has ${amount} ${noun}");
     }
   });
-  
+
   command("leaderboard", (event) {
     var chans = false;
     if (event.args.length == 1) {

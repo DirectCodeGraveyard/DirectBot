@@ -15,12 +15,12 @@ var REAL_GREEN = "\u000303";
 class CommandStorage {
   Set<String> normal;
   Set<String> admin;
-  
+
   CommandStorage() {
     normal = new Set<String>();
     admin = new Set<String>();
   }
-  
+
   Set<String> get all {
     var all = new Set<String>();
     all.addAll(admin);
@@ -33,9 +33,9 @@ class AuthenticatedUser {
   Client client;
   String username;
   String nickname;
-  
+
   AuthenticatedUser(this.client, this.username, this.nickname);
-  
+
   @override
   bool operator ==(Object obj) => obj is AuthenticatedUser && obj.username == username && obj.client == client;
 }
@@ -52,7 +52,7 @@ AdvancedCommandBot get bot => _bot;
 
 bool check_user(CommandEvent event, [bool fail_fast = true]) {
   for (AuthenticatedUser user in authenticated) {
-    if (user.nickname == event.from && user.client == event.client){
+    if (user.nickname == event.from && user.client == event.client) {
       return true;
     }
   }
@@ -70,25 +70,24 @@ void on_exit() {
 void start(String nickname, String prefix, String user, String pass) {
   load_config().then((the_config) {
     _config = the_config;
-    
+
     GitHub.token = config["github"]["token"];
-    
-    var botConf = new BotConfig(nickname: nickname, username: nickname, 
-                                      host: config["host"], port: config["port"]);
+
+    var botConf = new BotConfig(nickname: nickname, username: nickname, host: config["host"], port: config["port"]);
 
     _bot = new AdvancedCommandBot(botConf, prefix: prefix);
 
     FreenodeBridge.setup(nickname, prefix);
 
     init_datastore();
-    
+
     register((ReadyEvent event) {
       bot.client.identify(username: user, password: pass);
       for (String channel in config["channels"]) {
         bot.join(channel);
       }
     });
-    
+
     setup_sticky_channels();
     setup_aliases();
 
@@ -163,16 +162,16 @@ void start(String nickname, String prefix, String user, String pass) {
         if (enable_markov) {
           markov.addLine(event.message);
         }
-        
+
         /* GitHub Issues */
         GitHub.handle_issue(event);
         /* GitHub Repository Info */
         GitHub.handle_repo(event);
-        
+
         /* Link Checking */
         handleLink(event);
       }
-      
+
       if (enable_markov) {
         if (event.message.toLowerCase().contains(bot.client.nickname.toLowerCase())) {
           event.reply(markov.reply(event.message, bot.client.nickname, event.from));
@@ -199,26 +198,26 @@ void start(String nickname, String prefix, String user, String pass) {
     register_points_commands();
     register_datastore_commands();
     register_karma_commands();
-    
+
     GitHub.initialize();
 
     if (enable_markov) {
       markov.load();
       markov_save_timer = new Timer.periodic(new Duration(milliseconds: 60000), (t) => markov.save());
     }
-    
+
     var is_exiting = false;
-    
+
     [ProcessSignal.SIGINT].forEach((ProcessSignal it) {
       it.watch().listen((it) {
         if (!is_exiting) {
           is_exiting = true;
           on_exit();
-          exit(0); 
+          exit(0);
         }
       });
     });
-    
+
     bot.connect();
     new Future.delayed(new Duration(seconds: 1), server_listen);
   });

@@ -2,12 +2,12 @@ part of directbot;
 
 void register_fun_commands() {
   command("who", (event) {
-    
+
     if (event.args.length == 0) {
       event.reply("> Usage: who <question>");
       return;
     }
-    
+
     var msg = event.args.join(" ").trim();
     if (msg.endsWith("?")) {
       msg = msg.substring(0, msg.length - 1);
@@ -29,7 +29,7 @@ void register_fun_commands() {
         });
         break;
     }
-    
+
     Achievements.give(event.from, "Fun Person");
   });
 }

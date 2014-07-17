@@ -20,7 +20,7 @@ void register_google_commands() {
       event.reply("> Usage: google <query>");
     }
   });
-  
+
   command("shorten", (event) {
     if (event.args.length < 1) {
       event.reply("> Usage: shorten <url>");
@@ -42,13 +42,9 @@ Future<String> shorten(String longUrl) {
   var input = JSON.encode({
     "longUrl": longUrl
   });
-  return http.post(
-      "https://www.googleapis.com/urlshortener/v1/url?key=${googleAPIKey}",
-      headers: {
-        "Content-Type": ContentType.JSON.toString()
-      },
-      body: input
-  ).then((http.Response response) {
+  return http.post("https://www.googleapis.com/urlshortener/v1/url?key=${googleAPIKey}", headers: {
+    "Content-Type": ContentType.JSON.toString()
+  }, body: input).then((http.Response response) {
     Map<String, Object> resp = JSON.decoder.convert(response.body);
     return new Future.value(resp["id"]);
   });

@@ -5,13 +5,13 @@ void init_datastore() {
     _exec("git", ["clone", "git@github.com:DirectMyFile/bot-data.git", "../BotData"]);
   }
   _exec("git", ["pull", "origin", "master"], "../BotData/");
-  
+
   DataStore.load();
-  
+
   update_datastore();
-  
+
   var count = 0;
-  
+
   DataStore.save_timer = new Timer.periodic(new Duration(seconds: 60), (event) {
     count++;
     if (count == 30) {
@@ -22,7 +22,7 @@ void init_datastore() {
       DataStore.save();
     }
   });
-  
+
   if (DataStore.data["karma"] == null) {
     DataStore.data["karma"] = {};
   }
@@ -47,7 +47,7 @@ void _exec(String command, List<String> args, [String working_dir = "."]) {
 class DataStore {
   static Timer save_timer;
   static Map<String, dynamic> data = {};
-  
+
   static void on_load() {
     if (data["achievements"] != null) {
       Achievements.tracker.clear();
@@ -55,23 +55,23 @@ class DataStore {
         Achievements.tracker.addValues(k, v);
       });
     }
-    
+
     if (data["points"] != null) {
       Points.points = data["points"];
     }
-    
+
     if (data["karma"] != null) {
       Karma.tracker = data["karma"];
     }
   }
-  
+
   static void load() {
     if (data_file().existsSync()) {
       DataStore.data = JSON.decode(data_file().readAsStringSync());
       on_load();
     }
   }
-  
+
   static void save() {
     var out = new JsonEncoder.withIndent("  ").convert(data);
     if (!data_file().existsSync()) {
@@ -81,7 +81,7 @@ class DataStore {
     }
     data_file().writeAsStringSync(out);
   }
-  
+
   static File data_file() {
     return new File("../BotData/data.json");
   }

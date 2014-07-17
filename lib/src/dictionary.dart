@@ -16,7 +16,7 @@ void register_dictionary_commands() {
       }
     });
   });
-  
+
   command("define", (event) {
     if (event.args.length == 0) {
       event.reply("> Usage: define <word>");

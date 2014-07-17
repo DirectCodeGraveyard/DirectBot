@@ -2,7 +2,7 @@ part of directbot;
 
 class Karma {
   static Map<String, int> tracker = {};
-  
+
   static void give(String user, int amount) {
     tracker = DataStore.data["karma"];
     var nick = user;
@@ -13,11 +13,11 @@ class Karma {
       tracker[user] = tracker[user] + amount;
     }
     for (var chan in config["karma"]["notify"]) {
-      bot.message(chan, "${part_prefix("Karma")} ${nick} gained ${amount} karma points");    
+      bot.message(chan, "${part_prefix("Karma")} ${nick} gained ${amount} karma points");
     }
     DataStore.save();
   }
-  
+
   static void take(String user, int amount) {
     tracker = DataStore.data["karma"];
     var nick = user;
@@ -28,11 +28,11 @@ class Karma {
       tracker[user] = tracker[user] - amount;
     }
     for (var chan in config["karma"]["notify"]) {
-      bot.message(chan, "${part_prefix("Karma")} ${nick} lost ${amount} karma points");    
+      bot.message(chan, "${part_prefix("Karma")} ${nick} lost ${amount} karma points");
     }
     DataStore.save();
   }
-  
+
   static int get(String user) {
     tracker = DataStore.data["karma"];
     var count = tracker[user];
@@ -67,7 +67,7 @@ void register_karma_commands() {
       }
     }
   });
-  
+
   admin_command("take-karma", (event) {
     if (event.args.length != 2) {
       event.reply("> Usage: ${event.command} <user> <amount>");
@@ -90,10 +90,10 @@ void register_karma_commands() {
       }
     }
   });
-  
+
   command("karma", (event) {
     var user = event.from;
-    
+
     if (event.args.length > 1) {
       event.reply("> Usage: ${event.command} [user]");
     } else {

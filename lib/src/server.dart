@@ -4,8 +4,7 @@ HttpServer server;
 
 void server_listen() {
   runZoned(() {
-    HttpServer.bind(InternetAddress.ANY_IP_V4, config['http_port'])
-    .then((HttpServer _server) {
+    HttpServer.bind(InternetAddress.ANY_IP_V4, config['http_port']).then((HttpServer _server) {
       server = _server;
       server.listen((HttpRequest request) {
         switch (request.uri.path) {
@@ -29,9 +28,12 @@ void server_listen() {
 
 void handle_unhandled_path(HttpRequest request) {
   request.response
-    ..statusCode = 404
-    ..write(JSON.encode({ "status": "failure", "error": "Not Found" }))
-    ..close();
+      ..statusCode = 404
+      ..write(JSON.encode({
+        "status": "failure",
+        "error": "Not Found"
+      }))
+      ..close();
 }
 
 void handle_info_request(HttpRequest request) {

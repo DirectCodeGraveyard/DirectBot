@@ -7,7 +7,7 @@ void register_basic_commands() {
     event.client.notice(event.from, "${Color.BLUE}Commands${Color.RESET}:");
     paginate(event.from, cmds.toList(), 8);
   });
-  
+
   admin_command("say", (event) {
     Achievements.give(event.from, "Blabber Mouth");
     if (event.args.length != 0) {
@@ -25,7 +25,7 @@ void register_basic_commands() {
       event.reply("> Usage: act <text>");
     }
   });
-  
+
   admin_command("join", (event) {
     Achievements.give(event.from, "Joy Spreader");
     if (event.args.length != 1) {
@@ -34,7 +34,7 @@ void register_basic_commands() {
       bot.join(event.args[0]);
     }
   });
-  
+
   admin_command("part", (event) {
     Achievements.give(event.from, "Party Pooper");
     if (event.args.length != 1) {

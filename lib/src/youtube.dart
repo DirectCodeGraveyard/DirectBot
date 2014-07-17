@@ -40,7 +40,7 @@ String part_prefix(String name) {
 
 String extract_yt_id(url) {
   var first = _yt_link_id.firstMatch(url);
-  
+
   if (first == null) {
     return null;
   }

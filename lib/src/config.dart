@@ -57,9 +57,8 @@ Future<Map<String, dynamic>> load_config_file(String type) {
       base += type + ".yaml";
       break;
   }
-  
+
   return http.get(base).then((resp) {
     return new Future.value(loadYaml(resp.body));
   });
 }
-
