@@ -139,17 +139,17 @@ class GitHub {
             GitHub.shorten(json["compare"]).then((compareUrl) {
               var committer = "${Color.OLIVE}$pusher${Color.RESET}";
               var commit = "commit${commit_size > 1 ? "s" : ""}";
-              var branch = "${Color.GREEN}${json['ref'].split("/")[2]}${Color.RESET}";
+              var branch = "${REAL_GREEN}${json['ref'].split("/")[2]}${Color.RESET}";
 
               var url = "${Color.PURPLE}${compareUrl}${Color.RESET}";
-              message("$committer pushed ${Color.GREEN}$commit_size${Color.RESET} $commit to $branch - $url");
+              message("$committer pushed ${REAL_GREEN}$commit_size${Color.RESET} $commit to $branch - $url");
 
               int tracker = 0;
               for (var commit in json['commits']) {
                 tracker++;
                 if (tracker > 5) break;
                 committer = "${Color.OLIVE}${commit['committer']['name']}${Color.RESET}";
-                var sha = "${Color.GREEN}${commit['id'].substring(0, 7)}${Color.RESET}";
+                var sha = "${REAL_GREEN}${commit['id'].substring(0, 7)}${Color.RESET}";
                 message("$committer $sha - ${commit['message']}");
               }
             });
@@ -161,8 +161,8 @@ class GitHub {
             } else {
               out += "Tagged ";
             }
-            out += "${Color.GREEN}${json['head_commit']['id'].substring(0, 7)}${Color.RESET} as ";
-            out += "${Color.GREEN}${tagName}${Color.RESET}";
+            out += "${REAL_GREEN}${json['head_commit']['id'].substring(0, 7)}${Color.RESET} as ";
+            out += "${REAL_GREEN}${tagName}${Color.RESET}";
             message(out);
           } else if (is_branch) {
             if (json['repository']['fork']) break;
@@ -180,7 +180,7 @@ class GitHub {
                 out += "Created branch";
               }
             }
-            out += "${Color.GREEN}${branchName}${Color.RESET}";
+            out += "${REAL_GREEN}${branchName}${Color.RESET}";
 
             GitHub.shorten(json["head_commit"]["url"]).then((url) {
               out += " - ${Color.PURPLE}${url}${Color.RESET}";

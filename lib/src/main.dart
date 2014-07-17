@@ -10,6 +10,8 @@ Timer markov_save_timer;
 
 CommandStorage commands = new CommandStorage();
 
+var REAL_GREEN = "\u000303";
+
 class CommandStorage {
   Set<String> normal;
   Set<String> admin;

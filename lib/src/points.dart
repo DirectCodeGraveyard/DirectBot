@@ -31,6 +31,22 @@ class Points {
       bot.message(chan, "[${Color.BLUE}Points${Color.RESET}] ${message}");
     }
   }
+  
+  static List<String> get_order(bool channels) {
+    var list = new Map.from(points);
+    var people = new List.from(list.keys);
+    people.sort((a, b) {
+      return list[b].compareTo(list[a]);
+    });
+    people.removeWhere((it) {
+      if (channels) {
+        return !it.startsWith("#");
+      } else {
+        return it.startsWith("#");
+      }
+    });
+    return people;
+  }
 }
 
 void register_points_commands() {
@@ -64,5 +80,25 @@ void register_points_commands() {
       var noun = amount.abs() == 1 ? "point" : "points";
       event.reply("[${Color.BLUE}Points${Color.RESET}] ${user} has ${amount} ${noun}");
     }
+  });
+  
+  command("leaderboard", (event) {
+    var chans = false;
+    if (event.args.length == 1) {
+      if (event.args[0] == "channels") {
+        chans = true;
+      } else {
+        event.reply("> Usage: ${event.command} [channel flag]");
+        return;
+      }
+    }
+    var noun = chans ? "Channels" : "Users";
+    var points = Points.get_order(chans);
+    event.client.notice(event.from, "${part_prefix("Leaderboard")} Top 10 ${noun}:");
+    var msgs = new List.from(points.map((it) {
+      return "${it}: ${Points.get(it)} points";
+    }));
+    msgs = new List.from(msgs.take(10));
+    paginate(event.from, msgs, 2);
   });
 }
