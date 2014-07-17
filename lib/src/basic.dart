@@ -8,8 +8,7 @@ void register_basic_commands() {
     paginate(event.from, cmds.toList(), 8);
   });
   
-  command("say", (event) {
-    if (!check_user(event)) return;
+  admin_command("say", (event) {
     Achievements.give(event.from, "Blabber Mouth");
     if (event.args.length != 0) {
       event.reply(event.args.join(" "));
@@ -18,8 +17,7 @@ void register_basic_commands() {
     }
   });
 
-  command("act", (event) {
-    if (!check_user(event)) return;
+  admin_command("act", (event) {
     Achievements.give(event.from, "Wise Guy");
     if (event.args.length != 0) {
       event.channel.action(event.args.join(" "));
@@ -28,8 +26,7 @@ void register_basic_commands() {
     }
   });
   
-  command("join", (event) {
-    if (!check_user(event)) return;
+  admin_command("join", (event) {
     Achievements.give(event.from, "Joy Spreader");
     if (event.args.length != 1) {
       event.reply("> Usage: join <channel>");
@@ -38,8 +35,7 @@ void register_basic_commands() {
     }
   });
   
-  command("part", (event) {
-    if (!check_user(event)) return;
+  admin_command("part", (event) {
     Achievements.give(event.from, "Party Pooper");
     if (event.args.length != 1) {
       bot.part(event.channel.name);
@@ -48,8 +44,7 @@ void register_basic_commands() {
     }
   });
 
-  command("quit", (event) {
-    if (!check_user(event)) return;
+  admin_command("quit", (event) {
     Achievements.give(event.from, "Anti-Bot Activist");
     bot.disconnect();
   });
