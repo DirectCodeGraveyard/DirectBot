@@ -32,7 +32,7 @@ class Points {
     }
   }
 
-  static List<String> get_order(bool channels) {
+  static List<String> sorted(bool channels) {
     var list = new Map.from(points);
     var people = new List.from(list.keys);
     people.sort((a, b) {
@@ -93,7 +93,7 @@ void register_points_commands() {
       }
     }
     var noun = chans ? "Channels" : "Users";
-    var points = Points.get_order(chans);
+    var points = Points.sorted(chans);
     event.client.notice(event.from, "${part_prefix("Leaderboard")} Top 10 ${noun}:");
     var msgs = new List.from(points.map((it) {
       return "${it}: ${Points.get(it)} points";
