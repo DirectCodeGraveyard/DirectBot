@@ -8,7 +8,7 @@ class GitHub {
 
   static var HOOK_URL = "http://bot.directcode.org:8020/github";
 
-  static List<String> events = ["push", "ping", "pull_request", "fork", "release", "issues", "commit_comment", "watch"];
+  static List<String> events = ["push", "ping", "pull_request", "fork", "release", "issues", "commit_comment", "watch", "status", "team_add", "issue_comment", "gollum", "page_build", "public"];
 
   static Future<http.Response> get(String url, {String api_token}) {
     if (api_token == null) {
@@ -289,7 +289,7 @@ class GitHub {
             message("${json["sender"]["login"]} made the repository public: ${url}");
           });
           break;
-          
+
         case "status":
           var msg = "";
           var status = json["state"];
@@ -309,7 +309,7 @@ class GitHub {
             message(msg);
           });
           break;
-          
+
         case "team_add":
           var added_user = false;
           var team = json["team"];
@@ -321,7 +321,7 @@ class GitHub {
             message(msg);
           }
           break;
-          
+
         default:
           handled = false;
           break;
