@@ -21,6 +21,9 @@ void register_math_commands() {
       math_context.variables.remove("ans");
       math_context.bindVariable(new MathExpr.Variable("ans"), new MathExpr.Number(result));
       Achievements.give(event.from, "Math Wizard");
+      if (result.toString() == "Infinity") {
+        Achievements.give(event.from, "Infinity and Beyond");
+      }
     } catch (e) {
       event.reply("${part_prefix("Calculator")} ERROR: ${e}");
       Achievements.give(event.from, "High School Dropout");
