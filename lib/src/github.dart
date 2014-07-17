@@ -449,16 +449,16 @@ class GitHub {
   static void handle_repo(MessageEvent event) {
     if (REPO_REGEX.hasMatch(event.message)) {
       for (var match in REPO_REGEX.allMatches(event.message)) {
-        
+
         var it = match[0];
-        
+
         var user = match[1];
         var repo = match[2];
-        
+
         var user_and_repo = "${user}/${repo}";
-        
+
         var rest = it.substring(it.indexOf(user_and_repo) + user_and_repo.length).replaceAll(r"/", "");
-        
+
         if (rest != "") {
           return;
         }
@@ -499,4 +499,3 @@ class GitHub {
     }
   }
 }
-
