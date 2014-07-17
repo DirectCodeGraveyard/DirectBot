@@ -18,6 +18,6 @@ void readPageTitle(MessageEvent event, String url) {
     RegExp specialChars = new RegExp(r'''[^a-zA-Z0-9`~!@#$%^&*()\-_=+\[\]:'",<.>/?\\| ]''');
     RegExp multiSpaces = new RegExp(r' {2,}');
     title = title.replaceAll(specialChars, ' ').replaceAll(multiSpaces, ' ');
-    event.reply(part_prefix("Link Title") + " " + title);
+    event.reply("${part_prefix("Link Title")} ${title}");
   });
 }
