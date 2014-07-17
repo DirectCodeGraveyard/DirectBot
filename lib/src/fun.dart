@@ -24,7 +24,7 @@ void register_fun_commands() {
         break;
       default:
         var url = "http://lmgtfy.com/?q=${Uri.encodeComponent("who " + msg)}";
-        shorten(url).then((shortened) {
+        google_shorten(url).then((shortened) {
           event.reply("> ${shortened}");
         });
         break;

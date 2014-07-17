@@ -25,7 +25,7 @@ void register_google_commands() {
     if (event.args.length < 1) {
       event.reply("> Usage: shorten <url>");
     } else {
-      shorten(event.args.join(" ")).then((shortened) {
+      google_shorten(event.args.join(" ")).then((shortened) {
         event.reply("${part_prefix("URL Shortener")} ${shortened}");
       });
     }
@@ -38,7 +38,7 @@ Future<Map<String, Object>> google(String query) {
   });
 }
 
-Future<String> shorten(String longUrl) {
+Future<String> google_shorten(String longUrl) {
   var input = JSON.encode({
     "longUrl": longUrl
   });

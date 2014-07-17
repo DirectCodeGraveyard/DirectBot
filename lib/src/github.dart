@@ -283,6 +283,45 @@ class GitHub {
 
           break;
 
+        case "public":
+          var repo = json["repository"];
+          GitHub.shorten(repo["html_url"]).then((url) {
+            message("${json["sender"]["login"]} made the repository public: ${url}");
+          });
+          break;
+          
+        case "status":
+          var msg = "";
+          var status = json["state"];
+          if (status == "pending") {
+            status = "${Color.DARK_GRAY}Pending${Color.RESET}.";
+          } else if (status == "success") {
+            status = "${REAL_GREEN}Success${Color.RESET}.";
+          } else {
+            status = "${Color.RED}Failure${Color.RESET}.";
+          }
+          msg += status;
+          msg += " ";
+          msg += json["description"];
+          msg += " - ";
+          google_shorten(json["target_url"]).then((url) {
+            msg += "${Color.MAGENTA}${url}${Color.RESET}";
+            message(msg);
+          });
+          break;
+          
+        case "team_add":
+          var added_user = false;
+          var team = json["team"];
+          var msg = "";
+          if (json["user"] != null) {
+            added_user = true;
+            msg += "${Color.OLIVE}${json["sender"]["login"]}${Color.RESET} has added ";
+            msg += "${Color.OLIVE}${json["user"]["login"]} to the '${team["name"]}' team.";
+            message(msg);
+          }
+          break;
+          
         default:
           handled = false;
           break;
