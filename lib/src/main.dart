@@ -48,13 +48,15 @@ get config => _config;
 
 AdvancedCommandBot get bot => _bot;
 
-bool check_user(CommandEvent event) {
+bool check_user(CommandEvent event, [bool fail_fast = true]) {
   for (AuthenticatedUser user in authenticated) {
     if (user.nickname == event.from && user.client == event.client){
       return true;
     }
   }
-  event.reply("> ${Color.RED}Sorry, you don't have permission to do that${Color.RESET}.");
+  if (fail_fast) {
+    event.reply("> ${Color.RED}Sorry, you don't have permission to do that${Color.RESET}.");
+  }
   return false;
 }
 
@@ -234,8 +236,16 @@ void admin_command(String name, void handle(CommandEvent event)) {
   print("Registering Admin Command '${name}'");
   commands.admin.add(name);
   bot.command(name).listen((CommandEvent event) {
-    if (check_user(event)) {
+    if (check_user(event, false)) {
       handle(event);
+    } else {
+      var e = new CommandEvent(new MessageEvent(bot.client, event.from, event.target, "\$authenticate"), "authenticate", []);
+      bot.commands["authenticate"].add(e);
+      new Timer(new Duration(seconds: 2), () {
+        if (check_user(event, false)) {
+          handle(event);
+        }
+      });
     }
   });
 }
