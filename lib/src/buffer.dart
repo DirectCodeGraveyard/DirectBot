@@ -29,7 +29,12 @@ class Buffer {
       data["message_count"] = {};
     }
     
+    if (data["character_count"] == null) {
+      data["character_count"] = {};
+    }
+    
     var counts = data["message_count"];
+    var chars = data["character_count"];
     
     var id = "${get_store_name(event.from)}${event.target}";
     
@@ -48,6 +53,27 @@ class Buffer {
     
     chan_count++;
     
+    if (!counts.containsKey(id)) {
+      counts[id] = 1;
+    } else {
+      counts[id] = counts[id] + 1;
+    }
+    
+    var char_count = counts[id];
+    var chan_char_count = counts[event.target];
+    
+    if (char_count == null) {
+      char_count = 0;
+    }
+    
+    char_count += event.message.length;
+    
+    if (!chars.containsKey(id)) {
+      chars[id] = 1;
+    } else {
+      chars[id] = chars[id] + event.message.length;
+    }
+    
     if (chan_count % 10 == 0) {
       Points.add_points(event.target, 1, null, false);
     }
@@ -62,6 +88,7 @@ class Buffer {
     }
     
     counts[event.target] = chan_count;
+    chars[event.target] = char_count;
     
     var buf = buffers[event.target];
     if (buf == null) {

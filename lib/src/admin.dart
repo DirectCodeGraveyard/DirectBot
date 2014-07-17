@@ -192,6 +192,82 @@ void register_bot_admin_commands() {
       event.reply("> Reloading Configuration, Aliases, Text Commands");
     }
   });
+  
+  command("messages", (event) {
+    var user = event.from;
+    
+    if (event.args.length > 1) {
+      event.reply("> Usage: ${event.command} [target]");
+    } else {
+      user = event.args.length == 1 ? event.args[0] : event.from;
+      int amount;
+      if (user.startsWith("#")) {
+        amount = Messages.get_channel(user);
+      } else {
+        amount = Messages.get(event.channel.name, user);
+      }
+      event.client.message(event.channel.name, "[${Color.BLUE}Messages${Color.RESET}] ${user} has ${amount} messages");
+    }
+  });
+  
+  command("characters", (event) {
+    var user = event.from;
+    
+    if (event.args.length > 1) {
+      event.reply("> Usage: ${event.command} [target]");
+    } else {
+      user = event.args.length == 1 ? event.args[0] : event.from;
+      int amount;
+      if (user.startsWith("#")) {
+        amount = Characters.get_channel(user);
+      } else {
+        amount = Characters.get(event.channel.name, user);
+      }
+      event.client.message(event.channel.name, "[${Color.BLUE}Characters${Color.RESET}] ${user} has ${amount} characters");
+    }
+  });
+}
+
+class Messages {
+  static int get(String channel, String user) {
+    user = get_store_name(user);
+    var counts = DataStore.data["message_count"];
+    if (!counts.containsKey(user + channel)) {
+      return 0;
+    } else {
+      return counts[user + channel];
+    }
+  }
+  
+  static int get_channel(String channel) {
+    var counts = DataStore.data["message_count"];
+    if (!counts.containsKey(channel)) {
+      return 0;
+    } else {
+      return counts[channel];
+    }
+  }
+}
+
+class Characters {
+  static int get(String channel, String user) {
+    user = get_store_name(user);
+    var counts = DataStore.data["character_count"];
+    if (!counts.containsKey(user + channel)) {
+      return 0;
+    } else {
+      return counts[user + channel];
+    }
+  }
+  
+  static int get_channel(String channel) {
+    var counts = DataStore.data["character_count"];
+    if (!counts.containsKey(channel)) {
+      return 0;
+    } else {
+      return counts[channel];
+    }
+  }
 }
 
 void reload_config() {
