@@ -15,7 +15,8 @@ class GitHub {
       api_token = token;
     }
     return http.get(url, headers: {
-      "Authorization": "token ${api_token}"
+      "Authorization": "token ${api_token}",
+      "Accept": "application/vnd.github.v3+json"
     });
   }
 
@@ -24,7 +25,8 @@ class GitHub {
       api_token = token;
     }
     return http.post(url, headers: {
-      "Authorization": "token ${api_token}"
+      "Authorization": "token ${api_token}",
+      "Accept": "application/vnd.github.v3+json"
     }, body: body);
   }
 
@@ -193,13 +195,13 @@ class GitHub {
             out += "${REAL_GREEN}${branchName}${Color.RESET}";
 
             var url_long = "";
-            
+
             if (json["head_commit"] == null) {
               url_long = json["compare"];
             } else {
               url_long = json["head_commit"]["url"];
             }
-            
+
             GitHub.shorten(url_long).then((url) {
               out += " - ${Color.PURPLE}${url}${Color.RESET}";
               message(out);
@@ -355,7 +357,7 @@ class GitHub {
 
     var ran_complete = false;
 
-    GitHub.get("https://api.github.com/users/${user}/repos", api_token: token).then((response) {
+    GitHub.get("https://api.github.com/users/${user}/repos?per_page=500", api_token: token).then((response) {
 
       if (response.statusCode != 200) {
         bot.message("#directcode", "[${Color.BLUE}GitHub${Color.RESET}] Failed to get repository list.");
@@ -377,7 +379,7 @@ class GitHub {
           if (hresp.statusCode != 200) {
             var m = "[${Color.BLUE}GitHub${Color.RESET}] No Permissions for Repository '${repo["name"]}'";
             if (irc_user != null) {
-              bot.client.notice(irc_user, m);
+              // bot.client.notice(irc_user, m);
             }
             count++;
             return;
@@ -463,6 +465,16 @@ class GitHub {
           register_github_hooks(user, event.from, event.isPrivate ? event.from : event.target, token);
         }
       }
+    });
+    
+    admin_command("gh-limit", (event) {
+      GitHub.get("https://api.github.com/").then((response) {
+        var limit = response.headers["x-ratelimit-limit"];
+        var remain = response.headers["x-ratelimit-remaining"];
+        var reset = response.headers["x-ratelimit-reset"];
+        var resets = new DateTime.fromMillisecondsSinceEpoch(int.parse(reset) * 1000);
+        event.reply("${part_prefix("GitHub")} Limit: ${limit}, Remaining: ${remain}, Resets: ${resets}");
+      });
     });
   }
 
