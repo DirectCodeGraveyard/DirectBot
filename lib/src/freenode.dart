@@ -20,8 +20,8 @@ class FreenodeBridge {
     var botConf = new BotConfig(nickname: nickname, username: nickname, host: "irc.freenode.net", port: 6667);
     client = new Client(botConf);
     
-    load_config_file("freenode").then((config) {
-      chans = config["channels"];
+    load_config_file("freenode").then((it) {
+      chans = it["channels"];
     });
 
     client.register((ReadyEvent event) {
@@ -29,7 +29,7 @@ class FreenodeBridge {
       chans.values.forEach(event.join);
     });
 
-    client.register((ReadyEvent event) {
+    bot.client.register((ReadyEvent event) {
       chans.keys.forEach(event.join);
     });
 
