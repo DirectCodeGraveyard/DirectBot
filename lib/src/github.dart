@@ -192,7 +192,15 @@ class GitHub {
             }
             out += "${REAL_GREEN}${branchName}${Color.RESET}";
 
-            GitHub.shorten(json["head_commit"]["url"]).then((url) {
+            var url_long = "";
+            
+            if (json["head_commit"] == null) {
+              url_long = json["compare"];
+            } else {
+              url_long = json["head_commit"]["url"];
+            }
+            
+            GitHub.shorten(url_long).then((url) {
               out += " - ${Color.PURPLE}${url}${Color.RESET}";
               message(out);
             });
