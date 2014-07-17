@@ -3,7 +3,7 @@ part of directbot;
 class GitHub {
   static String token = null;
 
-// Github IP range converted to regex
+  // Github IP range converted to regex
   static var IP_REGEX = new RegExp(r"192\.30\.25[2-5]\.[0-9]{1,3}");
 
   static var HOOK_URL = "http://bot.directcode.org:8020/github";
