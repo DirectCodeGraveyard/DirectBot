@@ -49,7 +49,7 @@ class GitHub {
   }
 
   static void handle_request(HttpRequest request) {
-    
+
     if (!connected) {
       request.response.statusCode = 500;
       request.response.write(JSON.encode({
@@ -58,7 +58,7 @@ class GitHub {
       request.response.close();
       return;
     }
-    
+
     if (request.method != "POST") {
       request.response.write(JSON.encode({
         "status": "failure",
