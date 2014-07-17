@@ -375,51 +375,55 @@ class GitHub {
       });
 
       repos.forEach((repo) {
-        GitHub.get(repo["hooks_url"], api_token: token).then((hresp) {
-          if (hresp.statusCode != 200) {
-            var m = "[${Color.BLUE}GitHub${Color.RESET}] No Permissions for Repository '${repo["name"]}'";
-            if (irc_user != null) {
-              // bot.client.notice(irc_user, m);
-            }
-            count++;
-            return;
-          }
-
-          var hooks = JSON.decode(hresp.body) as List<Map<String, Object>>;
-
-          var add_hook = true;
-
-          for (var hook in hooks) {
-            if (hook["config"]["url"] == HOOK_URL) {
-              add_hook = false;
-            }
-          }
-
-          if (add_hook) {
-            GitHub.post(repo["hooks_url"], JSON.encode({
-              "name": "web",
-              "active": true,
-              "config": {
-                "url": HOOK_URL,
-                "content_type": "json"
-              },
-              "events": GitHub.events
-            } as Map<String, Object>), api_token: token).then((resp) {
-              if (resp.statusCode != 201) {
-                var m = "[${Color.BLUE}GitHub${Color.RESET}] Failed to add hook for ${repo["name"]}.";
-                if (irc_user != null) {
-                  bot.client.notice(irc_user, m);
-                }
-              } else {
-                added_hook = true;
-                bot.message(channel, "[${Color.BLUE}GitHub${Color.RESET}] Added Hook for ${repo["name"]}.");
+        var number = repos.indexOf(repo);
+        new Future.delayed(new Duration(seconds: 1), () {
+          GitHub.get(repo["hooks_url"], api_token: token).then((hresp) {
+            print("Fetched repository ${number} of ${repos.length}");
+            if (hresp.statusCode != 200) {
+              var m = "[${Color.BLUE}GitHub${Color.RESET}] No Permissions for Repository '${repo["name"]}'";
+              if (irc_user != null) {
+                // bot.client.notice(irc_user, m);
               }
-
               count++;
-            });
-          } else {
-            count++;
-          }
+              return;
+            }
+
+            var hooks = JSON.decode(hresp.body) as List<Map<String, Object>>;
+
+            var add_hook = true;
+
+            for (var hook in hooks) {
+              if (hook["config"]["url"] == HOOK_URL) {
+                add_hook = false;
+              }
+            }
+
+            if (add_hook) {
+              GitHub.post(repo["hooks_url"], JSON.encode({
+                "name": "web",
+                "active": true,
+                "config": {
+                  "url": HOOK_URL,
+                  "content_type": "json"
+                },
+                "events": GitHub.events
+              } as Map<String, Object>), api_token: token).then((resp) {
+                if (resp.statusCode != 201) {
+                  var m = "[${Color.BLUE}GitHub${Color.RESET}] Failed to add hook for ${repo["name"]}.";
+                  if (irc_user != null) {
+                    bot.client.notice(irc_user, m);
+                  }
+                } else {
+                  added_hook = true;
+                  bot.message(channel, "[${Color.BLUE}GitHub${Color.RESET}] Added Hook for ${repo["name"]}.");
+                }
+
+                count++;
+              });
+            } else {
+              count++;
+            }
+          });
         });
       });
     });
@@ -466,7 +470,7 @@ class GitHub {
         }
       }
     });
-    
+
     admin_command("gh-limit", (event) {
       GitHub.get("https://api.github.com/").then((response) {
         var limit = response.headers["x-ratelimit-limit"];
