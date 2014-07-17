@@ -449,15 +449,26 @@ class GitHub {
   static void handle_repo(MessageEvent event) {
     if (REPO_REGEX.hasMatch(event.message)) {
       for (var match in REPO_REGEX.allMatches(event.message)) {
+        
+        var it = match[0];
+        
         var user = match[1];
         var repo = match[2];
+        
+        var user_and_repo = "${user}/${repo}";
+        
+        var rest = it.substring(it.indexOf(user_and_repo) + user_and_repo.length).replaceAll(r"/", "");
+        
+        if (rest != "") {
+          return;
+        }
 
-        var url = "https://api.github.com/repos/${user}/${repo}";
+        var url = "https://api.github.com/repos/${user_and_repo}";
 
         GitHub.get(url).then((response) {
           if (response.statusCode != 200) {
             if (response.statusCode == 404) {
-              event.reply("${part_prefix("GitHub")} Repository does not exist: ${user}/${repo}");
+              event.reply("${part_prefix("GitHub")} Repository does not exist: ${user_and_repo}");
             } else {
               event.reply("${part_prefix("GitHub")} Failed to get repository information (code: ${response.statusCode})");
             }
