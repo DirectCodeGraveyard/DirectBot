@@ -65,6 +65,9 @@ class AdvancedCommandBot extends Bot {
           Achievements.give(event.from, "Command Ninja");
           break;
         case 500:
+          Achievements.give(event.from, "Command Demi-God");
+          break;
+        case 1000:
           Achievements.give(event.from, "Command God");
           break;
       }
