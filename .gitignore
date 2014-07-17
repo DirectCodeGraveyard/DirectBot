@@ -6,3 +6,4 @@ config.yaml
 build/
 .settings
 data/
+*.lock
