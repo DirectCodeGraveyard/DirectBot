@@ -1,13 +1,14 @@
 name: directbot
 version: 1.0.0
 description: DirectCode IRC Bot
+environment:
+  sdk: '>=1.5.0'
 dependencies:
+  html5lib: any
   http: 0.11.1+1
   irc: 1.3.6
+  math_expressions: '>=0.0.9 <0.5.0'
   quiver: 0.19.0-dev.2
   yaml: 1.1.1
-  math_expressions: ">=0.0.9 <0.5.0"
-environment:
-  sdk: ">=1.5.0"
 dev_dependencies:
-  hop: "0.31.0+1"
+  hop: 0.31.0+1

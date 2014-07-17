@@ -11,6 +11,7 @@ import "package:quiver/collection.dart";
 import "package:math_expressions/math_expressions.dart" as MathExpr;
 import "dart:math" as Math;
 import "package:yaml/yaml.dart";
+import 'package:html5lib/parser.dart' as HtmlParser;
 
 part 'src/misc/timers.dart';
 
@@ -39,3 +40,4 @@ part 'src/achievements.dart';
 part 'src/data_store.dart';
 part 'src/points.dart';
 part 'src/karma.dart';
+part 'src/linkcheck.dart';

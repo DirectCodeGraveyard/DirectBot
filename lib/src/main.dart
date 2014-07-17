@@ -164,8 +164,11 @@ void start(String nickname, String prefix, String user, String pass) {
         GitHub.handle_issue(event);
         /* GitHub Repository Info */
         GitHub.handle_repo(event);
+        
+        /* Link Checking */
+        handleLink(event);
       }
-
+      
       if (enable_markov) {
         if (event.message.toLowerCase().contains(bot.client.nickname.toLowerCase())) {
           event.reply(markov.reply(event.message, bot.client.nickname, event.from));
