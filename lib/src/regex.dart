@@ -2,6 +2,7 @@ part of directbot;
 
 class RegExSupport {
   static void handle(MessageEvent event) {
+    var the_event = event;
     if (event.message.startsWith("s/") && event.message.length > 3) {
       var msg = event.message.substring(2); // skip "s/"
       var first = true;
@@ -66,7 +67,7 @@ class RegExSupport {
         }
       }
       event.reply("> ERROR: No Match Found for expression '${expr}'");
-      Achievements.give(event.from, "Regular Expression Failure");
     }
+    Achievements.give(the_event.from, "Regular Expression Failure");
   }
 }
