@@ -36,7 +36,7 @@ class Buffer {
     
     var channel = event.target;
     
-    var user_id = "${event.from}${event.target}";
+    var user_id = "${get_store_name(event.from)}${event.target}";
     
     // Messages Count (Channel)
     {
@@ -68,7 +68,7 @@ class Buffer {
     
     // Character Count (Channel)
     {
-      var count = messages[channel];
+      var count = chars[channel];
       if (count == null) {
         count = 0;
       }
@@ -82,7 +82,7 @@ class Buffer {
     
     // Characters Count (User)
     {
-      var count = messages[user_id];
+      var count = chars[user_id];
       if (count == null) {
         count = 0;
       }

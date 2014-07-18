@@ -50,8 +50,10 @@ class DataStore {
 
   static void on_load() {
     if (data["achievements"] != null) {
+      print("Loading Achievements");
       Achievements.tracker.clear();
       data["achievements"].forEach((k, v) {
+        print("${k}: ${v.join(", ")}");
         Achievements.tracker.addValues(k, v);
       });
     }
@@ -67,7 +69,7 @@ class DataStore {
 
   static void load() {
     if (data_file().existsSync()) {
-      DataStore.data = JSON.decode(data_file().readAsStringSync());
+      data = JSON.decode(data_file().readAsStringSync());
       on_load();
     }
   }

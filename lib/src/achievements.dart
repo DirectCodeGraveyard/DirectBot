@@ -63,8 +63,8 @@ void paginate(String to, List<String> messages, [int count = 5]) {
   var current = [];
   for (int i = 1; i < messages.length; i++) {
     current.add(messages[i - 1]);
-    if (i % count == 0 || i == messages.length) {
-      bot.client.notice(to, "${current.join(", ")}");
+    if (i % count == 0 || i == messages.length - 1) {
+      bot.client.notice(to, current.join(", "));
       current.clear();
     }
   }
