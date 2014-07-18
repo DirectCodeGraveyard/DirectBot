@@ -67,7 +67,7 @@ class RegExSupport {
         }
       }
       event.reply("> ERROR: No Match Found for expression '${expr}'");
+      Achievements.give(the_event.from, "Regular Expression Failure");
     }
-    Achievements.give(the_event.from, "Regular Expression Failure");
   }
 }
