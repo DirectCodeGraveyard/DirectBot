@@ -4,15 +4,15 @@ class Achievements {
   static Multimap<String, String> tracker = new Multimap<String, String>();
 
   static void give(String user, String name) {
-//    var store_name = get_store_name(user);
-//    if (!has(user, name)) {
-//      var msg = "[${Color.BLUE}Achievements${Color.RESET}] ${user} earned '${name}'";
-//      for (var chan in config["achievements"]["notify"]) {
-//        bot.message(chan, msg);
-//      }
-//      tracker.add(store_name, name);
-//      DataStore.data["achievements"] = tracker.toMap();
-//    }
+    var store_name = get_store_name(user);
+    if (!has(user, name)) {
+      var msg = "[${Color.BLUE}Achievements${Color.RESET}] ${user} earned '${name}'";
+      for (var chan in config["achievements"]["notify"]) {
+        bot.message(chan, msg);
+      }
+      tracker.add(store_name, name);
+      DataStore.data["achievements"] = tracker.toMap();
+    }
   }
 
   static List<String> get(String user) {

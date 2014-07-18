@@ -53,7 +53,6 @@ class DataStore {
       print("Loading Achievements");
       Achievements.tracker.clear();
       data["achievements"].forEach((k, v) {
-        print("${k}: ${v.join(", ")}");
         Achievements.tracker.addValues(k, v);
       });
     }
